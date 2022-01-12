@@ -1,0 +1,34 @@
+{
+  "name": "phodam/phodam",
+  "description": "A library to provide populated objects for testing",
+  "type": "library",
+  "minimum-stability": "stable",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "unit tests",
+    "testing",
+    "data objects"
+  ],
+  "homepage": "https://gitlab.com/phodam/phodam",
+  "readme": "README.md",
+  "authors": [
+    {
+      "name": "Andrew Vehlies",
+      "email": "avehlies@gmail.com",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phodam\\": "src/Phodam"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\Phodam\\": "test/Phodam"
+    }
+  }
+}
