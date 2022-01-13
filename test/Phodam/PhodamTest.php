@@ -40,19 +40,34 @@ class PhodamTest extends TestCase
     public function testDifferent(): void
     {
         $base = $this->phodam->create(TestClass::class);
-        for ($i = 0; $i < 10; ++$i) {
+        for ($i = 0; $i < 1; ++$i) {
             $current = $this->phodam->create(TestClass::class);
             $this->assertNotEqualsCanonicalizing($current, $base);
-//            echo $i . ":\n";
-//            echo "```\n";
-//            echo var_export($current, true);
-//            echo "\n```\n";
+            echo $i . ":\n";
+            echo "```\n";
+            echo var_export($current, true);
+            echo "\n```\n";
         }
     }
+
+    public function testBigTestClass(): void
+    {
+        $result = $this->phodam->create(BigTestClass::class);
+        var_export($result);
+    }
+}
+
+class BigTestClass
+{
+    private TestClass $one;
+    private TestClass $two;
+    private int $myNumber;
 }
 
 class TestClass
 {
+    public static string $staticString = "my static string";
+
     private string $myString;
     private int $myInt;
     private float $myFloat;

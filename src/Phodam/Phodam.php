@@ -68,6 +68,7 @@ class Phodam
                     $val = $this->randomObject();
                     break;
                 default:
+                    $val = $this->create($property->getType()->getName());
                     break;
             }
         }
