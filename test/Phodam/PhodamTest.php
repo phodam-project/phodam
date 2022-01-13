@@ -29,7 +29,7 @@ class PhodamTest extends TestCase
     {
         $item = $this->phodam->create(TestClass::class, [
             'myString' => 'my cool string',
-            'myInt' => 420
+            'myInt' => 1337
         ]);
         var_export($item);
 
