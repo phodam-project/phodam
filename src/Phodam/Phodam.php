@@ -93,7 +93,9 @@ class Phodam
 
     private function randomString(): string
     {
-        return md5($this->randomInt() . " " . $this->randomInt());
+        $md5 = md5($this->randomInt() . " " . $this->randomInt());
+        $len = strlen($md5);
+        return substr($md5, 0, rand(5, $len - 1 - 5));
     }
 
     private function randomBool(): bool

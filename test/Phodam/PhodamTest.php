@@ -29,7 +29,10 @@ class PhodamTest extends TestCase
     {
         for ($i = 0; $i < 10; ++$i) {
             $current = $this->phodam->create(TestClass::class);
-            var_export($current);
+            echo $i . ":\n";
+            echo "```\n";
+            echo var_export($current, true);
+            echo "\n```\n";
         }
     }
 }
