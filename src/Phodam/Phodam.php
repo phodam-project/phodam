@@ -12,70 +12,64 @@ class Phodam
     /**
      * @template T of object
      * @param class-string<T> $class
+     * @param array<string, mixed> $overrides
      * @return T
      */
-    public function create(string $class): object {
-        $fields = $this->findFields($class);
-        $result = $this->populateObject($class, $fields);
+    public function create(string $class, array $overrides = []): object {
+        $result = $this->populateObject($class, $overrides);
         return $result;
-    }
-
-    /**
-     * @param class-string $class
-     * @return array<ReflectionProperty>
-     */
-    private function findFields(string $class): array
-    {
-        /** @var array<ReflectionProperty> $fields */
-        $fields = [];
-        // do horrible reflection lmao
-        $refClass = new ReflectionClass($class);
-        foreach ($refClass->getProperties() as $property) {
-            $fields[] = $property;
-        }
-        return $fields;
     }
 
     /**
      * @template T of object
      * @param class-string<T> $class
-     * @param array<ReflectionProperty> $fields
+     * @param array<string, mixed> $fields
      * @return T
      */
-    private function populateObject(string $class, array $fields): object
+    private function populateObject(string $class, array $overrides): object
     {
         $refClass = new ReflectionClass($class);
         $obj = $refClass->newInstanceWithoutConstructor();
-        foreach ($fields as $field) {
-            $this->populateValue($obj, $field);
+        foreach ($refClass->getProperties() as $field) {
+            $this->populateValue($obj, $field, $overrides);
         }
         return $obj;
     }
 
-    private function populateValue(object $obj, ReflectionProperty &$property): void
+    /**
+     * @param object $obj
+     * @param ReflectionProperty $property
+     * @param array<string, mixed> $overrides
+     * @return void
+     */
+    private function populateValue(object $obj, ReflectionProperty &$property, array $overrides): void
     {
         $val = null;
-        switch ($property->getType()->getName()) {
-            case "int":
-                $val = $this->randomInt();
-                break;
-            case "string":
-                $val = $this->randomString();
-                break;
-            case "float":
-                $val = $this->randomFloat();
-                break;
-            case "bool":
-                $val = $this->randomBool();
-                break;
-            case "array":
-                $val = $this->randomArray();
-                break;
-            case "object":
-                $val = $this->randomObject();
-                break;
-            default:
-                break;
+        if (array_key_exists($property->getName(), $overrides)) {
+            $val = $overrides[$property->getName()];
+        } else {
+            switch ($property->getType()->getName()) {
+                case "int":
+                    $val = $this->randomInt();
+                    break;
+                case "string":
+                    $val = $this->randomString();
+                    break;
+                case "float":
+                    $val = $this->randomFloat();
+                    break;
+                case "bool":
+                    $val = $this->randomBool();
+                    break;
+                case "array":
+                    $val = $this->randomArray();
+                    break;
+                case "object":
+                    $val = $this->randomObject();
+                    break;
+                default:
+                    break;
+            }
         }
         $property->setAccessible(true);
         $property->setValue($obj, $val);

@@ -25,14 +25,28 @@ class PhodamTest extends TestCase
         $this->assertIsObject($item->getMyObject());
     }
 
+    public function testOverrides(): void
+    {
+        $item = $this->phodam->create(TestClass::class, [
+            'myString' => 'my cool string',
+            'myInt' => 420
+        ]);
+        var_export($item);
+
+        $this->assertEquals('my cool string', $item->getMyString());
+        $this->assertEquals(1337, $item->getMyInt());
+    }
+
     public function testDifferent(): void
     {
+        $base = $this->phodam->create(TestClass::class);
         for ($i = 0; $i < 10; ++$i) {
             $current = $this->phodam->create(TestClass::class);
-            echo $i . ":\n";
-            echo "```\n";
-            echo var_export($current, true);
-            echo "\n```\n";
+            $this->assertNotEqualsCanonicalizing($current, $base);
+//            echo $i . ":\n";
+//            echo "```\n";
+//            echo var_export($current, true);
+//            echo "\n```\n";
         }
     }
 }
