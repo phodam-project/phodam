@@ -34,5 +34,15 @@
     "psr-4": {
       "Tests\\Phodam\\": "test/Phodam"
     }
+  },
+  "scripts": {
+    "lint:phpstan": "phpstan analyse -l 9 src",
+    "test:phpunit": "phpunit test",
+    "lint": [
+      "@lint:phpstan"
+    ],
+    "test": [
+      "@test:phpunit"
+    ]
   }
 }
