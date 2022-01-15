@@ -2,20 +2,22 @@
 
 namespace Phodam;
 
-
 use ReflectionClass;
+use ReflectionException;
+use ReflectionNamedType;
 use ReflectionProperty;
 
 class Phodam
 {
-
     /**
      * @template T of object
      * @param class-string<T> $class
      * @param array<string, mixed> $overrides
      * @return T
+     * @throws ReflectionException
      */
-    public function create(string $class, array $overrides = []): object {
+    public function create(string $class, array $overrides = []): object
+    {
         $result = $this->populateObject($class, $overrides);
         return $result;
     }
@@ -23,8 +25,9 @@ class Phodam
     /**
      * @template T of object
      * @param class-string<T> $class
-     * @param array<string, mixed> $fields
+     * @param array<string, mixed> $overrides
      * @return T
+     * @throws ReflectionException
      */
     private function populateObject(string $class, array $overrides): object
     {
@@ -41,6 +44,7 @@ class Phodam
      * @param ReflectionProperty $property
      * @param array<string, mixed> $overrides
      * @return void
+     * @throws ReflectionException
      */
     private function populateValue(object $obj, ReflectionProperty &$property, array $overrides): void
     {
@@ -48,7 +52,13 @@ class Phodam
         if (array_key_exists($property->getName(), $overrides)) {
             $val = $overrides[$property->getName()];
         } else {
-            switch ($property->getType()->getName()) {
+            if ($property->getType()) {
+                throw new \InvalidArgumentException("Property Type is null");
+            }
+            /** @var ReflectionNamedType $type */
+            $type = $property->getType();
+
+            switch ($property) {
                 case "int":
                     $val = $this->randomInt();
                     break;
@@ -68,7 +78,9 @@ class Phodam
                     $val = $this->randomObject();
                     break;
                 default:
-                    $val = $this->create($property->getType()->getName());
+                    /** @var class-string $typeClass */
+                    $typeClass = $type->getName();
+                    $val = $this->create($typeClass);
                     break;
             }
         }
