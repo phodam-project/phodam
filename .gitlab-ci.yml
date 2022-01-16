@@ -67,6 +67,7 @@ build:8.1:
   script:
     - composer install
     - composer run lint
+    - composer run test
 
 lint:7.4:
   extends:
