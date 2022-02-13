@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
+use InvalidArgumentException;
 use Phodam\PhodamTypes;
 
 class TypeProviderConfig
@@ -25,6 +26,15 @@ class TypeProviderConfig
     public function __construct(TypeProviderInterface $typeProvider)
     {
         $this->typeProvider = $typeProvider;
+    }
+
+    public function validate(): void
+    {
+        if ($this->isArray() && !$this->getName()) {
+            throw new InvalidArgumentException(
+                "An array provider config must have a name"
+            );
+        }
     }
 
     /**

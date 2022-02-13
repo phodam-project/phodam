@@ -14,4 +14,10 @@ class PhodamTypes
     public const PRIMITIVE_FLOAT = "float";
     public const PRIMITIVE_INT = "int";
     public const PRIMITIVE_STRING = "string";
+
+    public const PRIMITIVE_TYPES = [
+        self::PRIMITIVE_FLOAT,
+        self::PRIMITIVE_INT,
+        self::PRIMITIVE_STRING
+    ];
 }
