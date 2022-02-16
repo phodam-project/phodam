@@ -219,15 +219,6 @@ class TypeProviderFactory
             }
             $this->namedPrimitiveProviders[$primitive][$name] = $typeProvider;
         } else {
-            // you 100% should be allowed to register your own over the existing one
-            // or i can keep the "internal" ones in a separate array?
-            // TODO: Keep track of our base int/float/string providers in a different array
-            //     so people can overwrite them
-//            if (array_key_exists($name, $this->primitiveProviders)) {
-//                throw new InvalidArgumentException(
-//                    "A default primitive provider of type {$primitive} already exists"
-//                );
-//            }
             $this->primitiveProviders[$primitive] = $typeProvider;
         }
     }
