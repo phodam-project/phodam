@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tests\Phodam\Provider;
 
 use DateTime;
+use InvalidArgumentException;
 use Phodam\PhodamTypes;
 use Phodam\Provider\TypeProviderConfig;
 use Phodam\Provider\TypeProviderInterface;
@@ -148,5 +149,45 @@ class TypeProviderConfigTest extends PhodamTestCase
         $this->assertEquals(PhodamTypes::PRIMITIVE_STRING, $config->getPrimitive());
         $this->assertNull($config->getName());
         $this->assertEquals($this->provider, $config->getTypeProvider());
+    }
+
+    /**
+     * @covers ::validate
+     */
+    public function testValidate(): void
+    {
+        $config = (new TypeProviderConfig($this->provider))
+            ->forString();
+
+        $config->validate();
+
+        $this->assertEquals(PhodamTypes::PRIMITIVE_STRING, $config->getPrimitive());
+    }
+
+    /**
+     * @covers ::validate
+     */
+    public function testValidateWithArrayWithoutName(): void
+    {
+        $config = (new TypeProviderConfig($this->provider))
+            ->forArray();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("An array provider config must have a name");
+
+        $config->validate();
+    }
+
+    /**
+     * @covers ::validate
+     */
+    public function testValidateWithoutAnyValidType(): void
+    {
+        $config = (new TypeProviderConfig($this->provider));
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("A provider config must be declared for an array, primitive, or a class");
+
+        $config->validate();
     }
 }

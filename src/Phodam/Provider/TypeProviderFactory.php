@@ -41,7 +41,7 @@ class TypeProviderFactory
     private array $namedProviders = [];
 
     /**
-     * A map of primitive-name => { class-string => TypeProviderInterface }
+     * A map of primitive-name => { provider-name => TypeProviderInterface }
      * @var array<string, array<string, TypeProviderInterface>>
      */
     private array $namedPrimitiveProviders = [];
@@ -92,8 +92,7 @@ class TypeProviderFactory
      */
     public function getArrayProvider(string $name): TypeProviderInterface
     {
-        if (!array_key_exists($name, $this->arrayProviders))
-        {
+        if (!array_key_exists($name, $this->arrayProviders)) {
             throw new InvalidArgumentException(
                 "Unable to find an array provider with the name {$name}"
             );
@@ -143,6 +142,13 @@ class TypeProviderFactory
         );
     }
 
+    /**
+     * @param array<string, TypeProviderInterface> $providers
+     * @param array<string, array<string, TypeProviderInterface>> $namedProviders
+     * @param string $type
+     * @param string|null $name
+     * @return TypeProviderInterface
+     */
     private function getNamedOrDefaultProvider(
         array $providers,
         array $namedProviders,
@@ -151,8 +157,10 @@ class TypeProviderFactory
     ): TypeProviderInterface {
         // we're looking for a named provider
         if ($name) {
-            if (!array_key_exists($type, $namedProviders)
-                || !array_key_exists($name, $namedProviders[$type])) {
+            if (
+                !array_key_exists($type, $namedProviders)
+                || !array_key_exists($name, $namedProviders[$type])
+            ) {
                 throw new InvalidArgumentException(
                     "Unable to find a provider of type {$type} with the name {$name}"
                 );
@@ -169,7 +177,7 @@ class TypeProviderFactory
         }
     }
 
-        /**
+    /**
      * Registers a TypeProviderConfig for an array
      *
      * @param TypeProviderConfig $config
@@ -211,12 +219,16 @@ class TypeProviderFactory
             }
             $this->namedPrimitiveProviders[$primitive][$name] = $typeProvider;
         } else {
-            if (array_key_exists($name, $this->primitiveProviders)) {
-                throw new InvalidArgumentException(
-                    "A default primitive provider of type {$primitive} already exists"
-                );
-            }
-            $this->primitiveProviders[$name] = $typeProvider;
+            // you 100% should be allowed to register your own over the existing one
+            // or i can keep the "internal" ones in a separate array?
+            // TODO: Keep track of our base int/float/string providers in a different array
+            //     so people can overwrite them
+//            if (array_key_exists($name, $this->primitiveProviders)) {
+//                throw new InvalidArgumentException(
+//                    "A default primitive provider of type {$primitive} already exists"
+//                );
+//            }
+            $this->primitiveProviders[$primitive] = $typeProvider;
         }
     }
 

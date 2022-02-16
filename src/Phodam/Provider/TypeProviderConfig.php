@@ -35,6 +35,12 @@ class TypeProviderConfig
                 "An array provider config must have a name"
             );
         }
+
+        if (!$this->isArray() && !$this->getPrimitive() && !$this->getClass()) {
+            throw new InvalidArgumentException(
+                "A provider config must be declared for an array, primitive, or a class"
+            );
+        }
     }
 
     /**

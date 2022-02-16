@@ -2,6 +2,7 @@
 build/
 vendor/
 
+.phpunit.result.cache
 composer.phar
 
 *~
