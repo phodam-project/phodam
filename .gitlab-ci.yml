@@ -67,18 +67,19 @@ build:8.1:
   script:
     - composer install
     - composer run lint
+    - composer run test
 
-lint:7.4:
+lint-test:7.4:
   extends:
-    - .lint-test
     - .version-7.4
+    - .lint-test
 
-lint:8.0:
+lint-test:8.0:
   extends:
+    - .version-8.0
     - .lint-test
-    - .version-7.4
 
-lint:8.1:
+lint-test:8.1:
   extends:
+    - .version-8.1
     - .lint-test
-    - .version-7.4

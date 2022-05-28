@@ -2,8 +2,8 @@
   "name": "phodam/phodam",
   "description": "A library to provide populated objects for testing",
   "type": "library",
-  "minimum-stability": "stable",
-  "license": "BSD-3-Clause",
+  "minimum-stability": "dev",
+  "license": "MIT",
   "keywords": [
     "unit tests",
     "testing",
@@ -18,12 +18,16 @@
       "role": "Developer"
     }
   ],
-  "require": {
-    "php": ">=7.4"
+  "config": {
+    "platform": {
+      "php": ">=7.4"
+    }
   },
   "require-dev": {
-    "phpstan/phpstan": "^1.3",
-    "phpunit/phpunit": "^9.5"
+    "phpstan/phpstan": "^1.4",
+    "phpunit/phpunit": "^9.5",
+    "squizlabs/php_codesniffer": "^3.6",
+    "friendsofphp/php-cs-fixer": "^3.5"
   },
   "autoload": {
     "psr-4": {
@@ -32,17 +36,29 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\Phodam\\": "test/Phodam"
+      "Phodam\\Tests\\": "tests"
     }
   },
   "scripts": {
-    "lint:phpstan": "phpstan analyse -l 9 src",
-    "test:phpunit": "phpunit test",
+    "lint:phpcs": "phpcs --standard=PSR12 src",
+    "lint:phpcsfixer": "php-cs-fixer fix src --rules=@PSR12 --dry-run --cache-file=build/.php-cs-fixer.cache",
+    "lint:phpcsfixer:fix": "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache",
+    "lint:phpstan": "phpstan analyse -l 6 src",
+    "test:phpunit": "phpunit",
+    "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=build/phpunit",
     "lint": [
-      "@lint:phpstan"
+      "mkdir -p build",
+      "@lint:phpstan",
+      "@lint:phpcs",
+      "@lint:phpcsfixer"
     ],
     "test": [
+      "mkdir -p build",
       "@test:phpunit"
+    ],
+    "precommit": [
+      "@lint",
+      "@test"
     ]
   }
 }
