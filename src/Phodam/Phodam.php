@@ -77,7 +77,7 @@ class Phodam
     public function createFloat(string $name = null): float
     {
         return $this->typeProviderFactory->getPrimitiveProvider(
-            PhodamTypes::PRIMITIVE_STRING,
+            PhodamTypes::PRIMITIVE_FLOAT,
             $name
         )
             ->create();

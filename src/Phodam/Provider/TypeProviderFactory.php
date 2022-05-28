@@ -79,6 +79,7 @@ class TypeProviderFactory
             return;
         }
 
+        // $config->validate() should always prevent us from getting here
         throw new InvalidArgumentException(
             "Unable to determine how to register type provider"
         );
