@@ -1,5 +1,5 @@
 {
-  "name": "phodam/phodam",
+  "name": "avehlies/phodam",
   "description": "A library to provide populated objects for testing",
   "type": "library",
   "minimum-stability": "dev",
