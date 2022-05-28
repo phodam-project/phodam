@@ -7,16 +7,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Phodam\Provider;
+namespace Phodam\Tests\Phodam\Provider;
 
-use Tests\Fixtures\UnregisteredClassType;
+use Phodam\Tests\Fixtures\UnregisteredClassType;
 use InvalidArgumentException;
 use Phodam\PhodamTypes;
 use Phodam\Provider\TypeProviderConfig;
 use Phodam\Provider\TypeProviderFactory;
 use Phodam\Provider\TypeProviderInterface;
-use Tests\Fixtures\SampleTypeProvider;
-use Tests\Phodam\PhodamTestCase;
+use Phodam\Tests\Fixtures\SampleTypeProvider;
+use Phodam\Tests\Phodam\PhodamTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\TypeProviderFactory
@@ -281,7 +281,7 @@ class TypeProviderFactoryTest extends PhodamTestCase
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            "A class provider of type Tests\Fixtures\UnregisteredClassType with the name MyCoolClassProvider already exists"
+            "A class provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyCoolClassProvider already exists"
         );
 
         $this->factory->registerTypeProviderConfig($config);
@@ -296,7 +296,7 @@ class TypeProviderFactoryTest extends PhodamTestCase
         $class = UnregisteredClassType::class;
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a default provider of type Tests\Fixtures\UnregisteredClassType");
+        $this->expectExceptionMessage("Unable to find a default provider of type Phodam\Tests\Fixtures\UnregisteredClassType");
 
         $this->factory->getClassProvider($class);
     }
@@ -311,7 +311,7 @@ class TypeProviderFactoryTest extends PhodamTestCase
         $name = "MyName";
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a provider of type Tests\Fixtures\UnregisteredClassType with the name MyName");
+        $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
 
         $this->factory->getClassProvider($class, $name);
     }
@@ -330,7 +330,7 @@ class TypeProviderFactoryTest extends PhodamTestCase
         $this->factory->registerTypeProviderConfig($config);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a provider of type Tests\Fixtures\UnregisteredClassType with the name MyName");
+        $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
 
         $this->factory->getClassProvider($class, $name);
     }
@@ -351,7 +351,7 @@ class TypeProviderFactoryTest extends PhodamTestCase
         $this->factory->registerTypeProviderConfig($config);
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a provider of type Tests\Fixtures\UnregisteredClassType with the name MyName");
+        $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
 
         $this->factory->getClassProvider($class, $name);
     }

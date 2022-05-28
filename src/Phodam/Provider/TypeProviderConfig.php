@@ -28,17 +28,23 @@ class TypeProviderConfig
         $this->typeProvider = $typeProvider;
     }
 
+    /**
+     * Validates the configuration and throws an Exception if it's not valid
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     */
     public function validate(): void
     {
-        if ($this->isArray() && !$this->getName()) {
-            throw new InvalidArgumentException(
-                "An array provider config must have a name"
-            );
-        }
-
         if (!$this->isArray() && !$this->getPrimitive() && !$this->getClass()) {
             throw new InvalidArgumentException(
                 "A provider config must be declared for an array, primitive, or a class"
+            );
+        }
+
+        if ($this->isArray() && !$this->getName()) {
+            throw new InvalidArgumentException(
+                "An array provider config must have a name"
             );
         }
     }

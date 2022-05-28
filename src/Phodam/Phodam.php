@@ -41,12 +41,31 @@ class Phodam
      * Create a named associative array
      *
      * @param string $name the name of the array
+     * @param array<string, mixed> $overrides values to override in the array
      * @return array<string, mixed>
      */
-    public function createArray(string $name): array
+    public function createArray(string $name, array $overrides = []): array
     {
-        $typeProvider = $this->typeProviderFactory->getArrayProvider($name);
-        return [];
+        return $this->typeProviderFactory
+            ->getArrayProvider($name)
+            ->create($overrides);
+    }
+
+    /**
+     * @template T
+     * @param class-string<T> $class class to create
+     * @param string|null $name the name of the class provider
+     * @param array<string, mixed> $overrides values to override
+     * @return T
+     */
+    public function create(
+        string $class,
+        string $name = null,
+        array $overrides = []
+    ) {
+        return $this->typeProviderFactory
+            ->getClassProvider($class, $name)
+            ->create($overrides);
     }
 
     /**
@@ -57,11 +76,11 @@ class Phodam
      */
     public function createFloat(string $name = null): float
     {
-        $typeProvider = $this->typeProviderFactory->getPrimitiveProvider(
+        return $this->typeProviderFactory->getPrimitiveProvider(
             PhodamTypes::PRIMITIVE_STRING,
             $name
-        );
-        return 1.0;
+        )
+            ->create();
     }
 
     /**
@@ -72,11 +91,11 @@ class Phodam
      */
     public function createInt(string $name = null): int
     {
-        $typeProvider = $this->typeProviderFactory->getPrimitiveProvider(
+        return $this->typeProviderFactory->getPrimitiveProvider(
             PhodamTypes::PRIMITIVE_INT,
             $name
-        );
-        return 1;
+        )
+            ->create();
     }
 
     /**
@@ -87,10 +106,10 @@ class Phodam
      */
     public function createString(string $name = null): string
     {
-        $typeProvider = $this->typeProviderFactory->getPrimitiveProvider(
+        return $this->typeProviderFactory->getPrimitiveProvider(
             PhodamTypes::PRIMITIVE_STRING,
             $name
-        );
-        return "";
+        )
+            ->create();
     }
 }

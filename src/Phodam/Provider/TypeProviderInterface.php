@@ -11,4 +11,9 @@ namespace Phodam\Provider;
 
 interface TypeProviderInterface
 {
+    /**
+     * @param array<string, mixed> $overrides
+     * @return mixed
+     */
+    public function create(array $overrides = []);
 }

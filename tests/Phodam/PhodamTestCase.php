@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Phodam;
+namespace Phodam\Tests\Phodam;
 
 use PHPUnit\Framework\TestCase;
 

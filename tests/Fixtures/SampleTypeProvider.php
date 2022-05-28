@@ -7,11 +7,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures;
+namespace Phodam\Tests\Fixtures;
 
 use Phodam\Provider\TypeProviderInterface;
 
 class SampleTypeProvider implements TypeProviderInterface
 {
-
+    public function create(array $overrides = [])
+    {
+        return [];
+    }
 }

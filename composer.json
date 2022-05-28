@@ -2,7 +2,7 @@
   "name": "phodam/phodam",
   "description": "A library to provide populated objects for testing",
   "type": "library",
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "license": "MIT",
   "keywords": [
     "unit tests",
@@ -36,7 +36,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": "tests"
+      "Phodam\\Tests\\": "tests"
     }
   },
   "scripts": {

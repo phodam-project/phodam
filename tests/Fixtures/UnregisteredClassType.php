@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures;
+namespace Phodam\Tests\Fixtures;
 
 class UnregisteredClassType
 {
