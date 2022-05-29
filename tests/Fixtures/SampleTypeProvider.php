@@ -13,7 +13,7 @@ use Phodam\Provider\TypeProviderInterface;
 
 class SampleTypeProvider implements TypeProviderInterface
 {
-    public function create(array $overrides = [])
+    public function create(array $overrides = [], array $config = [])
     {
         return [];
     }

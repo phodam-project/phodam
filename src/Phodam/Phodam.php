@@ -42,13 +42,18 @@ class Phodam
      *
      * @param string $name the name of the array
      * @param array<string, mixed> $overrides values to override in the array
+     * @param array<string, mixed> $config provider-specific information. an
+     *     open-ended array for the provider to pass information along
      * @return array<string, mixed>
      */
-    public function createArray(string $name, array $overrides = []): array
-    {
+    public function createArray(
+        string $name,
+        array $overrides = [],
+        array $config = []
+    ): array {
         return $this->typeProviderFactory
             ->getArrayProvider($name)
-            ->create($overrides);
+            ->create($overrides, $config);
     }
 
     /**
@@ -56,60 +61,75 @@ class Phodam
      * @param class-string<T> $class class to create
      * @param string|null $name the name of the class provider
      * @param array<string, mixed> $overrides values to override
+     * @param array<string, mixed> $config provider-specific information. an
+     *     open-ended array for the provider to pass information along
      * @return T
      */
     public function create(
         string $class,
         string $name = null,
-        array $overrides = []
+        array $overrides = [],
+        array $config = []
     ) {
         return $this->typeProviderFactory
             ->getClassProvider($class, $name)
-            ->create($overrides);
+            ->create($overrides, $config);
     }
 
     /**
      * Create a random float or a named float
      *
      * @param string|null $name the name of the float if any
+     * @param array<string, mixed> $config provider-specific information. an
+     *     open-ended array for the provider to pass information along
      * @return float
      */
-    public function createFloat(string $name = null): float
-    {
+    public function createFloat(
+        string $name = null,
+        array $config = []
+    ): float {
         return $this->typeProviderFactory->getPrimitiveProvider(
             PhodamTypes::PRIMITIVE_FLOAT,
             $name
         )
-            ->create();
+            ->create([], $config);
     }
 
     /**
      * Create a random int or named int
      *
      * @param string|null $name the name of the int if any
+     * @param array<string, mixed> $config provider-specific information. an
+     *     open-ended array for the provider to pass information along
      * @return int
      */
-    public function createInt(string $name = null): int
-    {
+    public function createInt(
+        string $name = null,
+        array $config = []
+    ): int {
         return $this->typeProviderFactory->getPrimitiveProvider(
             PhodamTypes::PRIMITIVE_INT,
             $name
         )
-            ->create();
+            ->create([], $config);
     }
 
     /**
      * Create a random string or named string
      *
      * @param string|null $name the name of the string if any
+     * @param array<string, mixed> $config provider-specific information. an
+     *     open-ended array for the provider to pass information along
      * @return string
      */
-    public function createString(string $name = null): string
-    {
+    public function createString(
+        string $name = null,
+        array $config = []
+    ): string {
         return $this->typeProviderFactory->getPrimitiveProvider(
             PhodamTypes::PRIMITIVE_STRING,
             $name
         )
-            ->create();
+            ->create([], $config);
     }
 }
