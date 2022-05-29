@@ -32,9 +32,11 @@ $sportsTeamProviderConfig->withName('Hockey');
 $this->phodam->registerTypeProviderConfig($sportsTeamProviderConfig);
 
 $team = $this->phodam->create(SportsTeam::class, 'Hockey');
+// $team is now an object with a randomly generated location and name
+// 'NHL' for the league, and a random 'founded' year between 1920 and this year
 ```
 
-The idea is that you should be able to specify a way to create a generic `SporstTeam` or a specific type of `SportsTeam` that can then be used from Phodam.
+The idea is that you should be able to specify a way to create a generic `SportsTeam` or a specific type of `SportsTeam` that can then be used from Phodam.
 
 ## Local Build
 
