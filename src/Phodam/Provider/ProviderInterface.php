@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
-interface TypeProviderInterface
+interface ProviderInterface
 {
     /**
      * @param array<string, mixed> $overrides values to override

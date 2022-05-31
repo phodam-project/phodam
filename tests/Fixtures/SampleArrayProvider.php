@@ -9,12 +9,19 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Fixtures;
 
-use Phodam\Provider\TypeProviderInterface;
+use Phodam\Provider\ProviderInterface;
 
-class SampleTypeProvider implements TypeProviderInterface
+class SampleArrayProvider implements ProviderInterface
 {
     public function create(array $overrides = [], array $config = [])
     {
-        return [];
+        $defaults = [
+            'field1' => 'value1',
+            'field2' => 'second value'
+        ];
+
+        return array_merge(
+            $defaults, $overrides
+        );
     }
 }
