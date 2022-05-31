@@ -9,19 +9,19 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam\Provider\Builtin;
 
-use Phodam\Provider\Builtin\BuiltinStringTypeProvider;
+use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Tests\Phodam\PhodamTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\Builtin\BuiltinStringTypeProvider
+ * @coversDefaultClass \Phodam\Provider\Primitive\DefaultStringTypeProvider
  */
-class BuiltinStringTypeProviderTest extends PhodamTestCase
+class DefaultStringTypeProviderTest extends PhodamTestCase
 {
-    private BuiltinStringTypeProvider $provider;
+    private DefaultStringTypeProvider $provider;
 
     public function setUp(): void
     {
-        $this->provider = new BuiltinStringTypeProvider();
+        $this->provider = new DefaultStringTypeProvider();
     }
 
     /**

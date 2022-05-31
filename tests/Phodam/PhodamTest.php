@@ -19,6 +19,7 @@ use Phodam\Tests\Fixtures\UnregisteredClassType;
 /**
  * @coversDefaultClass \Phodam\Phodam
  * @covers ::__construct
+ * @covers ::registerPrimitiveTypeProviders
  */
 class PhodamTest extends PhodamTestCase
 {
@@ -270,21 +271,18 @@ class PhodamTest extends PhodamTestCase
     public function testCreateWithBuiltinString(): void
     {
         $result = $this->phodam->create('string');
-        var_export($result);
         $this->assertIsString($result, 'Expected result should be a string');
     }
 
     public function testCreateWithBuiltinInt(): void
     {
         $result = $this->phodam->create('int');
-        var_export($result);
         $this->assertIsInt($result, 'Expected result should be an int');
     }
 
     public function testCreateWithBuiltinFloat(): void
     {
         $result = $this->phodam->create('float');
-        var_export($result);
         $this->assertIsFloat($result, 'Expected result should be a float');
     }
 }

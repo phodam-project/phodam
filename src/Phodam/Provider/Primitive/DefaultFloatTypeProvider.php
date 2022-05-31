@@ -7,14 +7,15 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Provider\Builtin;
+namespace Phodam\Provider\Primitive;
 
 use Phodam\Provider\ProviderInterface;
 
-class BuiltinStringTypeProvider implements ProviderInterface
+class DefaultFloatTypeProvider implements ProviderInterface
 {
-    public function create(array $overrides = [], array $config = []): string
+    public function create(array $overrides = [], array $config = []): float
     {
-        return bin2hex(random_bytes(rand(16, 32)));
+        $value = rand(-10000, 10000) + (rand(0, 100) / 100);
+        return $value;
     }
 }

@@ -11,7 +11,6 @@ namespace Phodam\Tests\Phodam\Provider;
 
 use DateTime;
 use InvalidArgumentException;
-use Phodam\PhodamTypes;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
 use Phodam\Tests\Fixtures\SampleProvider;
@@ -91,7 +90,7 @@ class ProviderConfigTest extends PhodamTestCase
 
         $config->validate();
 
-        $this->assertEquals(PhodamTypes::PRIMITIVE_STRING, $config->getType());
+        $this->assertEquals('string', $config->getType());
     }
 
     /**

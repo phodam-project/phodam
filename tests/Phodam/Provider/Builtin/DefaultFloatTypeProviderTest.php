@@ -9,19 +9,19 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam\Provider\Builtin;
 
-use Phodam\Provider\Builtin\BuiltinIntTypeProvider;
+use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
 use Phodam\Tests\Phodam\PhodamTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\Builtin\BuiltinIntTypeProvider
+ * @coversDefaultClass \Phodam\Provider\Primitive\DefaultFloatTypeProvider
  */
-class BuiltinIntTypeProviderTest extends PhodamTestCase
+class DefaultFloatTypeProviderTest extends PhodamTestCase
 {
-    private BuiltinIntTypeProvider $provider;
+    private DefaultFloatTypeProvider $provider;
 
     public function setUp(): void
     {
-        $this->provider = new BuiltinIntTypeProvider();
+        $this->provider = new DefaultFloatTypeProvider();
     }
 
     /**
@@ -31,7 +31,7 @@ class BuiltinIntTypeProviderTest extends PhodamTestCase
     {
         for ($i = 0; $i < 10; $i++) {
             $value = $this->provider->create();
-            $this->assertIsInt($value);
+            $this->assertIsFloat($value);
         }
     }
 }
