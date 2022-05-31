@@ -9,9 +9,12 @@ declare(strict_types=1);
 
 namespace Phodam;
 
-interface PhodamValueCreatorAware
+trait PhodamAwareTrait
 {
-    public function getPhodam(): PhodamValueCreatorInterface;
+    private PhodamInterface $phodam;
 
-    public function setPhodam(PhodamValueCreatorInterface $phodam): void;
+    public function setPhodam(PhodamInterface $phodam): void
+    {
+        $this->phodam = $phodam;
+    }
 }

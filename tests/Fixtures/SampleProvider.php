@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Fixtures;
 
-use Phodam\PhodamValueCreatorAware;
-use Phodam\PhodamValueCreatorAwareTrait;
+use Phodam\PhodamAware;
+use Phodam\PhodamAwareTrait;
 use Phodam\Provider\ProviderInterface;
 
-class SampleProvider implements ProviderInterface, PhodamValueCreatorAware
+class SampleProvider implements ProviderInterface, PhodamAware
 {
-    use PhodamValueCreatorAwareTrait;
+    use PhodamAwareTrait;
 
     public function create(array $overrides = [], array $config = [])
     {

@@ -16,7 +16,7 @@ use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
 
-class Phodam implements PhodamValueCreatorInterface
+class Phodam implements PhodamInterface
 {
     /**
      * A map of array-provider-name => ProviderInterface
@@ -160,7 +160,7 @@ class Phodam implements PhodamValueCreatorInterface
         }
 
         $provider = $config->getProvider();
-        if ($provider instanceof PhodamValueCreatorAware) {
+        if ($provider instanceof PhodamAware) {
             $provider->setPhodam($this);
         }
 
@@ -179,7 +179,7 @@ class Phodam implements PhodamValueCreatorInterface
         $name = $config->getName();
 
         $provider = $config->getProvider();
-        if ($provider instanceof PhodamValueCreatorAware) {
+        if ($provider instanceof PhodamAware) {
             $provider->setPhodam($this);
         }
 

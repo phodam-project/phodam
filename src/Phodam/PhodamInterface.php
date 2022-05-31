@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam;
 
-interface PhodamValueCreatorInterface
+interface PhodamInterface
 {
     /**
      * Create a named associative array
