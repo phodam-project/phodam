@@ -16,7 +16,7 @@ use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
 
-class Phodam
+class Phodam implements PhodamValueCreatorInterface
 {
     /**
      * A map of array-provider-name => ProviderInterface
@@ -41,13 +41,7 @@ class Phodam
     }
 
     /**
-     * Create a named associative array
-     *
-     * @param string $name the name of the array
-     * @param array<string, mixed> $overrides values to override in the array
-     * @param array<string, mixed> $config provider-specific information. an
-     *     open-ended array for the provider to pass information along
-     * @return array<string, mixed>
+     * @inheritDoc
      */
     public function createArray(
         string $name,
@@ -60,13 +54,7 @@ class Phodam
     }
 
     /**
-     * @template T
-     * @param class-string<T> $type type to create
-     * @param string|null $name the name of the class provider
-     * @param array<string, mixed> $overrides values to override
-     * @param array<string, mixed> $config provider-specific information. an
-     *     open-ended array for the provider to pass information along
-     * @return T
+     * @inheritDoc
      */
     public function create(
         string $type,
@@ -171,6 +159,11 @@ class Phodam
             );
         }
 
+        $provider = $config->getProvider();
+        if ($provider instanceof PhodamValueCreatorAware) {
+            $provider->setPhodam($this);
+        }
+
         $this->arrayProviders[$config->getName()] = $config->getProvider();
     }
 
@@ -184,7 +177,11 @@ class Phodam
     {
         $type = $config->getType();
         $name = $config->getName();
-        $typeProvider = $config->getProvider();
+
+        $provider = $config->getProvider();
+        if ($provider instanceof PhodamValueCreatorAware) {
+            $provider->setPhodam($this);
+        }
 
         if ($name) {
             // create the named type array if it doesn't exist
@@ -198,9 +195,9 @@ class Phodam
                     "A type provider of type {$type} with the name {$name} already exists"
                 );
             }
-            $this->namedProviders[$type][$name] = $typeProvider;
+            $this->namedProviders[$type][$name] = $provider;
         } else {
-            $this->providers[$type] = $typeProvider;
+            $this->providers[$type] = $provider;
         }
     }
 
