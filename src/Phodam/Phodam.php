@@ -9,32 +9,31 @@ declare(strict_types=1);
 
 namespace Phodam;
 
-use Phodam\Provider\TypeProviderConfig;
-use Phodam\Provider\TypeProviderFactory;
+use InvalidArgumentException;
+use Phodam\Provider\ProviderConfig;
+use Phodam\Provider\ProviderInterface;
 
 class Phodam
 {
-    private TypeProviderFactory $typeProviderFactory;
-
-    public function __construct(
-        TypeProviderFactory $typeProviderFactory = null
-    ) {
-        if ($typeProviderFactory == null) {
-            $typeProviderFactory = new TypeProviderFactory();
-        }
-        $this->typeProviderFactory = $typeProviderFactory;
-    }
+    /**
+     * A map of array-provider-name => ProviderInterface
+     * @var array<string, ProviderInterface>
+     */
+    private array $arrayProviders = [];
 
     /**
-     * Registers a TypeProvider using a TypeProviderConfig
-     *
-     * @param TypeProviderConfig $config
-     * @return self
+     * A map of class-string => ProviderInterface
+     * @var array<string, ProviderInterface>
      */
-    public function registerTypeProviderConfig(TypeProviderConfig $config): self
-    {
-        $this->typeProviderFactory->registerTypeProviderConfig($config);
-        return $this;
+    private array $providers = [];
+
+    /**
+     * A map of class-string => { provider-name => ProviderInterface }
+     * @var array<string, array<string, ProviderInterface>>
+     */
+    private array $namedProviders = [];
+
+    public function __construct() {
     }
 
     /**
@@ -51,14 +50,14 @@ class Phodam
         array $overrides = [],
         array $config = []
     ): array {
-        return $this->typeProviderFactory
+        return $this
             ->getArrayProvider($name)
             ->create($overrides, $config);
     }
 
     /**
      * @template T
-     * @param class-string<T> $class class to create
+     * @param class-string<T> $type type to create
      * @param string|null $name the name of the class provider
      * @param array<string, mixed> $overrides values to override
      * @param array<string, mixed> $config provider-specific information. an
@@ -66,70 +65,138 @@ class Phodam
      * @return T
      */
     public function create(
-        string $class,
+        string $type,
         string $name = null,
         array $overrides = [],
         array $config = []
     ) {
-        return $this->typeProviderFactory
-            ->getClassProvider($class, $name)
+        return $this
+            ->getTypeProvider($type, $name)
             ->create($overrides, $config);
     }
 
     /**
-     * Create a random float or a named float
+     * Registers a TypeProvider using a ProviderConfig
      *
-     * @param string|null $name the name of the float if any
-     * @param array<string, mixed> $config provider-specific information. an
-     *     open-ended array for the provider to pass information along
-     * @return float
+     * @param ProviderConfig $config
+     * @return void
      */
-    public function createFloat(
-        string $name = null,
-        array $config = []
-    ): float {
-        return $this->typeProviderFactory->getPrimitiveProvider(
-            PhodamTypes::PRIMITIVE_FLOAT,
-            $name
-        )
-            ->create([], $config);
+    public function registerProviderConfig(ProviderConfig $config)
+    {
+        $config->validate();
+
+        $isArray = $config->isArray();
+        $type = $config->getType();
+
+        if ($isArray) {
+            $this->registerArrayProviderConfig($config);
+            return;
+        }
+
+        if ($type) {
+            $this->registerTypeProviderConfig($config);
+            return;
+        }
+
+        // $config->validate() should always prevent us from getting here
+        throw new InvalidArgumentException(
+            "Unable to determine how to register type provider"
+        );
     }
 
     /**
-     * Create a random int or named int
+     * Returns an array provider
      *
-     * @param string|null $name the name of the int if any
-     * @param array<string, mixed> $config provider-specific information. an
-     *     open-ended array for the provider to pass information along
-     * @return int
+     * @param string $name the name of the array provider
+     * @return ProviderInterface
      */
-    public function createInt(
-        string $name = null,
-        array $config = []
-    ): int {
-        return $this->typeProviderFactory->getPrimitiveProvider(
-            PhodamTypes::PRIMITIVE_INT,
-            $name
-        )
-            ->create([], $config);
+    public function getArrayProvider(string $name): ProviderInterface
+    {
+        if (!array_key_exists($name, $this->arrayProviders)) {
+            throw new InvalidArgumentException(
+                "Unable to find an array provider with the name {$name}"
+            );
+        }
+
+        return $this->arrayProviders[$name];
     }
 
     /**
-     * Create a random string or named string
+     * Returns a type provider by type name and optionally name
      *
-     * @param string|null $name the name of the string if any
-     * @param array<string, mixed> $config provider-specific information. an
-     *     open-ended array for the provider to pass information along
-     * @return string
+     * @template T
+     * @param class-string<T> $type
+     * @param string|null $name
+     * @return ProviderInterface
      */
-    public function createString(
-        string $name = null,
-        array $config = []
-    ): string {
-        return $this->typeProviderFactory->getPrimitiveProvider(
-            PhodamTypes::PRIMITIVE_STRING,
-            $name
-        )
-            ->create([], $config);
+    public function getTypeProvider(string $type, ?string $name = null): ProviderInterface
+    {
+        // we're looking for a named provider
+        if ($name) {
+            if (
+                !array_key_exists($type, $this->namedProviders)
+                || !array_key_exists($name, $this->namedProviders[$type])
+            ) {
+                throw new InvalidArgumentException(
+                    "Unable to find a provider of type {$type} with the name {$name}"
+                );
+            }
+            return $this->namedProviders[$type][$name];
+        } else {
+            // looking for a default provider
+            if (!array_key_exists($type, $this->providers)) {
+                throw new InvalidArgumentException(
+                    "Unable to find a default provider of type {$type}"
+                );
+            }
+            return $this->providers[$type];
+        }
+    }
+
+    /**
+     * Registers a ProviderConfig for an array
+     *
+     * @param ProviderConfig $config
+     * @return void
+     */
+    private function registerArrayProviderConfig(ProviderConfig $config): void
+    {
+        if (array_key_exists($config->getName(), $this->arrayProviders)) {
+            throw new InvalidArgumentException(
+                "An array provider with the name {$config->getName()} already exists"
+            );
+        }
+
+        $this->arrayProviders[$config->getName()] = $config->getProvider();
+    }
+
+    /**
+     * Registers a ProviderConfig for a class
+     *
+     * @param ProviderConfig $config
+     * @return void
+     */
+    private function registerTypeProviderConfig(ProviderConfig $config): void
+    {
+        $type = $config->getType();
+        $name = $config->getName();
+        $typeProvider = $config->getProvider();
+
+        if ($name) {
+            // create the named type array if it doesn't exist
+            if (!array_key_exists($type, $this->namedProviders)) {
+                $this->namedProviders[$type] = [];
+            }
+
+            // check that we don't have a named provider for this type
+            if (array_key_exists($name, $this->namedProviders[$type])) {
+                throw new InvalidArgumentException(
+                    "A type provider of type {$type} with the name {$name} already exists"
+                );
+            }
+            $this->namedProviders[$type][$name] = $typeProvider;
+        } else {
+            $this->providers[$type] = $typeProvider;
+        }
     }
 }

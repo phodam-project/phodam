@@ -9,12 +9,11 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam;
 
+use InvalidArgumentException;
 use Phodam\Phodam;
-use Phodam\PhodamTypes;
-use Phodam\Provider\TypeProviderConfig;
-use Phodam\Provider\TypeProviderFactory;
-use Phodam\Provider\TypeProviderInterface;
-use Phodam\Tests\Fixtures\SampleTypeProvider;
+use Phodam\Provider\ProviderConfig;
+use Phodam\Tests\Fixtures\SampleArrayProvider;
+use Phodam\Tests\Fixtures\SampleProvider;
 use Phodam\Tests\Fixtures\UnregisteredClassType;
 
 /**
@@ -24,42 +23,208 @@ use Phodam\Tests\Fixtures\UnregisteredClassType;
 class PhodamTest extends PhodamTestCase
 {
     private Phodam $phodam;
-    private TypeProviderFactory $typeProviderFactoryMock;
+    private SampleProvider $provider;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->typeProviderFactoryMock =
-            $this->createMock(TypeProviderFactory::class);
 
-        $this->phodam = new Phodam($this->typeProviderFactoryMock);
+        $this->phodam = new Phodam();
+        $this->provider = new SampleProvider();
     }
 
     /**
-     * @covers ::__construct
+     * @covers ::registerProviderConfig
      */
-    public function testConstructorWithoutFactory(): void
+    public function testRegisterProviderConfigWithoutValidConfig(): void
     {
-        // covers the case where there is no passed in Factory
-        $phodam = new Phodam();
-        $this->assertInstanceOf(Phodam::class, $phodam);;
+        // without any configuring, we don't know if it's
+        // an array or a type
+        $config = new ProviderConfig($this->provider);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("A provider config must be declared for an array or a type");
+
+        $this->phodam->registerProviderConfig($config);
     }
 
+    /**
+     * @covers ::getArrayProvider
+     * @covers ::registerProviderConfig
+     * @covers ::registerArrayProviderConfig
+     */
+    public function testRegisterProviderConfigForArray(): void
+    {
+        $name = "MyCoolArray";
+
+        $config = (new ProviderConfig($this->provider))
+            ->forArray()
+            ->withName($name);
+
+        $this->phodam->registerProviderConfig($config);
+
+        $result = $this->phodam->getArrayProvider($name);
+
+        $this->assertSame($this->provider, $result);
+    }
 
     /**
      * @covers ::registerTypeProviderConfig
+     * @covers ::registerArrayProviderConfig
      */
-    public function testRegisterTypeProviderConfig(): void
+    public function testRegisterProviderConfigForArrayWithNameThatAlreadyExists(): void
     {
-        $typeProvider = new SampleTypeProvider();
-        $config = new TypeProviderConfig($typeProvider);
+        $name = "MyCoolArray";
+        $config = (new ProviderConfig($this->provider))
+            ->forArray()
+            ->withName($name);
 
-        $this->typeProviderFactoryMock->expects($this->once())
-            ->method('registerTypeProviderConfig')
-            ->with($config);
+        $this->phodam->registerProviderConfig($config);
 
-        $result = $this->phodam->registerTypeProviderConfig($config);
-        $this->assertEquals($result, $this->phodam);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "An array provider with the name MyCoolArray already exists"
+        );
+
+        $this->phodam->registerProviderConfig($config);
+    }
+
+    /**
+     * @covers ::getArrayProvider
+     */
+    public function testGetArrayProviderWithoutRegisteredName(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unable to find an array provider with the name MyUnregisteredName");
+
+        $this->phodam->getArrayProvider("MyUnregisteredName");
+    }
+
+    /**
+     * @covers ::getTypeProvider
+     * @covers ::registerProviderConfig
+     * @covers ::registerTypeProviderConfig
+     */
+    public function testRegisterProviderConfigForClassWithoutName(): void
+    {
+        $type = UnregisteredClassType::class;
+        $config = (new ProviderConfig($this->provider))
+            ->forType($type);
+
+        $this->phodam->registerProviderConfig($config);
+
+        $result = $this->phodam->getTypeProvider($type);
+
+        $this->assertSame($this->provider, $result);
+    }
+
+    /**
+     * @covers ::getTypeProvider
+     * @covers ::registerProviderConfig
+     * @covers ::registerTypeProviderConfig
+     */
+    public function testRegisterProviderConfigForClassWithName(): void
+    {
+        $type = UnregisteredClassType::class;
+        $name = "MyCoolClassProvider";
+        $config = (new ProviderConfig($this->provider))
+            ->forType($type)
+            ->withName($name);
+
+        $this->phodam->registerProviderConfig($config);
+
+        $result = $this->phodam->getTypeProvider($type, $name);
+
+        $this->assertSame($this->provider, $result);
+    }
+
+    /**
+     * @covers ::getTypeProvider
+     * @covers ::registerProviderConfig
+     * @covers ::registerTypeProviderConfig
+     */
+    public function testRegisterProviderConfigForTypeWithNameThatAlreadyExists(): void
+    {
+        $type = UnregisteredClassType::class;
+        $name = "MyCoolClassProvider";
+        $config = (new ProviderConfig($this->provider))
+            ->forType($type)
+            ->withName($name);
+
+        $this->phodam->registerProviderConfig($config);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage(
+            "A type provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyCoolClassProvider already exists"
+        );
+
+        $this->phodam->registerProviderConfig($config);
+    }
+
+    /**
+     * @covers ::getTypeProvider
+     */
+    public function testGetTypeProviderForTypeThatHasNoDefaultProvider(): void
+    {
+        $type = UnregisteredClassType::class;
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unable to find a default provider of type Phodam\Tests\Fixtures\UnregisteredClassType");
+
+        $this->phodam->getTypeProvider($type);
+    }
+
+    /**
+     * @covers ::getTypeProvider
+     */
+    public function testGetTypeProviderByNameForTypeThatHasNoProviders(): void
+    {
+        $class = UnregisteredClassType::class;
+        $name = "MyName";
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
+
+        $this->phodam->getTypeProvider($class, $name);
+    }
+
+    /**
+     * @covers ::getTypeProvider
+     */
+    public function testGetTypeProviderByNameForTypeThatHasNoNamedProviders(): void
+    {
+        $type = UnregisteredClassType::class;
+        $name = "MyName";
+
+        $config = (new ProviderConfig($this->provider))
+            ->forType($type);
+        $this->phodam->registerProviderConfig($config);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
+
+        $this->phodam->getTypeProvider($type, $name);
+    }
+
+
+    /**
+     * @covers ::getTypeProvider
+     */
+    public function testGetTypeProviderByNameForTypeWithoutRegisteredName(): void
+    {
+        $type = UnregisteredClassType::class;
+        $name = "MyName";
+
+        $config = (new ProviderConfig($this->provider))
+            ->forType($type)
+            ->withName("SomeOtherName");
+
+        $this->phodam->registerProviderConfig($config);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
+
+        $this->phodam->getTypeProvider($type, $name);
     }
 
     /**
@@ -69,27 +234,19 @@ class PhodamTest extends PhodamTestCase
     {
         $name = 'MyArrayName';
         $overrides = [
-            'field1' => 'value'
+            'field1' => 'my first value'
         ];
-        $createdArray = [
-            'field1' => 'value',
+        $expectedArray = [
+            'field1' => 'my first value',
             'field2' => 'second value'
         ];
 
-        $provider = $this->createMock(TypeProviderInterface::class);
-
-        $this->typeProviderFactoryMock->expects($this->once())
-            ->method('getArrayProvider')
-            ->with($name)
-            ->willReturn($provider);
-
-        $provider->expects($this->once())
-            ->method('create')
-            ->with($overrides)
-            ->willReturn($createdArray);
+        $provider = new SampleArrayProvider();
+        $config = (new ProviderConfig($provider))->forArray()->withName($name);
+        $this->phodam->registerProviderConfig($config);
 
         $result = $this->phodam->createArray($name, $overrides);
-        $this->assertEquals($result, $createdArray);
+        $this->assertEquals($expectedArray, $result);
     }
 
     /**
@@ -99,92 +256,14 @@ class PhodamTest extends PhodamTestCase
     {
         $name = 'MyUnregisteredClassType';
         $overrides = [
-            'override1' => 'overrideValue1'
+            'field1' => 'my overridden value'
         ];
-        $createdClass = new UnregisteredClassType();
-
-        $provider = $this->createMock(TypeProviderInterface::class);
-
-        $this->typeProviderFactoryMock->expects($this->once())
-            ->method('getClassProvider')
-            ->with(UnregisteredClassType::class, $name)
-            ->willReturn($provider);
-
-        $provider->expects($this->once())
-            ->method('create')
-            ->with($overrides)
-            ->willReturn($createdClass);
+        $expectedResult = new UnregisteredClassType('my overridden value', 'second value');
+        $provider = new SampleProvider();
+        $config = (new ProviderConfig($provider))->forType(UnregisteredClassType::class)->withName($name);
+        $this->phodam->registerProviderConfig($config);
 
         $result = $this->phodam->create(UnregisteredClassType::class, $name, $overrides);
-        $this->assertEquals($result, $createdClass);;
-    }
-
-    /**
-     * @covers ::createFloat
-     */
-    public function testCreateFloat(): void
-    {
-        $name = 'MyFloatName';
-        $createdFloat = 42.0;
-
-        $provider = $this->createMock(TypeProviderInterface::class);
-
-        $this->typeProviderFactoryMock->expects($this->once())
-            ->method('getPrimitiveProvider')
-            ->with(PhodamTypes::PRIMITIVE_FLOAT, $name)
-            ->willReturn($provider);
-
-        $provider->expects($this->once())
-            ->method('create')
-            ->willReturn($createdFloat);
-
-        $result = $this->phodam->createFloat($name);
-        $this->assertEquals($result, $createdFloat);
-    }
-
-    /**
-     * @covers ::createInt
-     */
-    public function testCreateInt(): void
-    {
-        $name = 'MyIntName';
-        $createdInt = 123;
-
-        $provider = $this->createMock(TypeProviderInterface::class);
-
-        $this->typeProviderFactoryMock->expects($this->once())
-            ->method('getPrimitiveProvider')
-            ->with(PhodamTypes::PRIMITIVE_INT, $name)
-            ->willReturn($provider);
-
-        $provider->expects($this->once())
-            ->method('create')
-            ->willReturn($createdInt);
-
-        $result = $this->phodam->createInt($name);
-        $this->assertEquals($result, $createdInt);
-    }
-
-    /**
-     * @covers ::createString
-     */
-    public function testCreateString(): void
-    {
-        $name = 'MyStringName';
-        $createdString = 'abcdef01-1234-5678-1234-abcdefabcdef';
-
-        $provider = $this->createMock(TypeProviderInterface::class);
-
-        $this->typeProviderFactoryMock->expects($this->once())
-            ->method('getPrimitiveProvider')
-            ->with(PhodamTypes::PRIMITIVE_STRING, $name)
-            ->willReturn($provider);
-
-        $provider->expects($this->once())
-            ->method('create')
-            ->willReturn($createdString);
-
-        $result = $this->phodam->createString($name);
-        $this->assertEquals($result, $createdString);
+        $this->assertEquals($expectedResult, $result);
     }
 }
