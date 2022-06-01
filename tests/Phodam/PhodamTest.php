@@ -259,13 +259,16 @@ class PhodamTest extends PhodamTestCase
         $overrides = [
             'field1' => 'my overridden value'
         ];
-        $expectedResult = new UnregisteredClassType('my overridden value', 'second value');
+
         $provider = new SampleProvider();
         $config = (new ProviderConfig($provider))->forType(UnregisteredClassType::class)->withName($name);
         $this->phodam->registerProviderConfig($config);
 
         $result = $this->phodam->create(UnregisteredClassType::class, $name, $overrides);
-        $this->assertEquals($expectedResult, $result);
+
+        $this->assertEquals('my overridden value', $result->getField1());
+        $this->assertIsString($result->getField2());
+        $this->assertNotEquals('second value', $result->getField2());
     }
 
     public function testCreateWithBuiltinString(): void
