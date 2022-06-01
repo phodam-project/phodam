@@ -1,5 +1,5 @@
 {
-  "name": "avehlies/phodam",
+  "name": "phodam/phodam",
   "description": "A library to provide populated objects for testing",
   "type": "library",
   "minimum-stability": "dev",
@@ -9,7 +9,7 @@
     "testing",
     "data objects"
   ],
-  "homepage": "https://gitlab.com/phodam/phodam",
+  "homepage": "https://github.com/avehlies/phodam",
   "readme": "README.md",
   "authors": [
     {
