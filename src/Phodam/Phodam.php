@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Phodam;
 
 use InvalidArgumentException;
+use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
 use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
@@ -36,7 +37,8 @@ class Phodam implements PhodamInterface
      */
     private array $namedProviders = [];
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->registerPrimitiveTypeProviders();
     }
 
@@ -218,5 +220,10 @@ class Phodam implements PhodamInterface
             (new ProviderConfig(new DefaultFloatTypeProvider()))
                 ->forType('float');
         $this->registerProviderConfig($floatProviderConfig);
+
+        $boolProviderConfig =
+            (new ProviderConfig(new DefaultBoolTypeProvider()))
+                ->forType('bool');
+        $this->registerProviderConfig($boolProviderConfig);
     }
 }

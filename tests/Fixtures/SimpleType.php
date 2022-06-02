@@ -9,15 +9,12 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Fixtures;
 
-use Phodam\PhodamAware;
-use Phodam\PhodamAwareTrait;
-use Phodam\Provider\ProviderInterface;
-
 class SimpleType
 {
     private int $myInt;
-    private float $myFloat;
-    private string $myString;
+    private ?float $myFloat;
+    private ?string $myString;
+    private bool $myBool;
 
     /**
      * @return int
@@ -36,34 +33,50 @@ class SimpleType
     }
 
     /**
-     * @return float
+     * @return ?float
      */
-    public function getMyFloat(): float
+    public function getMyFloat(): ?float
     {
         return $this->myFloat;
     }
 
     /**
-     * @param float $myFloat
+     * @param ?float $myFloat
      */
-    public function setMyFloat(float $myFloat): void
+    public function setMyFloat(?float $myFloat): void
     {
         $this->myFloat = $myFloat;
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getMyString(): string
+    public function getMyString(): ?string
     {
         return $this->myString;
     }
 
     /**
-     * @param string $myString
+     * @param ?string $myString
      */
-    public function setMyString(string $myString): void
+    public function setMyString(?string $myString): void
     {
         $this->myString = $myString;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMyBool(): bool
+    {
+        return $this->myBool;
+    }
+
+    /**
+     * @param bool $myBool
+     */
+    public function setMyBool(bool $myBool): void
+    {
+        $this->myBool = $myBool;
     }
 }

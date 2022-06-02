@@ -11,7 +11,7 @@ namespace Phodam\Provider;
 
 class GenericObjectTypeProvider implements ProviderInterface
 {
-    public function create(array $overrides = [], array $config = []): float
+    public function create(array $overrides = [], array $config = [])
     {
         /*
          * i really think that i should allow people to pass in a field config

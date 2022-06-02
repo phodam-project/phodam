@@ -33,9 +33,26 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
     public function testAnalyze(): void
     {
         $expected = [
-            'myInt' => 'int',
-            'myFloat' => 'float',
-            'myString' => 'string'
+            'myInt' => [
+                'type' => 'int',
+                'nullable' => false,
+                'array' => false
+            ],
+            'myFloat' => [
+                'type' => 'float',
+                'nullable' => true,
+                'array' => false
+            ],
+            'myString' => [
+                'type' => 'string',
+                'nullable' => true,
+                'array' => false
+            ],
+            'myBool' => [
+                'type' => 'bool',
+                'nullable' => false,
+                'array' => false
+            ]
         ];
 
         $result = $this->analyzer->analyze(SimpleType::class);
