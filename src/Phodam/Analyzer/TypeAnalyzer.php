@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
-class PhodamTypeAnalyzer
+class TypeAnalyzer
 {
     public function analyze(string $type): array
     {

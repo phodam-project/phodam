@@ -21,7 +21,7 @@ use Phodam\Tests\Fixtures\UnregisteredClassType;
  * @covers ::__construct
  * @covers ::registerPrimitiveTypeProviders
  */
-class PhodamTest extends PhodamTestCase
+class PhodamTest extends PhodamBaseTestCase
 {
     private Phodam $phodam;
     private SampleProvider $provider;

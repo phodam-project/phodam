@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace Phodam\Tests\Phodam\Provider\Builtin;
 
 use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
-use Phodam\Tests\Phodam\PhodamTestCase;
+use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\Primitive\DefaultFloatTypeProvider
  */
-class DefaultFloatTypeProviderTest extends PhodamTestCase
+class DefaultFloatTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultFloatTypeProvider $provider;
 

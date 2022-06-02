@@ -9,22 +9,22 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam;
 
-use Phodam\Analyzer\PhodamTypeAnalyzer;
+use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\Phodam;
 use Phodam\Tests\Fixtures\SampleProvider;
 use Phodam\Tests\Fixtures\SimpleType;
 
 /**
- * @coversDefaultClass \Phodam\Analyzer\PhodamTypeAnalyzer
+ * @coversDefaultClass \Phodam\Analyzer\TypeAnalyzer
  */
-class PhodamTypeAnalyzerTest extends PhodamTestCase
+class TypeAnalyzerTest extends PhodamBaseTestCase
 {
-    private PhodamTypeAnalyzer $analyzer;
+    private TypeAnalyzer $analyzer;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->analyzer = new PhodamTypeAnalyzer();
+        $this->analyzer = new TypeAnalyzer();
     }
 
     /**
