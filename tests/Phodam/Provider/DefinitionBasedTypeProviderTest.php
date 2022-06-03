@@ -83,6 +83,70 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->assertEquals($myBool, $result->isMyBool());
     }
 
+
+    /**
+     * @covers ::__construct
+     * @covers ::create
+     */
+    public function testCreateWithNamedProvider()
+    {
+        $myInt = 42;
+        $myFloat = 98.6;
+        $myString = 'My Named String';
+        $myBool = false;
+
+        $this->phodam->expects($this->exactly(4))
+            ->method('create')
+            ->willReturnMap([
+                [ 'int', null, [], [], $myInt ],
+                [ 'float', null, [], [], $myFloat ],
+                [ 'string', 'MyNamedString', [], [], $myString ],
+                [ 'bool', null, [], [], $myBool ]
+            ]);
+
+        $type = SimpleType::class;
+        $definition = [
+            'myInt' => [
+                'type' => 'int',
+                'name' => null,
+                'overrides' => [],
+                'nullable' => false,
+                'array' => false
+            ],
+            'myFloat' => [
+                'type' => 'float',
+                'name' => null,
+                'overrides' => [],
+                'nullable' => true,
+                'array' => false
+            ],
+            'myString' => [
+                'type' => 'string',
+                'name' => 'MyNamedString',
+                'overrides' => [],
+                'nullable' => true,
+                'array' => false
+            ],
+            'myBool' => [
+                'type' => 'bool',
+                'name' => null,
+                'overrides' => [],
+                'nullable' => false,
+                'array' => false
+            ]
+        ];
+
+        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider->setPhodam($this->phodam);
+
+        $result = $provider->create();
+        $this->assertInstanceOf(SimpleType::class, $result);
+        $this->assertEquals($myInt, $result->getMyInt());
+        $this->assertEquals($myFloat, $result->getMyFloat());
+        $this->assertEquals($myString, $result->getMyString());
+        $this->assertEquals($myBool, $result->isMyBool());
+    }
+
     /**
      * @covers ::__construct
      * @covers ::create

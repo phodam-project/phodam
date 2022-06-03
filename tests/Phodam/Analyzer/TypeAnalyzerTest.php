@@ -36,21 +36,33 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         $expected = [
             'myInt' => [
                 'type' => 'int',
+                'name' => null,
+                'overrides' => [],
+                'config' => [],
                 'nullable' => false,
                 'array' => false
             ],
             'myFloat' => [
                 'type' => 'float',
+                'name' => null,
+                'overrides' => [],
+                'config' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myString' => [
                 'type' => 'string',
+                'name' => null,
+                'overrides' => [],
+                'config' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myBool' => [
                 'type' => 'bool',
+                'name' => null,
+                'overrides' => [],
+                'config' => [],
                 'nullable' => false,
                 'array' => false
             ]
@@ -76,11 +88,17 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         $expectedMappedFields = [
             'myFloat' => [
                 'type' => 'float',
+                'name' => null,
+                'overrides' => [],
+                'config' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myBool' => [
                 'type' => 'bool',
+                'name' => null,
+                'overrides' => [],
+                'config' => [],
                 'nullable' => false,
                 'array' => false
             ]

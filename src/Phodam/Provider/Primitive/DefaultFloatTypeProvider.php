@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
-use Phodam\Provider\ProviderInterface;
+use Phodam\Provider\TypedProviderInterface;
 
 /**
  * @template T extends float
- * @template-implements ProviderInterface<float>
+ * @template-implements TypedProviderInterface<float>
  */
-class DefaultFloatTypeProvider implements ProviderInterface
+class DefaultFloatTypeProvider implements TypedProviderInterface
 {
     public function create(array $overrides = [], array $config = []): float
     {

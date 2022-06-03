@@ -9,13 +9,13 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
-use Phodam\Provider\ProviderInterface;
+use Phodam\Provider\TypedProviderInterface;
 
 /**
  * @template T extends bool
- * @template-implements ProviderInterface<bool>
+ * @template-implements TypedProviderInterface<bool>
  */
-class DefaultBoolTypeProvider implements ProviderInterface
+class DefaultBoolTypeProvider implements TypedProviderInterface
 {
     /**
      * @inheritDoc

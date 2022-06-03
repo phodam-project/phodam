@@ -13,6 +13,9 @@ use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
 use ReflectionClass;
 
+/**
+ * @template T
+ */
 class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
 {
     use PhodamAwareTrait;
@@ -21,6 +24,10 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
     /** @var array<string, array<string, mixed>> */
     private array $definition;
 
+    /**
+     * @param class-string<T> $type
+     * @param array<string, array<string, mixed>> $definition
+     */
     public function __construct(
         string $type, array $definition
     ) {
@@ -28,6 +35,12 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         $this->definition = $definition;
     }
 
+    /**
+     * @param array<string, mixed> $overrides
+     * @param array<string, mixed> $config
+     * @return mixed
+     * @throws \ReflectionException
+     */
     public function create(array $overrides = [], array $config = [])
     {
         $refClass = new ReflectionClass($this->type);
@@ -38,7 +51,12 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             if (array_key_exists($fieldName, $overrides)) {
                 $val = $overrides[$fieldName];
             } else {
-                $val = $this->phodam->create($def['type']);
+                $val = $this->phodam->create(
+                    $def['type'],
+                    $def['name'] ?? null,
+                    $def['overrides'] ?? [],
+                    $def['config'] ?? []
+                );
             }
             $refProperty->setAccessible(true);
             $refProperty->setValue($obj, $val);
