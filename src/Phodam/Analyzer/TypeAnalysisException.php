@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
-use JetBrains\PhpStorm\Internal\LanguageLevelTypeAware;
-use ReflectionNamedType;
-
 class TypeAnalysisException extends \Exception
 {
     private string $type;

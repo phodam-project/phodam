@@ -10,12 +10,15 @@ declare(strict_types=1);
 namespace Phodam;
 
 use InvalidArgumentException;
+use Phodam\Analyzer\TypeAnalyzer;
+use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
 use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
+use Phodam\Provider\ProviderNotFoundException;
 
 class Phodam implements PhodamInterface
 {
@@ -37,9 +40,12 @@ class Phodam implements PhodamInterface
      */
     private array $namedProviders = [];
 
+    private TypeAnalyzer $typeAnalyzer;
+
     public function __construct()
     {
         $this->registerPrimitiveTypeProviders();
+        $this->typeAnalyzer = new TypeAnalyzer();
     }
 
     /**
@@ -64,9 +70,18 @@ class Phodam implements PhodamInterface
         array $overrides = [],
         array $config = []
     ) {
-        return $this
-            ->getTypeProvider($type, $name)
-            ->create($overrides, $config);
+        try {
+            $provider = $this
+                ->getTypeProvider($type, $name);
+        } catch (ProviderNotFoundException $ex) {
+            $definition = $this->typeAnalyzer->analyze($type);
+            $provider = new DefinitionBasedTypeProvider($type, $definition);
+            $providerConfig = (new ProviderConfig($provider))
+                ->forType($type);
+            $this->registerProviderConfig($providerConfig);
+        }
+
+        return $provider->create($overrides, $config);
     }
 
     /**
@@ -122,8 +137,9 @@ class Phodam implements PhodamInterface
      * @param class-string<T> $type
      * @param string|null $name
      * @return ProviderInterface
+     * @throws ProviderNotFoundException if a provider can't be found
      */
-    public function getTypeProvider(string $type, ?string $name = null): ProviderInterface
+    public function getTypeProvider(string $type, ?string $name = null): ?ProviderInterface
     {
         // we're looking for a named provider
         if ($name) {
@@ -139,7 +155,8 @@ class Phodam implements PhodamInterface
         } else {
             // looking for a default provider
             if (!array_key_exists($type, $this->providers)) {
-                throw new InvalidArgumentException(
+                throw new ProviderNotFoundException(
+                    $type,
                     "Unable to find a default provider of type {$type}"
                 );
             }

@@ -1058,12 +1058,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "4e9e2d0d96152df1c75f2859f715ee69713f18e5"
+                "reference": "7591758f528801650902e006691101d64c15ee5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4e9e2d0d96152df1c75f2859f715ee69713f18e5",
-                "reference": "4e9e2d0d96152df1c75f2859f715ee69713f18e5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7591758f528801650902e006691101d64c15ee5b",
+                "reference": "7591758f528801650902e006691101d64c15ee5b",
                 "shasum": ""
             },
             "require": {
@@ -1110,7 +1110,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-06-02T16:02:37+00:00"
+            "time": "2022-06-03T13:55:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4278,5 +4278,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }

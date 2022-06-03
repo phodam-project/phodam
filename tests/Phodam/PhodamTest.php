@@ -12,8 +12,10 @@ namespace Phodam\Tests\Phodam;
 use InvalidArgumentException;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
+use Phodam\Provider\ProviderNotFoundException;
 use Phodam\Tests\Fixtures\SampleArrayProvider;
 use Phodam\Tests\Fixtures\SampleProvider;
+use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Fixtures\UnregisteredClassType;
 
 /**
@@ -169,7 +171,7 @@ class PhodamTest extends PhodamBaseTestCase
     {
         $type = UnregisteredClassType::class;
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ProviderNotFoundException::class);
         $this->expectExceptionMessage("Unable to find a default provider of type Phodam\Tests\Fixtures\UnregisteredClassType");
 
         $this->phodam->getTypeProvider($type);
@@ -269,6 +271,45 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertEquals('my overridden value', $result->getField1());
         $this->assertIsString($result->getField2());
         $this->assertNotEquals('second value', $result->getField2());
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateWithoutTypeProviderExisting(): void
+    {
+        $result = $this->phodam->create(SimpleType::class);
+
+        $this->assertInstanceOf(SimpleType::class, $result);
+        $this->assertIsInt($result->getMyInt());
+        $this->assertIsFloat($result->getMyFloat());
+        $this->assertIsString($result->getMyString());
+        $this->assertIsBool($result->isMyBool());
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateWithoutTypeProviderExistingAndWithOverrides(): void
+    {
+        $overrides = [
+            'myFloat' => 98.1,
+            'myString' => 'Cool String'
+        ];
+
+        $result = $this->phodam->create(
+            SimpleType::class,
+            null,
+            $overrides
+        );
+
+        $this->assertInstanceOf(SimpleType::class, $result);
+        $this->assertIsInt($result->getMyInt());
+        $this->assertIsFloat($result->getMyFloat());
+        $this->assertEquals($overrides['myFloat'], $result->getMyFloat());
+        $this->assertIsString($result->getMyString());
+        $this->assertEquals($overrides['myString'], $result->getMyString());
+        $this->assertIsBool($result->isMyBool());
     }
 
     public function testCreateWithBuiltinString(): void
