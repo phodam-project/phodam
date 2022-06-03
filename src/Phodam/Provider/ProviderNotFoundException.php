@@ -18,7 +18,8 @@ class ProviderNotFoundException extends Exception
     /**
      * @param string $type
      */
-    public function __construct(string $type, string $message = '') {
+    public function __construct(string $type, string $message = '')
+    {
         parent::__construct($message);
         $this->type = $type;
     }

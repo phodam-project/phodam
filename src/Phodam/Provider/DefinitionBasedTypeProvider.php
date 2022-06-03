@@ -29,7 +29,8 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
      * @param array<string, array<string, mixed>> $definition
      */
     public function __construct(
-        string $type, array $definition
+        string $type,
+        array $definition
     ) {
         $this->type = $type;
         $this->definition = $definition;

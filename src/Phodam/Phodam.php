@@ -75,22 +75,34 @@ class Phodam implements PhodamInterface
                 ->getTypeProvider($type, $name);
         } catch (ProviderNotFoundException $ex) {
             $definition = $this->typeAnalyzer->analyze($type);
-            $provider = new DefinitionBasedTypeProvider($type, $definition);
-            $providerConfig = (new ProviderConfig($provider))
-                ->forType($type);
-            $this->registerProviderConfig($providerConfig);
+            $provider = $this->registerTypeDefinition($type, $definition);
         }
 
         return $provider->create($overrides, $config);
     }
 
     /**
+     * @param string $type
+     * @param array<string, array<string, mixed>> $definition
+     * @return ProviderInterface
+     */
+    public function registerTypeDefinition(string $type, array $definition): ProviderInterface
+    {
+        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $providerConfig = (new ProviderConfig($provider))
+            ->forType($type);
+        $this->registerProviderConfig($providerConfig);
+
+        return $provider;
+    }
+
+    /**
      * Registers a TypeProvider using a ProviderConfig
      *
      * @param ProviderConfig $config
-     * @return void
+     * @return self
      */
-    public function registerProviderConfig(ProviderConfig $config)
+    public function registerProviderConfig(ProviderConfig $config): self
     {
         $config->validate();
 
@@ -99,12 +111,12 @@ class Phodam implements PhodamInterface
 
         if ($isArray) {
             $this->registerArrayProviderConfig($config);
-            return;
+            return $this;
         }
 
         if ($type) {
             $this->registerTypeProviderConfig($config);
-            return;
+            return $this;
         }
 
         // $config->validate() should always prevent us from getting here
