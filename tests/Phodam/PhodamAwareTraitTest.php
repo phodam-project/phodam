@@ -15,7 +15,7 @@ use Phodam\Tests\Fixtures\SampleProvider;
 /**
  * @coversDefaultClass \Phodam\PhodamAwareTrait
  */
-class PhodamAwareTraitTest extends PhodamTestCase
+class PhodamAwareTraitTest extends PhodamBaseTestCase
 {
     private Phodam $phodam;
 

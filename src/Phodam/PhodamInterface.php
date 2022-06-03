@@ -27,17 +27,16 @@ interface PhodamInterface
     ): array;
 
     /**
-     * @template T
-     * @param class-string<T> $type type to create
+     * @param string $type type to create
      * @param string|null $name the name of the class provider
      * @param array<string, mixed> $overrides values to override
      * @param array<string, mixed> $config provider-specific information. an
      *     open-ended array for the provider to pass information along
-     * @return T
+     * @return mixed
      */
     public function create(
         string $type,
-        string $name = null,
+        ?string $name = null,
         array $overrides = [],
         array $config = []
     );

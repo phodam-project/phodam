@@ -12,13 +12,17 @@ namespace Phodam\Provider\Primitive;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
- * @template T extends int
- * @template-implements TypedProviderInterface<int>
+ * @template T extends bool
+ * @template-implements TypedProviderInterface<bool>
  */
-class DefaultIntTypeProvider implements TypedProviderInterface
+class DefaultBoolTypeProvider implements TypedProviderInterface
 {
-    public function create(array $overrides = [], array $config = []): int
+    /**
+     * @inheritDoc
+     * @return bool
+     */
+    public function create(array $overrides = [], array $config = []): bool
     {
-        return rand(-10000, 10000);
+        return (bool) rand(0, 1);
     }
 }

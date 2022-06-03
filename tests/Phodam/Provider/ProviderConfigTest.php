@@ -14,12 +14,12 @@ use InvalidArgumentException;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
 use Phodam\Tests\Fixtures\SampleProvider;
-use Phodam\Tests\Phodam\PhodamTestCase;
+use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\ProviderConfig
  */
-class ProviderConfigTest extends PhodamTestCase
+class ProviderConfigTest extends PhodamBaseTestCase
 {
     private ProviderInterface $provider;
 

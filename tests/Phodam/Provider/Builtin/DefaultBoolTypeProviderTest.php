@@ -9,19 +9,20 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam\Provider\Builtin;
 
-use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
+use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
+use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\Primitive\DefaultFloatTypeProvider
+ * @coversDefaultClass \Phodam\Provider\Primitive\DefaultBoolTypeProvider
  */
-class DefaultFloatTypeProviderTest extends PhodamBaseTestCase
+class DefaultBoolTypeProviderTest extends PhodamBaseTestCase
 {
-    private DefaultFloatTypeProvider $provider;
+    private DefaultBoolTypeProvider $provider;
 
     public function setUp(): void
     {
-        $this->provider = new DefaultFloatTypeProvider();
+        $this->provider = new DefaultBoolTypeProvider();
     }
 
     /**
@@ -31,7 +32,7 @@ class DefaultFloatTypeProviderTest extends PhodamBaseTestCase
     {
         for ($i = 0; $i < 10; $i++) {
             $value = $this->provider->create();
-            $this->assertIsFloat($value);
+            $this->assertIsBool($value);
         }
     }
 }
