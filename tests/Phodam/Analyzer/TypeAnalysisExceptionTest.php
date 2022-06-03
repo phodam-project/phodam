@@ -22,10 +22,9 @@ class TypeAnalysisExceptionTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::getType
-     * @covers ::getMessage
      * @covers ::getFieldNames
      * @covers ::getMappedFields
-     * @covres ::getUnmappedFields
+     * @covers ::getUnmappedFields
      */
     public function testConstruct(): void
     {
