@@ -9,10 +9,12 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam;
 
+use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\Phodam;
 use Phodam\Tests\Fixtures\SampleProvider;
 use Phodam\Tests\Fixtures\SimpleType;
+use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 
 /**
  * @coversDefaultClass \Phodam\Analyzer\TypeAnalyzer
@@ -57,5 +59,42 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
 
         $result = $this->analyzer->analyze(SimpleType::class);
         $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @covers ::analyze
+     */
+    public function testAnalyzeWithUnmappedFields(): void
+    {
+        $expectedMessage = "Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes: "
+            . "Unable to map fields: myInt, myString";
+        $expectedFieldNames = [
+            'myInt', 'myFloat', 'myString', 'myBool'
+        ];
+        $expectedUnmappedFields = [
+            'myInt', 'myString'
+        ];
+        $expectedMappedFields = [
+            'myFloat' => [
+                'type' => 'float',
+                'nullable' => true,
+                'array' => false
+            ],
+            'myBool' => [
+                'type' => 'bool',
+                'nullable' => false,
+                'array' => false
+            ]
+        ];
+        try {
+            $result = $this->analyzer->analyze(SimpleTypeMissingSomeFieldTypes::class);
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(TypeAnalysisException::class, $ex);
+            $this->assertEquals(SimpleTypeMissingSomeFieldTypes::class, $ex->getType());
+            $this->assertEquals($expectedMessage, $ex->getMessage());
+            $this->assertEquals($expectedFieldNames, $ex->getFieldNames());
+            $this->assertEquals($expectedUnmappedFields, $ex->getUnmappedFields());
+            $this->assertEquals($expectedMappedFields, $ex->getMappedFields());
+        }
     }
 }

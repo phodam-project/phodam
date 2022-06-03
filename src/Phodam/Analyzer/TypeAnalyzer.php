@@ -22,19 +22,36 @@ class TypeAnalyzer
     {
         $class = new \ReflectionClass($type);
 
-        $fields = [];
+        $fieldNames = [];
+        $unmappedFields = [];
+
+        $mappedFields = [];
         foreach ($class->getProperties() as $property) {
+            $fieldNames[] = $property->getName();
+
             /** @var null|ReflectionNamedType $propertyType */
             $propertyType = $property->getType();
             if ($propertyType === null) {
-                throw new \Exception('oops');
+                $unmappedFields[] = $property->getName();
+                continue;
             }
-            $fields[$property->getName()] = [
+            $mappedFields[$property->getName()] = [
                 'type' => $propertyType->getName(),
                 'nullable' => $propertyType->allowsNull(),
                 'array' => false
             ];
         }
-        return $fields;
+
+        if (!empty($unmappedFields)) {
+            throw new TypeAnalysisException(
+                $type,
+                "$type: Unable to map fields: " . join(', ', $unmappedFields),
+                $fieldNames,
+                $mappedFields,
+                $unmappedFields
+            );
+        }
+
+        return $mappedFields;
     }
 }
