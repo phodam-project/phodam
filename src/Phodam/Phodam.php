@@ -53,10 +53,9 @@ class Phodam implements PhodamInterface
      */
     public function createArray(
         string $name,
-        array  $overrides = [],
-        array  $config = []
-    ): array
-    {
+        array $overrides = [],
+        array $config = []
+    ): array {
         return $this
             ->getArrayProvider($name)
             ->create($overrides, $config);
@@ -68,10 +67,9 @@ class Phodam implements PhodamInterface
     public function create(
         string $type,
         string $name = null,
-        array  $overrides = [],
-        array  $config = []
-    )
-    {
+        array $overrides = [],
+        array $config = []
+    ) {
         try {
             $provider = $this
                 ->getTypeProvider($type, $name);
@@ -85,7 +83,7 @@ class Phodam implements PhodamInterface
 
     /**
      * @param string $type
-     * @param array $definition
+     * @param array<string, array<string, mixed>> $definition
      * @return ProviderInterface
      */
     public function registerTypeDefinition(string $type, array $definition): ProviderInterface
