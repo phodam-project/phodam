@@ -11,11 +11,14 @@ namespace Phodam\Provider\Primitive;
 
 use Phodam\Provider\ProviderInterface;
 
+/**
+ * @template T extends float
+ * @template-implements ProviderInterface<float>
+ */
 class DefaultFloatTypeProvider implements ProviderInterface
 {
     public function create(array $overrides = [], array $config = []): float
     {
-        $value = rand(-10000, 10000) + (rand(0, 100) / 100);
-        return $value;
+        return rand(-10000, 10000) + (rand(0, 100) / 100);
     }
 }

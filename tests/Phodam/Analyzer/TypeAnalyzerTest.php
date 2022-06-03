@@ -7,14 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam;
+namespace Phodam\Tests\Phodam\Analyzer;
 
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\Phodam;
-use Phodam\Tests\Fixtures\SampleProvider;
 use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
+use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Analyzer\TypeAnalyzer

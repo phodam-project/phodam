@@ -11,6 +11,10 @@ namespace Phodam\Provider\Primitive;
 
 use Phodam\Provider\ProviderInterface;
 
+/**
+ * @template T extends string
+ * @template-implements ProviderInterface<string>
+ */
 class DefaultStringTypeProvider implements ProviderInterface
 {
     public function create(array $overrides = [], array $config = []): string

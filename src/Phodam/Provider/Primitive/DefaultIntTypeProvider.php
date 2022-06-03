@@ -11,6 +11,10 @@ namespace Phodam\Provider\Primitive;
 
 use Phodam\Provider\ProviderInterface;
 
+/**
+ * @template T extends int
+ * @template-implements ProviderInterface<int>
+ */
 class DefaultIntTypeProvider implements ProviderInterface
 {
     public function create(array $overrides = [], array $config = []): int
