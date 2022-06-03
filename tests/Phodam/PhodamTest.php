@@ -261,7 +261,7 @@ class PhodamTest extends PhodamBaseTestCase
         try {
             $this->phodam->getTypeProvider($type);
         } catch (ProviderNotFoundException $ex) {
-            $this->assertTrue(true,  "'Provider was found, it shouldn't have been");
+            $this->assertTrue(true,  "Provider was found, it shouldn't have been");
         }
 
         // try creating an object of the type, it shouldn't find a type provider
@@ -328,6 +328,18 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertEquals('my overridden value', $result->getField1());
         $this->assertIsString($result->getField2());
         $this->assertNotEquals('second value', $result->getField2());
+
+        $customConfig = [
+            'minYear' => 1990,
+            'maxYear' => 2000
+        ];
+        $result = $this->phodam->create(UnregisteredClassType::class, $name, $overrides, $customConfig);
+        $this->assertEquals('my overridden value', $result->getField1());
+        $this->assertIsString($result->getField2());
+        $this->assertNotEquals('second value', $result->getField2());
+        $this->assertIsInt($result->getField3());
+        $this->assertGreaterThanOrEqual(1990, $result->getField3());
+        $this->assertLessThanOrEqual(2000, $result->getField3());
     }
 
     /**

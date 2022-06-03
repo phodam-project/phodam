@@ -13,12 +13,14 @@ class UnregisteredClassType
 {
     private string $field1;
     private string $field2;
+    private int $field3;
 
     public function __construct(
-        string $field1, string $field2
+        string $field1, string $field2, int $field3
     ) {
         $this->field1 = $field1;
         $this->field2 = $field2;
+        $this->field3 = $field3;
     }
 
     /**
@@ -36,4 +38,14 @@ class UnregisteredClassType
     {
         return $this->field2;
     }
+
+    /**
+     * @return int
+     */
+    public function getField3(): int
+    {
+        return $this->field3;
+    }
+
+
 }

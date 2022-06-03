@@ -21,15 +21,31 @@ class SampleProvider implements ProviderInterface, PhodamAware
     {
         $defaults = [
             'field1' => $this->phodam->create('string'),
-            'field2' => $this->phodam->create('string')
+            'field2' => $this->phodam->create('string'),
+            'field3' => $this->phodam->create('int')
         ];
         $values = array_merge(
             $defaults,
             $overrides
         );
+
+        $minYear = PHP_INT_MIN;
+        $maxYear = PHP_INT_MAX;
+        if(isset($config['minYear'])) {
+            $minYear = $config['minYear'];
+        }
+        if(isset($config['maxYear'])) {
+            $maxYear = $config['maxYear'];
+        }
+
+        if ($minYear !== PHP_INT_MIN || $maxYear !== PHP_INT_MAX) {
+            $values['field3'] = rand($minYear, $maxYear);
+        }
+
         return new UnregisteredClassType(
             $values['field1'],
-            $values['field2']
+            $values['field2'],
+            $values['field3']
         );
     }
 }
