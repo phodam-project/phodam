@@ -10,12 +10,14 @@ declare(strict_types=1);
 namespace Phodam\Tests\Phodam;
 
 use InvalidArgumentException;
+use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderNotFoundException;
 use Phodam\Tests\Fixtures\SampleArrayProvider;
 use Phodam\Tests\Fixtures\SampleProvider;
 use Phodam\Tests\Fixtures\SimpleType;
+use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use Phodam\Tests\Fixtures\UnregisteredClassType;
 
 /**
@@ -228,6 +230,61 @@ class PhodamTest extends PhodamBaseTestCase
         $this->expectExceptionMessage("Unable to find a provider of type Phodam\Tests\Fixtures\UnregisteredClassType with the name MyName");
 
         $this->phodam->getTypeProvider($type, $name);
+    }
+
+    /**
+     * Tests that a TypeProvider doesn't exist for a type, then after registering a definition,
+     * it can create a value of that type
+     *
+     * @covers ::registerTypeDefinition
+     */
+    public function testRegisterTypeDefinition(): void
+    {
+        $type = SimpleTypeMissingSomeFieldTypes::class;
+        $definition = [
+            'myInt' => [
+                'type' => 'int'
+            ],
+            'myFloat' => [
+                'type' => 'float',
+                'nullable' => true
+            ],
+            'myString' => [
+                'type' => 'string'
+            ],
+            'myBool' => [
+                'type' => 'bool'
+            ]
+        ];
+
+        // try getting a type provider that exists already, it shouldn't, so an exception should be thrown
+        try {
+            $this->phodam->getTypeProvider($type);
+        } catch (ProviderNotFoundException $ex) {
+            $this->assertTrue(true,  "'Provider was found, it shouldn't have been");
+        }
+
+        // try creating an object of the type, it shouldn't find a type provider
+        // so when it doesn't find one, it will try to analyze the type to create a definition
+        // it shouldn't be able to since it's not a well-defined type
+        try {
+            $this->phodam->create($type);
+        } catch (TypeAnalysisException $ex) {
+            $this->assertInstanceOf(TypeAnalysisException::class, $ex);
+            $this->assertEquals(
+                'Phodam\\Tests\\Fixtures\\SimpleTypeMissingSomeFieldTypes: Unable to map fields: myInt, myString',
+                $ex->getMessage()
+            );
+        }
+
+        $this->phodam->registerTypeDefinition($type, $definition);
+
+        $result = $this->phodam->create($type);
+        $this->assertInstanceOf(SimpleTypeMissingSomeFieldTypes::class, $result);
+        $this->assertIsInt($result->getMyInt());
+        $this->assertIsFloat($result->getMyFloat());
+        $this->assertIsString($result->getMyString());
+        $this->assertIsBool($result->isMyBool());
     }
 
     /**
