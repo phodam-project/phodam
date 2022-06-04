@@ -21,6 +21,6 @@ class DefaultIntTypeProvider implements TypedProviderInterface
     {
         $min = $config['min'] ?? -10000;
         $max = $config['max'] ?? 10000;
-        return rand(-$min, $max);
+        return rand($min, $max);
     }
 }
