@@ -12,6 +12,7 @@ namespace Phodam\Provider;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
 use ReflectionClass;
+use ReflectionProperty;
 
 /**
  * @template T
@@ -44,6 +45,22 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
      */
     public function create(array $overrides = [], array $config = [])
     {
+        // okay, so here's some thoughts.
+        // a definition shouldn't have to be complete, we should only HAVE
+        //     to define the fields that the type analyzer can't handle
+        // not sure the order on how i want to do this, but...
+        // 1. get a list of class fields
+        // 2. get a list of definition fields
+        // 3. check to see which fields don't overlap
+        // 4. if the definition handles it all, then that's fine
+        // 5. if it doesn't, start up a type analyzer
+        // 6. generate a definition for the type analyzer, if it completes
+        //    then fill in the remaining fields with the results
+        // 7. if it throws an exception, check the $mappedFields from
+        //    the exception
+        // 8. if $mappedFields covers the difference in fields, then you're good
+        // 9. if it doesn't, then throw an exception and give up
+
         $refClass = new ReflectionClass($this->type);
         $obj = $refClass->newInstanceWithoutConstructor();
 

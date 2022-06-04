@@ -296,17 +296,16 @@ class PhodamTest extends PhodamBaseTestCase
         $overrides = [
             'field1' => 'my first value'
         ];
-        $expectedArray = [
-            'field1' => 'my first value',
-            'field2' => 'second value'
-        ];
 
         $provider = new SampleArrayProvider();
         $config = (new ProviderConfig($provider))->forArray()->withName($name);
         $this->phodam->registerProviderConfig($config);
 
         $result = $this->phodam->createArray($name, $overrides);
-        $this->assertEquals($expectedArray, $result);
+        $this->assertIsArray($result);
+        $this->assertEquals('my first value', $result['field1']);
+        $this->assertEquals('second value', $result['field2']);
+        $this->assertIsInt($result['field3']);
     }
 
     /**
