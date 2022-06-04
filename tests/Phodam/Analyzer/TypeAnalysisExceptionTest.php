@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Phodam\Tests\Phodam\Analyzer;
 
 use Phodam\Analyzer\TypeAnalysisException;
-use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
 

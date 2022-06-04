@@ -9,14 +9,13 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam\Provider;
 
-use Phodam\Provider\ProviderNotFoundException;
 use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\ProviderNotFoundException
+ * @coversDefaultClass \Phodam\Provider\UnableToGenerateTypeException
  */
-class ProviderNotFoundExceptionTest extends PhodamBaseTestCase
+class UnableToGenerateTypeException extends PhodamBaseTestCase
 {
     /**
      * @covers ::__construct
@@ -27,7 +26,7 @@ class ProviderNotFoundExceptionTest extends PhodamBaseTestCase
         $message = 'My Message Here';
         $type = SimpleType::class;
 
-        $ex = new ProviderNotFoundException(
+        $ex = new UnableToGenerateTypeException(
             $type,
             $message
         );

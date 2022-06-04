@@ -13,7 +13,10 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
+use Phodam\Provider\UnableToGenerateTypeException;
 use Phodam\Tests\Fixtures\SimpleType;
+use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
+use Phodam\Tests\Fixtures\SimpleTypeWithoutTypes;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
@@ -200,5 +203,134 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->assertEquals($myFloat, $result->getMyFloat());
         $this->assertEquals($overrides['myString'], $result->getMyString());
         $this->assertEquals($overrides['myBool'], $result->isMyBool());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::create
+     */
+    public function testCreateSimpleTypeWithoutTypesHasFullDefinition()
+    {
+        $myInt = 42;
+        $myFloat = 98.6;
+        $myString = 'My String';
+        $myBool = false;
+
+        $this->phodam->expects($this->exactly(4))
+            ->method('create')
+            ->willReturnMap([
+                [ 'int', null, [], [], $myInt ],
+                [ 'float', null, [], [], $myFloat ],
+                [ 'string', null, [], [], $myString ],
+                [ 'bool', null, [], [], $myBool ]
+            ]);
+
+        $type = SimpleTypeWithoutTypes::class;
+        $definition = [
+            'myInt' => [
+                'type' => 'int',
+                'nullable' => false,
+                'array' => false
+            ],
+            'myFloat' => [
+                'type' => 'float',
+                'nullable' => true,
+                'array' => false
+            ],
+            'myString' => [
+                'type' => 'string',
+                'nullable' => true,
+                'array' => false
+            ],
+            'myBool' => [
+                'type' => 'bool',
+                'nullable' => false,
+                'array' => false
+            ]
+        ];
+
+        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider->setPhodam($this->phodam);
+
+        $result = $provider->create();
+        $this->assertInstanceOf($type, $result);
+        $this->assertEquals($myInt, $result->getMyInt());
+        $this->assertEquals($myFloat, $result->getMyFloat());
+        $this->assertEquals($myString, $result->getMyString());
+        $this->assertEquals($myBool, $result->isMyBool());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::create
+     */
+    public function testCreateSimpleTypeMissingSomeFieldsButDefined()
+    {
+        $myInt = 42;
+        $myFloat = 98.6;
+        $myString = 'My String';
+        $myBool = false;
+
+        $this->phodam->expects($this->exactly(4))
+            ->method('create')
+            ->willReturnMap([
+                [ 'int', null, [], [], $myInt ],
+                [ 'float', null, [], [], $myFloat ],
+                [ 'string', null, [], [], $myString ],
+                [ 'bool', null, [], [], $myBool ]
+            ]);
+
+        $type = SimpleTypeMissingSomeFieldTypes::class;
+        $definition = [
+            'myInt' => [
+                'type' => 'int',
+                'nullable' => false,
+                'array' => false
+            ],
+            'myString' => [
+                'type' => 'string',
+                'nullable' => true,
+                'array' => false
+            ]
+        ];
+
+        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider->setPhodam($this->phodam);
+
+        $result = $provider->create();
+        $this->assertInstanceOf($type, $result);
+        $this->assertEquals($myInt, $result->getMyInt());
+        $this->assertEquals($myFloat, $result->getMyFloat());
+        $this->assertEquals($myString, $result->getMyString());
+        $this->assertEquals($myBool, $result->isMyBool());
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::create
+     */
+    public function testCreateSimpleTypeMissingSomeFieldsNotAllDefined()
+    {
+        $this->phodam->expects($this->never())
+            ->method('create');
+
+        $type = SimpleTypeMissingSomeFieldTypes::class;
+        $definition = [
+            'myInt' => [
+                'type' => 'int',
+                'nullable' => false,
+                'array' => false
+            ]
+        ];
+
+        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider->setPhodam($this->phodam);
+
+        $this->expectException(UnableToGenerateTypeException::class);
+        $this->expectExceptionMessage(
+            'Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes: Unable to map fields myString'
+        );
+
+        $result = $provider->create();
     }
 }

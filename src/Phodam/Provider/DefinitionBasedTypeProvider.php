@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
+use Phodam\Analyzer\TypeAnalysisException;
+use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
 use ReflectionClass;
@@ -50,18 +52,56 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         //     to define the fields that the type analyzer can't handle
         // not sure the order on how i want to do this, but...
         // 1. get a list of class fields
-        // 2. get a list of definition fields
-        // 3. check to see which fields don't overlap
-        // 4. if the definition handles it all, then that's fine
-        // 5. if it doesn't, start up a type analyzer
-        // 6. generate a definition for the type analyzer, if it completes
-        //    then fill in the remaining fields with the results
-        // 7. if it throws an exception, check the $mappedFields from
-        //    the exception
-        // 8. if $mappedFields covers the difference in fields, then you're good
-        // 9. if it doesn't, then throw an exception and give up
-
         $refClass = new ReflectionClass($this->type);
+        $classFields = array_map(
+            function (ReflectionProperty $refProperty) {
+                return $refProperty->getName();
+            },
+            $refClass->getProperties()
+        );
+
+        // 2. get a list of definition fields
+        $defFields = array_keys($this->definition);
+
+        // 3. check to see which fields don't overlap
+        $missingFields = array_diff($classFields, $defFields);
+        // 4. if the definition handles it all, then that's fine
+        if (!empty($missingFields)) {
+
+            // 5. if it doesn't, start up a type analyzer
+            $analyzer = new TypeAnalyzer();
+            $generatedDef = [];
+            try {
+                // 6. generate a definition for the type analyzer
+                $generatedDef = $analyzer->analyze($this->type);
+            } catch (TypeAnalysisException $ex) {
+                // 7. if it throws an exception, check the $mappedFields from
+                //    the exception
+                $generatedDef = $ex->getMappedFields();
+            }
+
+            $stillMissingFields = array_diff(
+                $missingFields,
+                array_keys($generatedDef)
+            );
+            if (!empty($stillMissingFields)) {
+                // 9. if it doesn't, then throw an exception and give up
+                throw new UnableToGenerateTypeException(
+                    $this->type,
+                    "{$this->type}: Unable to map fields "
+                    . join(', ', $stillMissingFields)
+                );
+            }
+
+            // 8. if $mappedFields covers the difference in fields,
+            //    then you're good
+            foreach ($missingFields as $missingField) {
+                $this->definition[$missingField] = $generatedDef[$missingField];
+            }
+        }
+
+
+
         $obj = $refClass->newInstanceWithoutConstructor();
 
         foreach ($this->definition as $fieldName => $def) {
