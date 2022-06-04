@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
+use ReflectionException;
 use ReflectionNamedType;
 
 class TypeAnalyzer
@@ -16,7 +17,7 @@ class TypeAnalyzer
     /**
      * @param string $type
      * @return array<string, mixed>
-     * @throws \ReflectionException
+     * @throws ReflectionException|TypeAnalysisException
      */
     public function analyze(string $type): array
     {

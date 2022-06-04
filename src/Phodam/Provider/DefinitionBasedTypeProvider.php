@@ -100,10 +100,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             }
         }
 
-
-
         $obj = $refClass->newInstanceWithoutConstructor();
-
         foreach ($this->definition as $fieldName => $def) {
             $refProperty = $refClass->getProperty($fieldName);
             if (array_key_exists($fieldName, $overrides)) {
