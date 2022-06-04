@@ -19,6 +19,12 @@ class DefaultFloatTypeProvider implements TypedProviderInterface
 {
     public function create(array $overrides = [], array $config = []): float
     {
-        return rand(-10000, 10000) + (rand(0, 100) / 100);
+        $min = $config['min'] ?? -10000;
+        $max = $config['max'] ?? 10000;
+        $val = rand($min, $max);
+        $isNegative = $val <= 0;
+        // make sure we're not adding to an already positive max value
+        $additive = (rand(0, 100) / 100) * ($isNegative) ? 1 : -1;
+        return $val + $additive;
     }
 }

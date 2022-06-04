@@ -29,9 +29,52 @@ class DefaultFloatTypeProviderTest extends PhodamBaseTestCase
      */
     public function testCreate()
     {
+        // defaults
+        $min = -10000;
+        $max = 10000;
         for ($i = 0; $i < 10; $i++) {
             $value = $this->provider->create();
             $this->assertIsFloat($value);
+            $this->assertGreaterThanOrEqual($min, $value);
+            $this->assertLessThanOrEqual($max, $value);
+        }
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateWithConfigMinAndMax()
+    {
+        // defaults
+        $min = -100;
+        $max = 100;
+        for ($i = 0; $i < 10; $i++) {
+            $value = $this->provider->create([], [
+                'min' => $min,
+                'max' => $max
+            ]);
+            $this->assertIsFloat($value);
+            $this->assertGreaterThanOrEqual($min, $value);
+            $this->assertLessThanOrEqual($max, $value);
+        }
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateWithConfigMinAndMaxWithSmallRange()
+    {
+        // defaults
+        $min = -1;
+        $max = 1;
+        for ($i = 0; $i < 10; $i++) {
+            $value = $this->provider->create([], [
+                'min' => $min,
+                'max' => $max
+            ]);
+            $this->assertIsFloat($value);
+            $this->assertGreaterThanOrEqual($min, $value);
+            $this->assertLessThanOrEqual($max, $value);
         }
     }
 }

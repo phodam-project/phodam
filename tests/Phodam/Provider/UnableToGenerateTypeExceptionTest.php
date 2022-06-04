@@ -9,13 +9,14 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam\Provider;
 
+use Phodam\Provider\UnableToGenerateTypeException;
 use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\UnableToGenerateTypeException
  */
-class UnableToGenerateTypeException extends PhodamBaseTestCase
+class UnableToGenerateTypeExceptionTest extends PhodamBaseTestCase
 {
     /**
      * @covers ::__construct

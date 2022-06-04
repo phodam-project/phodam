@@ -29,9 +29,49 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
      */
     public function testCreate()
     {
+        $min = -10000;
+        $max = 10000;
         for ($i = 0; $i < 10; $i++) {
             $value = $this->provider->create();
             $this->assertIsInt($value);
+            $this->assertGreaterThanOrEqual($min, $value);
+            $this->assertLessThanOrEqual($max, $value);
+        }
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateWithConfigMinAndMax()
+    {
+        $min = -100;
+        $max = 100;
+        for ($i = 0; $i < 10; $i++) {
+            $value = $this->provider->create([], [
+                'min' => $min,
+                'max' => $max
+            ]);
+            $this->assertIsInt($value);
+            $this->assertGreaterThanOrEqual($min, $value);
+            $this->assertLessThanOrEqual($max, $value);
+        }
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateWithConfigMinAndMaxWithSmallRange()
+    {
+        $min = -1;
+        $max = 1;
+        for ($i = 0; $i < 10; $i++) {
+            $value = $this->provider->create([], [
+                'min' => $min,
+                'max' => $max
+            ]);
+            $this->assertIsInt($value);
+            $this->assertGreaterThanOrEqual($min, $value);
+            $this->assertLessThanOrEqual($max, $value);
         }
     }
 }

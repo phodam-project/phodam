@@ -19,6 +19,8 @@ class DefaultIntTypeProvider implements TypedProviderInterface
 {
     public function create(array $overrides = [], array $config = []): int
     {
-        return rand(-10000, 10000);
+        $min = $config['min'] ?? -10000;
+        $max = $config['max'] ?? 10000;
+        return rand(-$min, $max);
     }
 }
