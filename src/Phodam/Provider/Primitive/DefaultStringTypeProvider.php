@@ -20,10 +20,12 @@ class DefaultStringTypeProvider implements TypedProviderInterface
     private const LOWER_CASE = 'abcdefghijklmnopqrstuvwxyz';
     private const UPPER_CASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     private const NUMERIC = '0123456789';
+    private const ALPHABETIC = self::LOWER_CASE . self::UPPER_CASE;
     private const ALPHANUMERIC = self::LOWER_CASE . self::UPPER_CASE . self::NUMERIC;
     private const STRING_TYPES = [
         'lower' => self::LOWER_CASE,
         'upper' => self::UPPER_CASE,
+        'alphabetic' => self::ALPHABETIC,
         'numeric' => self::NUMERIC,
         'alphanumeric' => self::ALPHANUMERIC
     ];
@@ -32,10 +34,16 @@ class DefaultStringTypeProvider implements TypedProviderInterface
     {
         $type = $config['type'] ?? 'alphanumeric';
         $pool = self::STRING_TYPES[$type];
+        $poolLength = strlen($pool);
         $minLength = $config['minLength'] ?? 16;
         $maxLength = $config['maxLength'] ?? 32;
         $length = $config['length'] ?? rand($minLength, $maxLength);
 
-        return str_repeat(substr($pool, $length - 1, 1), $length);
+        $str = '';
+        for ($i = 0; $i < $length; $i++) {
+            $str .= substr($pool, rand(0, $poolLength - 1), 1);
+        }
+
+        return $str;
     }
 }
