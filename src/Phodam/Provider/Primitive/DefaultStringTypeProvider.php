@@ -33,7 +33,7 @@ class DefaultStringTypeProvider implements TypedProviderInterface
         $type = $config['type'] ?? 'alphanumeric';
         $pool = self::STRING_TYPES[$type];
         $minLength = $config['minLength'] ?? 16;
-        $maxLength = $config['maxLength'] ?? 32;;
+        $maxLength = $config['maxLength'] ?? 32;
         $length = $config['length'] ?? rand($minLength, $maxLength);
 
         return str_repeat(substr($pool, $length - 1, 1), $length);
