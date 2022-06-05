@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -17,6 +18,7 @@ use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderConfig;
+use Phodam\Provider\ProviderContext;
 use Phodam\Provider\ProviderInterface;
 use Phodam\Provider\ProviderNotFoundException;
 
@@ -53,12 +55,14 @@ class Phodam implements PhodamInterface
      */
     public function createArray(
         string $name,
-        array $overrides = [],
-        array $config = []
+        ?array $overrides = null,
+        ?array $config = null
     ): array {
+        $context = new ProviderContext($this, 'array', $overrides ?? [], $config ?? []);
+
         return $this
             ->getArrayProvider($name)
-            ->create($overrides, $config);
+            ->create($context);
     }
 
     /**
@@ -66,9 +70,9 @@ class Phodam implements PhodamInterface
      */
     public function create(
         string $type,
-        string $name = null,
-        array $overrides = [],
-        array $config = []
+        ?string $name = null,
+        ?array $overrides = null,
+        ?array $config = null
     ) {
         try {
             $provider = $this
@@ -78,7 +82,9 @@ class Phodam implements PhodamInterface
             $provider = $this->registerTypeDefinition($type, $definition);
         }
 
-        return $provider->create($overrides, $config);
+        $context = new ProviderContext($this, $type, $overrides ?? [], $config ?? []);
+
+        return $provider->create($context);
     }
 
     /**

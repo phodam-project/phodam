@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -9,28 +10,27 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Fixtures;
 
-use Phodam\PhodamAware;
-use Phodam\PhodamAwareTrait;
+use Phodam\Provider\ProviderContext;
 use Phodam\Provider\ProviderInterface;
 
-class SampleProvider implements ProviderInterface, PhodamAware
+class SampleProvider implements ProviderInterface
 {
-    use PhodamAwareTrait;
-
-    public function create(array $overrides = [], array $config = [])
+    public function create(ProviderContext $context)
     {
         $defaults = [
-            'field1' => $this->phodam->create('string'),
-            'field2' => $this->phodam->create('string'),
-            'field3' => $this->phodam->create('int')
+            'field1' => $context->create('string'),
+            'field2' => $context->create('string'),
+            'field3' => $context->create('int')
         ];
         $values = array_merge(
             $defaults,
-            $overrides
+            $context->getOverrides()
         );
 
+        $config = $context->getConfig();
         $minYear = PHP_INT_MIN;
         $maxYear = PHP_INT_MAX;
+
         if(isset($config['minYear'])) {
             $minYear = $config['minYear'];
         }

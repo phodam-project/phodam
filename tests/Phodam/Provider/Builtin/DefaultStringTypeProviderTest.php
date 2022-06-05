@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -9,8 +10,11 @@ declare(strict_types=1);
 
 namespace Phodam\Tests\Phodam\Provider\Builtin;
 
+use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
+use Phodam\Provider\ProviderContext;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Phodam\Provider\Primitive\DefaultStringTypeProvider
@@ -19,44 +23,84 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultStringTypeProvider $provider;
 
+    /** @var PhodamInterface & MockObject */
+    private $phodam;
+
     public function setUp(): void
     {
         $this->provider = new DefaultStringTypeProvider();
+        $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreate()
     {
+        $context = new ProviderContext($this->phodam, 'string', [], []);
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create();
+            $value = $this->provider->create($context);
             $this->assertIsString($value);
         }
     }
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
-    public function testCreateWithDifferentTypes()
+    public function testCreateWithTypeLower()
     {
-        $type = 'lower';
+        $context = new ProviderContext(
+            $this->phodam,
+            'string',
+            [],
+            ['type' => 'lower']
+        );
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], ['type' => $type]);
+            $value = $this->provider->create($context);
             $this->assertIsString($value);
             $this->assertEquals(strtolower($value), $value);
         }
+    }
 
-        $type = 'upper';
+    /**
+     * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
+     */
+    public function testCreateWithTypeUpper()
+    {
+        $context = new ProviderContext(
+            $this->phodam,
+            'string',
+            [],
+            ['type' => 'upper']
+        );
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], ['type' => $type]);
+            $value = $this->provider->create($context);
             $this->assertIsString($value);
             $this->assertEquals(strtoupper($value), $value);
         }
+    }
 
-        $type = 'numeric';
+    /**
+     * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
+     */
+    public function testCreateWithTypeNumeric()
+    {
+        $context = new ProviderContext(
+            $this->phodam,
+            'string',
+            [],
+            ['type' => 'numeric']
+        );
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], ['type' => $type]);
+            $value = $this->provider->create($context);
             $this->assertIsString($value);
             for ($j = 0; $j < strlen($value); $j++) {
                 $char = $value[$j];
@@ -67,19 +111,28 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateWithLength()
     {
-        // 'length' takes precedence over 'minLength' and 'maxLength'
         $length = 18;
         $minLength = 5;
         $maxLength = 15;
-        for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], [
+
+        // 'length' takes precedence over 'minLength' and 'maxLength'
+        $context = new ProviderContext(
+            $this->phodam,
+            'string',
+            [],
+            [
                 'length' => $length,
                 'minLength' => $minLength,
                 'maxLength' => $maxLength
-            ]);
+            ]
+        );
+
+        for ($i = 0; $i < 10; $i++) {
+            $value = $this->provider->create($context);
             $this->assertIsString($value);
             $this->assertEquals($length, strlen($value));
         }
@@ -87,16 +140,25 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateWithMinAndMaxLength()
     {
         $minLength = 5;
         $maxLength = 15;
-        for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], [
+
+        $context = new ProviderContext(
+            $this->phodam,
+            'string',
+            [],
+            [
                 'minLength' => $minLength,
                 'maxLength' => $maxLength
-            ]);
+            ]
+        );
+
+        for ($i = 0; $i < 10; $i++) {
+            $value = $this->provider->create($context);
             $this->assertIsString($value);
             $this->assertGreaterThanOrEqual($minLength, strlen($value));
             $this->assertLessThanOrEqual($maxLength, strlen($value));

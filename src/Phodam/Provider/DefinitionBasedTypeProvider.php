@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -11,18 +12,14 @@ namespace Phodam\Provider;
 
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\PhodamAware;
-use Phodam\PhodamAwareTrait;
 use ReflectionClass;
 use ReflectionProperty;
 
 /**
  * @template T
  */
-class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
+class DefinitionBasedTypeProvider implements ProviderInterface
 {
-    use PhodamAwareTrait;
-
     private string $type;
     /** @var array<string, array<string, mixed>> */
     private array $definition;
@@ -45,8 +42,11 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
      * @return mixed
      * @throws \ReflectionException
      */
-    public function create(array $overrides = [], array $config = [])
+    public function create(ProviderContext $context)
     {
+        // TODO: We could check if $this->type is compatible with
+        // $context->getType(), but it's not as simple as checking ===.
+
         // okay, so here's some thoughts.
         // a definition shouldn't have to be complete, we should only HAVE
         //     to define the fields that the type analyzer can't handle
@@ -103,14 +103,14 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         $obj = $refClass->newInstanceWithoutConstructor();
         foreach ($this->definition as $fieldName => $def) {
             $refProperty = $refClass->getProperty($fieldName);
-            if (array_key_exists($fieldName, $overrides)) {
-                $val = $overrides[$fieldName];
+            if ($context->hasOverride($fieldName)) {
+                $val = $context->getOverride($fieldName);
             } else {
-                $val = $this->phodam->create(
+                $val = $context->create(
                     $def['type'],
                     $def['name'] ?? null,
-                    $def['overrides'] ?? [],
-                    $def['config'] ?? []
+                    $def['overrides'] ?? null,
+                    $def['config'] ?? null
                 );
             }
             $refProperty->setAccessible(true);

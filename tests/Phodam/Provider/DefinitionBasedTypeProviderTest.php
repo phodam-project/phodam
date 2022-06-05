@@ -2,29 +2,31 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Provider\Builtin;
+namespace Phodam\Tests\Phodam\Provider;
 
 use Phodam\PhodamInterface;
 use Phodam\Provider\DefinitionBasedTypeProvider;
-use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
-use Phodam\Provider\Primitive\DefaultIntTypeProvider;
+use Phodam\Provider\ProviderContext;
 use Phodam\Provider\UnableToGenerateTypeException;
 use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use Phodam\Tests\Fixtures\SimpleTypeWithoutTypes;
 use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \Phodam\Provider\DefinitionBasedTypeProvider
  */
 class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 {
-    private PhodamInterface $phodam;
+    /** @var PhodamInterface & MockObject */
+    private $phodam;
 
     public function setUp(): void
     {
@@ -34,6 +36,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreate()
     {
@@ -76,9 +79,15 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
-        $provider->setPhodam($this->phodam);
 
-        $result = $provider->create();
+        $context = new ProviderContext(
+            $this->phodam,
+            SimpleType::class,
+            [],
+            []
+        );
+
+        $result = $provider->create($context);
         $this->assertInstanceOf(SimpleType::class, $result);
         $this->assertEquals($myInt, $result->getMyInt());
         $this->assertEquals($myFloat, $result->getMyFloat());
@@ -90,6 +99,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateWithNamedProvider()
     {
@@ -140,9 +150,15 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
-        $provider->setPhodam($this->phodam);
 
-        $result = $provider->create();
+        $context = new ProviderContext(
+            $this->phodam,
+            SimpleType::class,
+            [],
+            []
+        );
+
+        $result = $provider->create($context);
         $this->assertInstanceOf(SimpleType::class, $result);
         $this->assertEquals($myInt, $result->getMyInt());
         $this->assertEquals($myFloat, $result->getMyFloat());
@@ -153,6 +169,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateWithOverrides()
     {
@@ -195,9 +212,15 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
-        $provider->setPhodam($this->phodam);
 
-        $result = $provider->create($overrides);
+        $context = new ProviderContext(
+            $this->phodam,
+            SimpleType::class,
+            $overrides,
+            []
+        );
+
+        $result = $provider->create($context);
         $this->assertInstanceOf(SimpleType::class, $result);
         $this->assertEquals($myInt, $result->getMyInt());
         $this->assertEquals($myFloat, $result->getMyFloat());
@@ -208,6 +231,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateSimpleTypeWithoutTypesHasFullDefinition()
     {
@@ -250,9 +274,15 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
-        $provider->setPhodam($this->phodam);
 
-        $result = $provider->create();
+        $context = new ProviderContext(
+            $this->phodam,
+            SimpleTypeWithoutTypes::class,
+            [],
+            []
+        );
+
+        $result = $provider->create($context);
         $this->assertInstanceOf($type, $result);
         $this->assertEquals($myInt, $result->getMyInt());
         $this->assertEquals($myFloat, $result->getMyFloat());
@@ -263,6 +293,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateSimpleTypeMissingSomeFieldsButDefined()
     {
@@ -295,9 +326,15 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
-        $provider->setPhodam($this->phodam);
 
-        $result = $provider->create();
+        $context = new ProviderContext(
+            $this->phodam,
+            SimpleTypeMissingSomeFieldTypes::class,
+            [],
+            []
+        );
+
+        $result = $provider->create($context);
         $this->assertInstanceOf($type, $result);
         $this->assertEquals($myInt, $result->getMyInt());
         $this->assertEquals($myFloat, $result->getMyFloat());
@@ -308,6 +345,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateSimpleTypeMissingSomeFieldsNotAllDefined()
     {
@@ -324,13 +362,19 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
-        $provider->setPhodam($this->phodam);
+
+        $context = new ProviderContext(
+            $this->phodam,
+            SimpleTypeMissingSomeFieldTypes::class,
+            [],
+            []
+        );
 
         $this->expectException(UnableToGenerateTypeException::class);
         $this->expectExceptionMessage(
             'Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes: Unable to map fields myString'
         );
 
-        $result = $provider->create();
+        $provider->create($context);
     }
 }
