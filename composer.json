@@ -46,7 +46,7 @@
     "lint:phpcsfixer": "php-cs-fixer fix src --rules=@PSR12 --dry-run --cache-file=build/.php-cs-fixer.cache",
     "lint:phpcsfixer:fix": "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache",
     "lint:phpstan": "phpstan analyse -l 6 src",
-    "test:phpunit": "phpunit",
+    "test:phpunit": "phpunit -c phpunit.xml",
     "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=build/phpunit",
     "lint": [
       "mkdir -p build",

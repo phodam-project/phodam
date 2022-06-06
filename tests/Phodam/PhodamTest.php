@@ -272,7 +272,7 @@ class PhodamTest extends PhodamBaseTestCase
         } catch (TypeAnalysisException $ex) {
             $this->assertInstanceOf(TypeAnalysisException::class, $ex);
             $this->assertEquals(
-                'Phodam\\Tests\\Fixtures\\SimpleTypeMissingSomeFieldTypes: Unable to map fields: myInt, myString',
+                'PhodamTests\\Fixtures\\SimpleTypeMissingSomeFieldTypes: Unable to map fields: myInt, myString',
                 $ex->getMessage()
             );
         }
