@@ -20,7 +20,7 @@ use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderContext;
 use Phodam\Provider\ProviderInterface;
-use Phodam\Provider\ProviderNotFoundException;
+use Phodam\Store\ProviderNotFoundException;
 
 class Phodam implements PhodamInterface
 {
