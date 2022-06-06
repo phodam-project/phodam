@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Provider;
+namespace PhodamTests\Phodam\Provider;
 
 use Phodam\Provider\ProviderNotFoundException;
-use Phodam\Tests\Fixtures\SimpleType;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Fixtures\SimpleType;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\ProviderNotFoundException

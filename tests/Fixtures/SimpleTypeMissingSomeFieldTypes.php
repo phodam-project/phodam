@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Fixtures;
+namespace PhodamTests\Fixtures;
 
 class SimpleTypeMissingSomeFieldTypes
 {

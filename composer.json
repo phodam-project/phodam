@@ -36,10 +36,12 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Phodam\\Tests\\": "tests"
+      "PhodamTests\\": "tests",
+      "PhodamExamples\\": "examples"
     }
   },
   "scripts": {
+    "examples": "phpunit -c examples.phpunit.xml",
     "lint:phpcs": "phpcs --standard=PSR12 src",
     "lint:phpcsfixer": "php-cs-fixer fix src --rules=@PSR12 --dry-run --cache-file=build/.php-cs-fixer.cache",
     "lint:phpcsfixer:fix": "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache",

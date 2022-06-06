@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam;
+namespace PhodamTests\Phodam;
 
 use Phodam\Phodam;
-use Phodam\Tests\Fixtures\SampleProvider;
+use PhodamTests\Fixtures\SampleProvider;
 
 /**
  * @coversDefaultClass \Phodam\PhodamAwareTrait

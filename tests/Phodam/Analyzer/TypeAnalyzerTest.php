@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Analyzer;
+namespace PhodamTests\Phodam\Analyzer;
 
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\Tests\Fixtures\SimpleType;
-use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Fixtures\SimpleType;
+use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Analyzer\TypeAnalyzer
@@ -77,7 +77,7 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
      */
     public function testAnalyzeWithUnmappedFields(): void
     {
-        $expectedMessage = "Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes: "
+        $expectedMessage = "PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes: "
             . "Unable to map fields: myInt, myString";
         $expectedFieldNames = [
             'myInt', 'myFloat', 'myString', 'myBool'
