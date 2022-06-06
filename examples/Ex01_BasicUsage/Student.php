@@ -15,6 +15,7 @@ class Student
     private string $name;
     private float $gpa;
     private bool $active;
+    private Address $address;
 
     public function __construct()
     {
@@ -89,6 +90,24 @@ class Student
     public function setActive(bool $active): Student
     {
         $this->active = $active;
+        return $this;
+    }
+
+    /**
+     * @return Address
+     */
+    public function getAddress(): Address
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param Address $address
+     * @return Student
+     */
+    public function setAddress(Address $address): Student
+    {
+        $this->address = $address;
         return $this;
     }
 }

@@ -110,6 +110,7 @@ class Ex01_BasicUsageTest extends TestCase
         $this->assertIsString($student->getName());
         $this->assertIsFloat($student->getGpa());
         $this->assertIsBool($student->isActive());
+        $this->assertInstanceOf(Address::class, $student->getAddress());
     }
 
     public function testCreateStudentWithOverrides(): void
@@ -123,12 +124,13 @@ class Ex01_BasicUsageTest extends TestCase
                 $studentOverrides
             );
 
-            // var_export($student);
+            // echo "\n"; var_export($student);
             $this->assertInstanceOf(Student::class, $student);
             $this->assertIsInt($student->getId());
             $this->assertIsString($student->getName());
             $this->assertEquals(4.0, $student->getGpa());
             $this->assertTrue($student->isActive());
+            $this->assertInstanceOf(Address::class, $student->getAddress());
         }
     }
 }
