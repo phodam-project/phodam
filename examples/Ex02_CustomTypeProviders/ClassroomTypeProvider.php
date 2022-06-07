@@ -52,20 +52,9 @@ class ClassroomTypeProvider implements TypedProviderInterface, PhodamAware
         // we need to make a custom provider to populate an array
         $students = array_map(
             function ($index) {
-                $gpa = $this->phodam->create(
-                    'float',
-                    null,
-                    [],
-                    [ 'min' => 0.0, 'max' => 4.0, 'precision' => 2 ]
-                );
-                return $this->phodam->create(
-                    Student::class,
-                    null,
-                    [
-                        'gpa' => $gpa,
-                        'active' => true
-                    ]
-                );
+                // since we have a registered provider for Student::class,
+                // we don't need to override GPA or active here
+                return $this->phodam->create(Student::class);
             },
             range(0, $numStudents)
         );
