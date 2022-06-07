@@ -51,11 +51,7 @@ class ClassroomTypeProvider implements TypedProviderInterface, PhodamAware
         // Since PHP doesn't support giving a generic type in an array,
         // we need to make a custom provider to populate an array
         $students = array_map(
-            function ($index) {
-                // since we have a registered provider for Student::class,
-                // we don't need to override GPA or active here
-                return $this->phodam->create(Student::class);
-            },
+            fn ($i) => $this->phodam->create(Student::class),
             range(0, $numStudents)
         );
         $classroom->setStudents($students);

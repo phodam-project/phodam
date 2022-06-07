@@ -54,9 +54,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         // 1. get a list of class fields
         $refClass = new ReflectionClass($this->type);
         $classFields = array_map(
-            function (ReflectionProperty $refProperty) {
-                return $refProperty->getName();
-            },
+            fn (ReflectionProperty $refProperty) => $refProperty->getName(),
             $refClass->getProperties()
         );
 
