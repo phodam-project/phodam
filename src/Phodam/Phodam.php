@@ -30,11 +30,17 @@ class Phodam implements PhodamInterface
 
     private TypeAnalyzer $typeAnalyzer;
 
-    public function __construct()
+    public function __construct(?ProviderStore $providerStore = null)
     {
-        $this->providerStore = new ProviderStore();
         $this->typeAnalyzer = new TypeAnalyzer();
-        $this->registerPrimitiveTypeProviders();
+
+        if ($providerStore !== null) {
+            $this->providerStore = $providerStore;
+        } else {
+            // Fallback for now, but soon we'll require ProviderStore.
+            $this->providerStore = new ProviderStore();
+            $this->registerPrimitiveTypeProviders();
+        }
     }
 
     /**
