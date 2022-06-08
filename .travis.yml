@@ -12,4 +12,3 @@ before_script:
 script:
   - composer lint
   - composer test
-  - composer test:coverage
