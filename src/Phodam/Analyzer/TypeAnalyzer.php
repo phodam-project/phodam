@@ -43,6 +43,7 @@ class TypeAnalyzer
                 $unmappedFields[] = $property->getName();
                 continue;
             }
+
             $mappedFields[$property->getName()] = [
                 'type' => $propertyType->getName(),
                 'name' => null,
