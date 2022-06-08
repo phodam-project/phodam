@@ -67,7 +67,6 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         $missingFields = array_diff($classFields, $defFields);
         // 4. if the definition handles it all, then that's fine
         if (!empty($missingFields)) {
-
             // 5. if it doesn't, start up a type analyzer
             $analyzer = new TypeAnalyzer();
             $generatedDef = [];
