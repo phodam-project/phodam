@@ -14,10 +14,6 @@ class Address
     private string $street;
     private string $city;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return string
      */

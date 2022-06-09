@@ -17,10 +17,6 @@ class Student
     private bool $active;
     private Address $address;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return int
      */

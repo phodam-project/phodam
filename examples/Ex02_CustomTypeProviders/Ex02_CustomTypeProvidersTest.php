@@ -46,14 +46,11 @@ class Ex02_CustomTypeProvidersTest extends TestCase
         // make a Classroom because it's unable to map `array $students` to
         // a type it can generate
         $localPhodam = new Phodam();
-        try {
-            $localPhodam->create(Classroom::class);
-        } catch (TypeAnalysisException $ex) {
-            $this->assertStringContainsString(
-                'PhodamExamples\Ex02_CustomTypeProviders\Classroom: Unable to map fields: students',
-                $ex->getMessage()
-            );
-        }
+
+        $this->expectException(TypeAnalysisException::class);
+        $this->expectExceptionMessage('PhodamExamples\Ex02_CustomTypeProviders\Classroom: Unable to map fields: students');
+
+        $localPhodam->create(Classroom::class);
     }
 
     public function testCreatingClassroom(): void

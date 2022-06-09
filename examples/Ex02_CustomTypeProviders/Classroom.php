@@ -16,10 +16,6 @@ class Classroom
     /** @var array<Student> */
     private array $students;
 
-    public function __construct()
-    {
-    }
-
     /**
      * @return int
      */
