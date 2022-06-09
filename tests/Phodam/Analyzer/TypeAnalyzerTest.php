@@ -13,6 +13,7 @@ use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
+use PhodamTests\Fixtures\SimpleTypeWithAnArray;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
@@ -103,11 +104,39 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
                 'array' => false
             ]
         ];
+
         try {
             $result = $this->analyzer->analyze(SimpleTypeMissingSomeFieldTypes::class);
         } catch (\Exception $ex) {
             $this->assertInstanceOf(TypeAnalysisException::class, $ex);
             $this->assertEquals(SimpleTypeMissingSomeFieldTypes::class, $ex->getType());
+            $this->assertEquals($expectedMessage, $ex->getMessage());
+            $this->assertEquals($expectedFieldNames, $ex->getFieldNames());
+            $this->assertEquals($expectedUnmappedFields, $ex->getUnmappedFields());
+            $this->assertEquals($expectedMappedFields, $ex->getMappedFields());
+        }
+    }
+
+    /**
+     * @covers ::analyze
+     */
+    public function testAnalyzeWithAnArray(): void
+    {
+        $expectedMessage = "PhodamTests\Fixtures\SimpleTypeWithAnArray: "
+            . "Unable to map fields: myInt, myArray";
+        $expectedFieldNames = [
+            'myInt', 'myArray'
+        ];
+        $expectedUnmappedFields = [
+            'myInt', 'myArray'
+        ];
+        $expectedMappedFields = [];
+
+        try {
+            $this->analyzer->analyze(SimpleTypeWithAnArray::class);
+        } catch (\Exception $ex) {
+            $this->assertInstanceOf(TypeAnalysisException::class, $ex);
+            $this->assertEquals(SimpleTypeWithAnArray::class, $ex->getType());
             $this->assertEquals($expectedMessage, $ex->getMessage());
             $this->assertEquals($expectedFieldNames, $ex->getFieldNames());
             $this->assertEquals($expectedUnmappedFields, $ex->getUnmappedFields());
