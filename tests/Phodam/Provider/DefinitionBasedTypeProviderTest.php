@@ -48,10 +48,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnMap([
-                [ 'int', null, [], [], $myInt ],
-                [ 'float', null, [], [], $myFloat ],
-                [ 'string', null, [], [], $myString ],
-                [ 'bool', null, [], [], $myBool ]
+                [ 'int', null, null, null, $myInt ],
+                [ 'float', null, null, null, $myFloat ],
+                [ 'string', null, null, null, $myString ],
+                [ 'bool', null, null, null, $myBool ]
             ]);
 
         $type = SimpleType::class;
@@ -111,10 +111,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnMap([
-                [ 'int', null, [], [], $myInt ],
-                [ 'float', null, [], [], $myFloat ],
-                [ 'string', 'MyNamedString', [], [], $myString ],
-                [ 'bool', null, [], [], $myBool ]
+                [ 'int', null, null, null, $myInt ],
+                [ 'float', null, null, null, $myFloat ],
+                [ 'string', 'MyNamedString', null, null, $myString ],
+                [ 'bool', null, null, null, $myBool ]
             ]);
 
         $type = SimpleType::class;
@@ -122,28 +122,24 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
             'myInt' => [
                 'type' => 'int',
                 'name' => null,
-                'overrides' => [],
                 'nullable' => false,
                 'array' => false
             ],
             'myFloat' => [
                 'type' => 'float',
                 'name' => null,
-                'overrides' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myString' => [
                 'type' => 'string',
                 'name' => 'MyNamedString',
-                'overrides' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myBool' => [
                 'type' => 'bool',
                 'name' => null,
-                'overrides' => [],
                 'nullable' => false,
                 'array' => false
             ]
@@ -183,8 +179,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(2))
             ->method('create')
             ->willReturnMap([
-                [ 'int', null, [], [], $myInt ],
-                [ 'float', null, [], [], $myFloat ]
+                [ 'int', null, null, null, $myInt ],
+                [ 'float', null, null, null, $myFloat ]
             ]);
 
         $type = SimpleType::class;
@@ -243,10 +239,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnMap([
-                [ 'int', null, [], [], $myInt ],
-                [ 'float', null, [], [], $myFloat ],
-                [ 'string', null, [], [], $myString ],
-                [ 'bool', null, [], [], $myBool ]
+                [ 'int', null, null, null, $myInt ],
+                [ 'float', null, null, null, $myFloat ],
+                [ 'string', null, null, null, $myString ],
+                [ 'bool', null, null, null, $myBool ]
             ]);
 
         $type = SimpleTypeWithoutTypes::class;
@@ -305,10 +301,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnMap([
-                [ 'int', null, [], [], $myInt ],
-                [ 'float', null, [], [], $myFloat ],
-                [ 'string', null, [], [], $myString ],
-                [ 'bool', null, [], [], $myBool ]
+                [ 'int', null, null, null, $myInt ],
+                [ 'float', null, null, null, $myFloat ],
+                [ 'string', null, null, null, $myString ],
+                [ 'bool', null, null, null, $myBool ]
             ]);
 
         $type = SimpleTypeMissingSomeFieldTypes::class;

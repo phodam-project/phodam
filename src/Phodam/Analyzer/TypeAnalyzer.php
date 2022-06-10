@@ -39,8 +39,6 @@ class TypeAnalyzer
             $mappedFields[$property->getName()] = [
                 'type' => $propertyType->getName(),
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => $propertyType->allowsNull(),
                 'array' => false
             ];

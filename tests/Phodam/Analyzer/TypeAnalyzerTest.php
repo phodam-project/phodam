@@ -37,32 +37,24 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             'myInt' => [
                 'type' => 'int',
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => false,
                 'array' => false
             ],
             'myFloat' => [
                 'type' => 'float',
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myString' => [
                 'type' => 'string',
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myBool' => [
                 'type' => 'bool',
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => false,
                 'array' => false
             ]
@@ -89,16 +81,12 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             'myFloat' => [
                 'type' => 'float',
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => true,
                 'array' => false
             ],
             'myBool' => [
                 'type' => 'bool',
                 'name' => null,
-                'overrides' => [],
-                'config' => [],
                 'nullable' => false,
                 'array' => false
             ]

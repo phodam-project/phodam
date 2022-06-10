@@ -175,7 +175,7 @@ class PhodamTest extends PhodamBaseTestCase
         $type = UnregisteredClassType::class;
 
         $this->expectException(ProviderNotFoundException::class);
-        $this->expectExceptionMessage("Default provider not found for type Phodam\Tests\Fixtures\UnregisteredClassType");
+        $this->expectExceptionMessage("No default provider found for type Phodam\Tests\Fixtures\UnregisteredClassType");
 
         $this->phodam->getTypeProvider($type);
     }
