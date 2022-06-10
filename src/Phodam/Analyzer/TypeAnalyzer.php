@@ -36,6 +36,14 @@ class TypeAnalyzer
                 $unmappedFields[] = $property->getName();
                 continue;
             }
+
+            // if this is an array, we can't map the field
+            // since we don't know what the type in the array is
+            if ($propertyType->getName() === 'array') {
+                $unmappedFields[] = $property->getName();
+                continue;
+            }
+
             $mappedFields[$property->getName()] = [
                 'type' => $propertyType->getName(),
                 'name' => null,

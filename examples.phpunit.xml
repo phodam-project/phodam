@@ -3,26 +3,19 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          cacheResult="false"
-         cacheResultFile="build/.phpunit.cache/test-results"
+         cacheResultFile="build/.examples.phpunit.cache/test-results"
          executionOrder="depends,defects"
-         forceCoversAnnotation="true"
+         forceCoversAnnotation="false"
          beStrictAboutCoversAnnotation="false"
-         beStrictAboutOutputDuringTests="true"
+         beStrictAboutOutputDuringTests="false"
          beStrictAboutTodoAnnotatedTests="true"
          convertDeprecationsToExceptions="true"
-         failOnRisky="true"
-         failOnWarning="true"
+         failOnRisky="false"
+         failOnWarning="false"
          verbose="true">
     <testsuites>
         <testsuite name="default">
-            <directory>tests</directory>
+            <directory>examples</directory>
         </testsuite>
     </testsuites>
-
-    <coverage cacheDirectory="build/.phpunit.cache/code-coverage"
-              processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
 </phpunit>

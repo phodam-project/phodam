@@ -7,11 +7,11 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Analyzer;
+namespace PhodamTests\Phodam\Analyzer;
 
 use Phodam\Analyzer\TypeAnalysisException;
-use Phodam\Tests\Fixtures\SimpleType;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Fixtures\SimpleType;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Analyzer\TypeAnalysisException

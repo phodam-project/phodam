@@ -7,10 +7,10 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Provider\Builtin;
+namespace PhodamTests\Phodam\Provider\Builtin;
 
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\Primitive\DefaultIntTypeProvider

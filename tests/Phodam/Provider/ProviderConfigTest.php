@@ -7,14 +7,14 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Provider;
+namespace PhodamTests\Phodam\Provider;
 
 use DateTime;
 use InvalidArgumentException;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
-use Phodam\Tests\Fixtures\SampleProvider;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Fixtures\SampleProvider;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
  * @coversDefaultClass \Phodam\Provider\ProviderConfig
