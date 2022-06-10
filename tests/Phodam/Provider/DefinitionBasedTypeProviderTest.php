@@ -16,6 +16,7 @@ use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\UnableToGenerateTypeException;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
+use PhodamTests\Fixtures\SimpleTypeWithAnArray;
 use PhodamTests\Fixtures\SimpleTypeWithoutTypes;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
@@ -332,5 +333,55 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         );
 
         $result = $provider->create();
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateSimpleTypeWithAnArray()
+    {
+        $type = SimpleTypeWithAnArray::class;
+        $def = [
+            'myInt' => [
+                'type' => 'int',
+                'name' => null,
+                'nullable' => false,
+                'array' => false
+            ],
+            'myArray' => [
+                'type' => SimpleType::class,
+                'name' => null,
+                'nullable' => false,
+                'array' => true
+            ]
+        ];
+
+        $this->phodam
+            ->method('create')
+            ->willReturnCallback(function ($arg1) {
+                if ($arg1 === 'int') {
+                    return 10;
+                } else if ($arg1 === SimpleType::class) {
+                    return (new SimpleType())
+                        ->setMyBool(true)
+                        ->setMyInt(rand(0, 20))
+                        ->setMyString('hi there')
+                        ->setMyFloat(123.45);
+                }
+                return null;
+            });
+
+        $provider = new DefinitionBasedTypeProvider($type, $def);
+        $provider->setPhodam($this->phodam);
+
+        /** @var SimpleTypeWithAnArray $created */
+        $created = $provider->create();
+        // var_export($created);
+        $this->assertInstanceOf($type, $created);
+        $this->assertIsInt($created->getMyInt());
+        $this->assertIsArray($created->getMyArray());
+        foreach ($created->getMyArray() as $myArrayEntry) {
+            $this->assertInstanceOf(SimpleType::class, $myArrayEntry);
+        }
     }
 }

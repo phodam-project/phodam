@@ -67,4 +67,30 @@ class Ex02_CustomTypeProvidersTest extends TestCase
             $this->assertTrue($student->isActive());
         }
     }
+
+    public function testTypeDefinitionWithArray(): void
+    {
+        $def = [
+            'students' => [
+                'type' => Student::class,
+                'name' => null,
+                'nullable' => false,
+                'array' => true
+            ]
+        ];
+
+        $phodam = new Phodam();
+        $phodam->registerTypeDefinition(Classroom::class, $def);
+
+        /** @var Classroom $classroom */
+        $classroom = $phodam->create(Classroom::class);
+        // var_export($classroom);
+        $this->assertInstanceOf(Classroom::class, $classroom);
+        $this->assertIsInt($classroom->getRoomNumber());
+        $this->assertIsArray($classroom->getStudents());
+        foreach ($classroom->getStudents() as $student) {
+            $this->assertInstanceOf(Student::class, $student);
+            $this->assertInstanceOf(Address::class, $student->getAddress());
+        }
+    }
 }

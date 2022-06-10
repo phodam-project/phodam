@@ -103,12 +103,23 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             if (array_key_exists($fieldName, $overrides)) {
                 $val = $overrides[$fieldName];
             } else {
-                $val = $this->phodam->create(
-                    $def['type'],
-                    $def['name'] ?? null,
-                    $def['overrides'] ?? [],
-                    $def['config'] ?? []
-                );
+                $generate = function () use ($def) {
+                    return $this->phodam->create(
+                        $def['type'],
+                        $def['name'] ?? null,
+                        $def['overrides'] ?? [],
+                        $def['config'] ?? []
+                    );
+                };
+                $val = null;
+                if ($def['array'] ?? false) {
+                    $val = [];
+                    for ($i = 0; $i < rand(2, 5); $i++) {
+                        $val[] = $generate();
+                    }
+                } else {
+                    $val = $generate();
+                }
             }
             $refProperty->setAccessible(true);
             $refProperty->setValue($obj, $val);
