@@ -7,36 +7,37 @@ Phodam (pronounced Faux-dam) is a PHP library used to generate objects for unit 
 Phodam, in its current state, will populate objects as long as it's given a `TypeProviderInterface` for a specific class.
 
 ## Usage
+
+### Basic Usage
 ```php
-class SportsTeamProvider implements TypeProviderInterface
-{
-    public function create(array $overrides = [])
-    {
-        $team = new SportsTeam();
-        $team->setLocation('New Jersey');
-        $team->setTeamName('Devils');
-        $team->setLeague('NHL');
-        $team->setFoundedIn(1982);
-        return $team;
-    }
-}
-
-// in your test case base class
-$this->phodam = new Phodam();
-
-$sportsTeamProvider = new SportsTeamProvider();
-$sportsTeamProviderConfig = new \Phodam\Provider\TypeProviderConfig($sportsTeamProvider);
-$sportsTeamProviderConfig->forClass(SportsTeam::class);
-$sportsTeamProviderConfig->withName('Hockey');
-
-$this->phodam->registerTypeProviderConfig($sportsTeamProviderConfig);
-
-$team = $this->phodam->create(SportsTeam::class, 'Hockey');
-// $team is now an object with a randomly generated location and name
-// 'NHL' for the league, and a random 'founded' year between 1920 and this year
+$value = $this->phodam->create(SimpleType::class);
 ```
 
-The idea is that you should be able to specify a way to create a generic `SportsTeam` or a specific type of `SportsTeam` that can then be used from Phodam.
+### Populating a Type with untyped fields
+```php
+// Since PHP classes don't require types on fields, you may need to provide some hints
+// You only need to provide field definitions for fields that can't automatically be mapped
+$definition = [
+    'myInt' => new FieldDefinition('int'),
+    'myString' => new FieldDefinition('string')
+];
+
+$this->phodam->registerTypeDefinition(SimpleTypeMissingSomeFieldTypes::class, $definition);
+
+$value = $this->phodam->create(SimpleTypeMissingSomeFieldsTypes::class);
+```
+
+### Populating a Type with array (list) fields
+```php
+$definition = [
+    'myArray' => (new FieldDefinition(SimpleType::class))
+        ->setArray(true)
+];
+
+$this->phodam->registerTypeDefinition(SimpleTypeWithAnArray::class, $definition);
+
+$value = $this->phodam->create(SimpleTypeWithAnArray::class);
+```
 
 ## Local Build
 
