@@ -76,11 +76,11 @@ class Ex02_CustomTypeProvidersTest extends TestCase
                 ->setArray(true)
         ];
 
-        $phodam = new Phodam();
-        $phodam->registerTypeDefinition(Classroom::class, $def);
+        $localPhodam = new Phodam();
+        $localPhodam->registerTypeDefinition(Classroom::class, $def);
 
         /** @var Classroom $classroom */
-        $classroom = $phodam->create(Classroom::class);
+        $classroom = $localPhodam->create(Classroom::class);
         // var_export($classroom);
         $this->assertInstanceOf(Classroom::class, $classroom);
         $this->assertIsInt($classroom->getRoomNumber());
