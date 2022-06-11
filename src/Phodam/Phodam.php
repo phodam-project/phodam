@@ -9,9 +9,13 @@ declare(strict_types=1);
 
 namespace Phodam;
 
+use DateTime;
+use DateTimeImmutable;
 use InvalidArgumentException;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalyzer;
+use Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider;
+use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
 use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
@@ -46,6 +50,7 @@ class Phodam implements PhodamInterface
     public function __construct()
     {
         $this->registerPrimitiveTypeProviders();
+        $this->registerBuiltinTypeProviders();
         $this->typeAnalyzer = new TypeAnalyzer();
     }
 
@@ -236,24 +241,29 @@ class Phodam implements PhodamInterface
     private function registerPrimitiveTypeProviders(): void
     {
         // register default providers
-        $stringProviderConfig =
-            (new ProviderConfig(new DefaultStringTypeProvider()))
-                ->forType('string');
-        $this->registerProviderConfig($stringProviderConfig);
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultStringTypeProvider()))->forType('string')
+        );
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultIntTypeProvider()))->forType('int')
+        );
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultFloatTypeProvider()))->forType('float')
+        );
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultBoolTypeProvider()))->forType('bool')
+        );
+    }
 
-        $intProviderConfig =
-            (new ProviderConfig(new DefaultIntTypeProvider()))
-                ->forType('int');
-        $this->registerProviderConfig($intProviderConfig);
+    private function registerBuiltinTypeProviders(): void
+    {
+        // register default providers
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultDateTimeTypeProvider()))->forType(DateTime::class)
+        );
 
-        $floatProviderConfig =
-            (new ProviderConfig(new DefaultFloatTypeProvider()))
-                ->forType('float');
-        $this->registerProviderConfig($floatProviderConfig);
-
-        $boolProviderConfig =
-            (new ProviderConfig(new DefaultBoolTypeProvider()))
-                ->forType('bool');
-        $this->registerProviderConfig($boolProviderConfig);
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultDateTimeImmutableTypeProvider()))->forType(DateTimeImmutable::class)
+        );
     }
 }
