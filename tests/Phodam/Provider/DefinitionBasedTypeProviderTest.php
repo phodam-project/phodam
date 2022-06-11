@@ -7,12 +7,11 @@
 
 declare(strict_types=1);
 
-namespace PhodamTests\Phodam\Provider\Builtin;
+namespace PhodamTests\Phodam\Provider;
 
+use Phodam\Analyzer\FieldDefinition;
 use Phodam\PhodamInterface;
 use Phodam\Provider\DefinitionBasedTypeProvider;
-use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
-use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\UnableToGenerateTypeException;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
@@ -35,6 +34,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreate()
     {
@@ -54,26 +55,12 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         $type = SimpleType::class;
         $definition = [
-            'myInt' => [
-                'type' => 'int',
-                'nullable' => false,
-                'array' => false
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'nullable' => true,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'nullable' => false,
-                'array' => false
-            ]
+            'myInt' => new FieldDefinition('int'),
+            'myFloat' => (new FieldDefinition('float'))
+                ->setNullable(true),
+            'myString' => (new FieldDefinition('string'))
+                ->setNullable(true),
+            'myBool' => new FieldDefinition('bool')
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
@@ -91,6 +78,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreateWithNamedProvider()
     {
@@ -110,34 +99,13 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         $type = SimpleType::class;
         $definition = [
-            'myInt' => [
-                'type' => 'int',
-                'name' => null,
-                'overrides' => [],
-                'nullable' => false,
-                'array' => false
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'name' => null,
-                'overrides' => [],
-                'nullable' => true,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'name' => 'MyNamedString',
-                'overrides' => [],
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'name' => null,
-                'overrides' => [],
-                'nullable' => false,
-                'array' => false
-            ]
+            'myInt' => new FieldDefinition('int'),
+            'myFloat' => (new FieldDefinition('float'))
+                ->setNullable(true),
+            'myString' => (new FieldDefinition('string'))
+                ->setName('MyNamedString')
+                ->setNullable(true),
+            'myBool' => new FieldDefinition('bool')
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
@@ -154,6 +122,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreateWithOverrides()
     {
@@ -173,26 +143,12 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         $type = SimpleType::class;
         $definition = [
-            'myInt' => [
-                'type' => 'int',
-                'nullable' => false,
-                'array' => false
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'nullable' => true,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'nullable' => false,
-                'array' => false
-            ]
+            'myInt' => new FieldDefinition('int'),
+            'myFloat' => (new FieldDefinition('float'))
+                ->setNullable(true),
+            'myString' => (new FieldDefinition('string'))
+                ->setNullable(true),
+            'myBool' => new FieldDefinition('bool')
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
@@ -209,6 +165,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreateSimpleTypeWithoutTypesHasFullDefinition()
     {
@@ -228,26 +186,12 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         $type = SimpleTypeWithoutTypes::class;
         $definition = [
-            'myInt' => [
-                'type' => 'int',
-                'nullable' => false,
-                'array' => false
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'nullable' => true,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'nullable' => false,
-                'array' => false
-            ]
+            'myInt' => new FieldDefinition('int'),
+            'myFloat' => (new FieldDefinition('float'))
+                ->setNullable(true),
+            'myString' => (new FieldDefinition('string'))
+                ->setNullable(true),
+            'myBool' => new FieldDefinition('bool')
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
@@ -264,6 +208,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreateSimpleTypeMissingSomeFieldsButDefined()
     {
@@ -283,16 +229,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         $type = SimpleTypeMissingSomeFieldTypes::class;
         $definition = [
-            'myInt' => [
-                'type' => 'int',
-                'nullable' => false,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'nullable' => true,
-                'array' => false
-            ]
+            'myInt' => new FieldDefinition('int'),
+            'myString' => (new FieldDefinition('string'))
+                ->setNullable(true)
         ];
 
         $provider = new DefinitionBasedTypeProvider($type, $definition);
@@ -309,6 +248,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     /**
      * @covers ::__construct
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreateSimpleTypeMissingSomeFieldsNotAllDefined()
     {
@@ -337,23 +278,16 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
     /**
      * @covers ::create
+     * @covers ::generateValueFromFieldDefinition
+     * @covers ::generateSingleValueFromFieldDefinition
      */
     public function testCreateSimpleTypeWithAnArray()
     {
         $type = SimpleTypeWithAnArray::class;
-        $def = [
-            'myInt' => [
-                'type' => 'int',
-                'name' => null,
-                'nullable' => false,
-                'array' => false
-            ],
-            'myArray' => [
-                'type' => SimpleType::class,
-                'name' => null,
-                'nullable' => false,
-                'array' => true
-            ]
+        $definition = [
+            'myInt' => new FieldDefinition('int'),
+            'myArray' => (new FieldDefinition(SimpleType::class))
+                ->setArray(true)
         ];
 
         $this->phodam
@@ -371,7 +305,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 return null;
             });
 
-        $provider = new DefinitionBasedTypeProvider($type, $def);
+        $provider = new DefinitionBasedTypeProvider($type, $definition);
         $provider->setPhodam($this->phodam);
 
         /** @var SimpleTypeWithAnArray $created */

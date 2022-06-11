@@ -44,14 +44,12 @@ class TypeAnalyzer
                 continue;
             }
 
-            $mappedFields[$property->getName()] = [
-                'type' => $propertyType->getName(),
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => $propertyType->allowsNull(),
-                'array' => false
-            ];
+            $mappedFields[$property->getName()] = (new FieldDefinition($propertyType->getName()))
+                ->setName(null)
+                ->setOverrides([])
+                ->setConfig([])
+                ->setNullable($propertyType->allowsNull())
+                ->setArray(false);
         }
 
         if (!empty($unmappedFields)) {

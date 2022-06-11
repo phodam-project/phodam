@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam;
 
 use InvalidArgumentException;
+use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
@@ -242,19 +243,10 @@ class PhodamTest extends PhodamBaseTestCase
     {
         $type = SimpleTypeMissingSomeFieldTypes::class;
         $definition = [
-            'myInt' => [
-                'type' => 'int'
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'nullable' => true
-            ],
-            'myString' => [
-                'type' => 'string'
-            ],
-            'myBool' => [
-                'type' => 'bool'
-            ]
+            'myInt' => new FieldDefinition('int'),
+            'myFloat' => (new FieldDefinition('float'))->setNullable(true),
+            'myString' => new FieldDefinition('string'),
+            'myBool' => new FieldDefinition('bool')
         ];
 
         // try getting a type provider that exists already, it shouldn't, so an exception should be thrown

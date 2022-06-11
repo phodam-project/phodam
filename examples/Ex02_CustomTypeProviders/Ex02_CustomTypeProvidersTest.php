@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex02_CustomTypeProviders;
 
+use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
@@ -71,19 +72,15 @@ class Ex02_CustomTypeProvidersTest extends TestCase
     public function testTypeDefinitionWithArray(): void
     {
         $def = [
-            'students' => [
-                'type' => Student::class,
-                'name' => null,
-                'nullable' => false,
-                'array' => true
-            ]
+            'students' => (new FieldDefinition(Student::class))
+                ->setArray(true)
         ];
 
-        $phodam = new Phodam();
-        $phodam->registerTypeDefinition(Classroom::class, $def);
+        $localPhodam = new Phodam();
+        $localPhodam->registerTypeDefinition(Classroom::class, $def);
 
         /** @var Classroom $classroom */
-        $classroom = $phodam->create(Classroom::class);
+        $classroom = $localPhodam->create(Classroom::class);
         // var_export($classroom);
         $this->assertInstanceOf(Classroom::class, $classroom);
         $this->assertIsInt($classroom->getRoomNumber());
