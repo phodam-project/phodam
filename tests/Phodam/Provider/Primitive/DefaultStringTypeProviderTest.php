@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-namespace PhodamTests\Phodam\Provider\Builtin;
+namespace PhodamTests\Phodam\Provider\Primitive;
 
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use PhodamTests\Phodam\PhodamBaseTestCase;

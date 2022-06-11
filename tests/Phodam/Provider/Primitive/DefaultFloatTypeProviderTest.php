@@ -7,21 +7,21 @@
 
 declare(strict_types=1);
 
-namespace PhodamTests\Phodam\Provider\Builtin;
+namespace PhodamTests\Phodam\Provider\Primitive;
 
-use Phodam\Provider\Primitive\DefaultIntTypeProvider;
+use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\Primitive\DefaultIntTypeProvider
+ * @coversDefaultClass \Phodam\Provider\Primitive\DefaultFloatTypeProvider
  */
-class DefaultIntTypeProviderTest extends PhodamBaseTestCase
+class DefaultFloatTypeProviderTest extends PhodamBaseTestCase
 {
-    private DefaultIntTypeProvider $provider;
+    private DefaultFloatTypeProvider $provider;
 
     public function setUp(): void
     {
-        $this->provider = new DefaultIntTypeProvider();
+        $this->provider = new DefaultFloatTypeProvider();
     }
 
     /**
@@ -29,11 +29,12 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
      */
     public function testCreate()
     {
+        // defaults
         $min = -10000;
         $max = 10000;
         for ($i = 0; $i < 10; $i++) {
             $value = $this->provider->create();
-            $this->assertIsInt($value);
+            $this->assertIsFloat($value);
             $this->assertGreaterThanOrEqual($min, $value);
             $this->assertLessThanOrEqual($max, $value);
         }
@@ -44,6 +45,7 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
      */
     public function testCreateWithConfigMinAndMax()
     {
+        // defaults
         $min = -100;
         $max = 100;
         for ($i = 0; $i < 10; $i++) {
@@ -51,7 +53,7 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
                 'min' => $min,
                 'max' => $max
             ]);
-            $this->assertIsInt($value);
+            $this->assertIsFloat($value);
             $this->assertGreaterThanOrEqual($min, $value);
             $this->assertLessThanOrEqual($max, $value);
         }
@@ -62,6 +64,7 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
      */
     public function testCreateWithConfigMinAndMaxWithSmallRange()
     {
+        // defaults
         $min = -1;
         $max = 1;
         for ($i = 0; $i < 10; $i++) {
@@ -69,7 +72,7 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
                 'min' => $min,
                 'max' => $max
             ]);
-            $this->assertIsInt($value);
+            $this->assertIsFloat($value);
             $this->assertGreaterThanOrEqual($min, $value);
             $this->assertLessThanOrEqual($max, $value);
         }

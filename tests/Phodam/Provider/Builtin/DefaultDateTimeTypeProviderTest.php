@@ -9,19 +9,20 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider\Builtin;
 
-use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
+use DateTime;
+use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\Primitive\DefaultBoolTypeProvider
+ * @coversDefaultClass \Phodam\Provider\Builtin\DefaultDateTimeTypeProvider
  */
-class DefaultBoolTypeProviderTest extends PhodamBaseTestCase
+class DefaultDateTimeTypeProviderTest extends PhodamBaseTestCase
 {
-    private DefaultBoolTypeProvider $provider;
+    private DefaultDateTimeTypeProvider $provider;
 
     public function setUp(): void
     {
-        $this->provider = new DefaultBoolTypeProvider();
+        $this->provider = new DefaultDateTimeTypeProvider();
     }
 
     /**
@@ -31,7 +32,7 @@ class DefaultBoolTypeProviderTest extends PhodamBaseTestCase
     {
         for ($i = 0; $i < 10; $i++) {
             $value = $this->provider->create();
-            $this->assertIsBool($value);
+            $this->assertInstanceOf(DateTime::class, $value);
         }
     }
 }
