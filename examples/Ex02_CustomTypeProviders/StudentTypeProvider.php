@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex02_CustomTypeProviders;
 
+use DateTimeImmutable;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
 use Phodam\Provider\TypedProviderInterface;
@@ -39,7 +40,8 @@ class StudentTypeProvider implements TypedProviderInterface, PhodamAware
                 [ 'min' => 0.0, 'max' => 4.0, 'precision' => 2 ]
             ),
             'active' => true,
-            'address' => $this->phodam->create(Address::class)
+            'address' => $this->phodam->create(Address::class),
+            'dateOfBirth' => $this->phodam->create(DateTimeImmutable::class)
         ];
 
         $values = array_merge(
@@ -52,6 +54,7 @@ class StudentTypeProvider implements TypedProviderInterface, PhodamAware
             ->setName($values['name'])
             ->setGpa($values['gpa'])
             ->setActive($values['active'])
-            ->setAddress($values['address']);
+            ->setAddress($values['address'])
+            ->setDateOfBirth($values['dateOfBirth']);
     }
 }

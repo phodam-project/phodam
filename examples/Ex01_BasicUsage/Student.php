@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex01_BasicUsage;
 
+use DateTimeImmutable;
+
 class Student
 {
     private int $id;
@@ -16,6 +18,7 @@ class Student
     private float $gpa;
     private bool $active;
     private Address $address;
+    private DateTimeImmutable $dateOfBirth;
 
     /**
      * @return int
@@ -104,6 +107,24 @@ class Student
     public function setAddress(Address $address): Student
     {
         $this->address = $address;
+        return $this;
+    }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function getDateOfBirth(): DateTimeImmutable
+    {
+        return $this->dateOfBirth;
+    }
+
+    /**
+     * @param DateTimeImmutable $dateOfBirth
+     * @return Student
+     */
+    public function setDateOfBirth(DateTimeImmutable $dateOfBirth): Student
+    {
+        $this->dateOfBirth = $dateOfBirth;
         return $this;
     }
 }

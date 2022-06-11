@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex02_CustomTypeProviders;
 
+use DateTimeImmutable;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Phodam;
@@ -66,6 +67,8 @@ class Ex02_CustomTypeProvidersTest extends TestCase
             $this->assertGreaterThanOrEqual(0.0, $student->getGpa());
             $this->assertLessThanOrEqual(4.0, $student->getGpa());
             $this->assertTrue($student->isActive());
+            $this->assertInstanceOf(Address::class, $student->getAddress());
+            $this->assertInstanceOf(DateTimeImmutable::class, $student->getDateOfBirth());
         }
     }
 
@@ -88,6 +91,7 @@ class Ex02_CustomTypeProvidersTest extends TestCase
         foreach ($classroom->getStudents() as $student) {
             $this->assertInstanceOf(Student::class, $student);
             $this->assertInstanceOf(Address::class, $student->getAddress());
+            $this->assertInstanceOf(DateTimeImmutable::class, $student->getDateOfBirth());
         }
     }
 }

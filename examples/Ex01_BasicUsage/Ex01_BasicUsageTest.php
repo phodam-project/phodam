@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex01_BasicUsage;
 
+use DateTimeImmutable;
 use Phodam\Phodam;
 use PHPUnit\Framework\TestCase;
 
@@ -131,6 +132,7 @@ class Ex01_BasicUsageTest extends TestCase
             $this->assertEquals(4.0, $student->getGpa());
             $this->assertTrue($student->isActive());
             $this->assertInstanceOf(Address::class, $student->getAddress());
+            $this->assertInstanceOf(DateTimeImmutable::class, $student->getDateOfBirth());
         }
     }
 }
