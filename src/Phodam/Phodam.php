@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Phodam;
 
 use InvalidArgumentException;
+use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
@@ -83,7 +84,7 @@ class Phodam implements PhodamInterface
 
     /**
      * @param string $type
-     * @param array<string, array<string, mixed>> $definition
+     * @param array<string, FieldDefinition> $definition
      * @return ProviderInterface
      */
     public function registerTypeDefinition(string $type, array $definition): ProviderInterface

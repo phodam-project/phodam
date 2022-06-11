@@ -14,7 +14,7 @@ class TypeAnalysisException extends \Exception
     private string $type;
     /** @var array<string> $fieldNames */
     private array $fieldNames = [];
-    /** @var array<string, array<string, mixed>> */
+    /** @var array<string, FieldDefinition> */
     private array $mappedFields = [];
     /** @var array<string> */
     private array $unmappedFields = [];
@@ -23,7 +23,7 @@ class TypeAnalysisException extends \Exception
      * @param string $type
      * @param string $message
      * @param array<string> $fieldNames
-     * @param array<string, array<string, mixed>> $mappedFields
+     * @param array<string, FieldDefinition> $mappedFields
      * @param array<string> $unmappedFields
      */
     public function __construct(
@@ -57,7 +57,7 @@ class TypeAnalysisException extends \Exception
     }
 
     /**
-     * @return array<string, array<string, mixed>>
+     * @return array<string, FieldDefinition>
      */
     public function getMappedFields(): array
     {

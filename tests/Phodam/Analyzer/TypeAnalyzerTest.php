@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Analyzer;
 
+use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
 use PhodamTests\Fixtures\SimpleType;
@@ -35,38 +36,12 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
     public function testAnalyze(): void
     {
         $expected = [
-            'myInt' => [
-                'type' => 'int',
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => false,
-                'array' => false
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => true,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => false,
-                'array' => false
-            ]
+            'myInt' => (new FieldDefinition('int')),
+            'myFloat' => (new FieldDefinition('float'))
+                ->setNullable(true),
+            'myString' => (new FieldDefinition('string'))
+                ->setNullable(true),
+            'myBool' => (new FieldDefinition('bool'))
         ];
 
         $result = $this->analyzer->analyze(SimpleType::class);
@@ -87,22 +62,9 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             'myInt', 'myString'
         ];
         $expectedMappedFields = [
-            'myFloat' => [
-                'type' => 'float',
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'name' => null,
-                'overrides' => [],
-                'config' => [],
-                'nullable' => false,
-                'array' => false
-            ]
+            'myFloat' => (new FieldDefinition('float'))
+                ->setNullable(true),
+            'myBool' => (new FieldDefinition('bool'))
         ];
 
         try {

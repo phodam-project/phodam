@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
+use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\PhodamAware;
@@ -24,12 +25,12 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
     use PhodamAwareTrait;
 
     private string $type;
-    /** @var array<string, array<string, mixed>> */
+    /** @var array<string, FieldDefinition> */
     private array $definition;
 
     /**
      * @param class-string<T> $type
-     * @param array<string, array<string, mixed>> $definition
+     * @param array<string, FieldDefinition> $definition
      */
     public function __construct(
         string $type,
@@ -103,28 +104,44 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             if (array_key_exists($fieldName, $overrides)) {
                 $val = $overrides[$fieldName];
             } else {
-                $generate = function () use ($def) {
-                    return $this->phodam->create(
-                        $def['type'],
-                        $def['name'] ?? null,
-                        $def['overrides'] ?? [],
-                        $def['config'] ?? []
-                    );
-                };
-                $val = null;
-                if ($def['array'] ?? false) {
-                    $val = [];
-                    for ($i = 0; $i < rand(2, 5); $i++) {
-                        $val[] = $generate();
-                    }
-                } else {
-                    $val = $generate();
-                }
+                $val = $this->generateValueFromFieldDefinition($def);
             }
             $refProperty->setAccessible(true);
             $refProperty->setValue($obj, $val);
         }
 
         return $obj;
+    }
+
+    /**
+     * @param FieldDefinition $def
+     * @return mixed
+     */
+    private function generateValueFromFieldDefinition(FieldDefinition $def)
+    {
+        $val = null;
+        if ($def->isArray()) {
+            $val = [];
+            for ($i = 0; $i < rand(2, 5); $i++) {
+                $val[] = $this->generateSingleValueFromFieldDefinition($def);
+            }
+        } else {
+            $val = $this->generateSingleValueFromFieldDefinition($def);
+        }
+        return $val;
+    }
+
+    /**
+     * @param FieldDefinition $def
+     * @return mixed
+     */
+    private function generateSingleValueFromFieldDefinition(FieldDefinition $def)
+    {
+        return $this->phodam->create(
+            $def->getType(),
+            $def->getName(),
+            $def->getOverrides(),
+            $def->getConfig()
+        );
     }
 }
