@@ -26,14 +26,16 @@ class SimpleType
 
     /**
      * @param int $myInt
+     * @return SimpleType
      */
-    public function setMyInt(int $myInt): void
+    public function setMyInt(int $myInt): SimpleType
     {
         $this->myInt = $myInt;
+        return $this;
     }
 
     /**
-     * @return ?float
+     * @return float|null
      */
     public function getMyFloat(): ?float
     {
@@ -41,15 +43,17 @@ class SimpleType
     }
 
     /**
-     * @param ?float $myFloat
+     * @param float|null $myFloat
+     * @return SimpleType
      */
-    public function setMyFloat(?float $myFloat): void
+    public function setMyFloat(?float $myFloat): SimpleType
     {
         $this->myFloat = $myFloat;
+        return $this;
     }
 
     /**
-     * @return ?string
+     * @return string|null
      */
     public function getMyString(): ?string
     {
@@ -57,11 +61,13 @@ class SimpleType
     }
 
     /**
-     * @param ?string $myString
+     * @param string|null $myString
+     * @return SimpleType
      */
-    public function setMyString(?string $myString): void
+    public function setMyString(?string $myString): SimpleType
     {
         $this->myString = $myString;
+        return $this;
     }
 
     /**
@@ -74,9 +80,11 @@ class SimpleType
 
     /**
      * @param bool $myBool
+     * @return SimpleType
      */
-    public function setMyBool(bool $myBool): void
+    public function setMyBool(bool $myBool): SimpleType
     {
         $this->myBool = $myBool;
+        return $this;
     }
 }
