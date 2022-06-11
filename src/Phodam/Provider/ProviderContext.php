@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
+use InvalidArgumentException;
 use Phodam\PhodamInterface;
 
 class ProviderContext implements PhodamInterface
@@ -71,19 +72,26 @@ class ProviderContext implements PhodamInterface
      */
     public function hasOverride(string $field): bool
     {
-        return isset($this->overrides[$field]);
+        // Checking array key rather than isset because the override value can
+        // be null.
+        return array_key_exists($field, $this->overrides);
     }
 
     /**
-     * Return the override value for the given field in this context, or null if
-     * the field is not overridden.
+     * Return the override value for the given field in this context.
      *
      * @param string $field the field name to check
      * @return mixed the overridden value
+     * @throws InvalidArgumentException if there is no override for the given
+     *     field in this context
      */
     public function getOverride(string $field): mixed
     {
-        return $this->overrides[$field] ?? null;
+        if (!array_key_exists($field, $this->overrides)) {
+            throw new InvalidArgumentException("No override for field {$field}");
+        }
+
+        return $this->overrides[$field];
     }
 
     /**
