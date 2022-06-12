@@ -12,6 +12,7 @@ namespace Phodam\Provider;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
+use Phodam\Analyzer\TypeDefinition;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
 use ReflectionClass;
@@ -25,16 +26,15 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
     use PhodamAwareTrait;
 
     private string $type;
-    /** @var array<string, FieldDefinition> */
-    private array $definition;
+    private TypeDefinition $definition;
 
     /**
      * @param class-string<T> $type
-     * @param array<string, FieldDefinition> $definition
+     * @param TypeDefinition $definition
      */
     public function __construct(
         string $type,
-        array $definition
+        TypeDefinition $definition
     ) {
         $this->type = $type;
         $this->definition = $definition;
@@ -60,7 +60,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         );
 
         // 2. get a list of definition fields
-        $defFields = array_keys($this->definition);
+        $defFields = $this->definition->getFieldNames();
 
         // 3. check to see which fields don't overlap
         $missingFields = array_diff($classFields, $defFields);
@@ -72,6 +72,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             try {
                 // 6. generate a definition for the type analyzer
                 $generatedDef = $analyzer->analyze($this->type);
+                $generatedDef = $generatedDef->getFields();
             } catch (TypeAnalysisException $ex) {
                 // 7. if it throws an exception, check the $mappedFields from
                 //    the exception
@@ -94,12 +95,12 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             // 8. if $mappedFields covers the difference in fields,
             //    then you're good
             foreach ($missingFields as $missingField) {
-                $this->definition[$missingField] = $generatedDef[$missingField];
+                $this->definition->addField($missingField, $generatedDef[$missingField]);
             }
         }
 
         $obj = $refClass->newInstanceWithoutConstructor();
-        foreach ($this->definition as $fieldName => $def) {
+        foreach ($this->definition->getFields() as $fieldName => $def) {
             $refProperty = $refClass->getProperty($fieldName);
             if (array_key_exists($fieldName, $overrides)) {
                 $val = $overrides[$fieldName];

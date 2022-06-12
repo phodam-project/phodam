@@ -12,6 +12,7 @@ namespace PhodamExamples\Ex02_CustomTypeProviders;
 use DateTimeImmutable;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
+use Phodam\Analyzer\TypeDefinition;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
 use PHPUnit\Framework\TestCase;
@@ -74,10 +75,11 @@ class Ex02_CustomTypeProvidersTest extends TestCase
 
     public function testTypeDefinitionWithArray(): void
     {
-        $def = [
+        $fields = [
             'students' => (new FieldDefinition(Student::class))
                 ->setArray(true)
         ];
+        $def = new TypeDefinition($fields);
 
         $localPhodam = new Phodam();
         $localPhodam->registerTypeDefinition(Classroom::class, $def);

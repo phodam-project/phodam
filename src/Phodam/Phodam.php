@@ -14,6 +14,7 @@ use DateTimeImmutable;
 use InvalidArgumentException;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalyzer;
+use Phodam\Analyzer\TypeDefinition;
 use Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
 use Phodam\Provider\DefinitionBasedTypeProvider;
@@ -89,10 +90,10 @@ class Phodam implements PhodamInterface
 
     /**
      * @param string $type
-     * @param array<string, FieldDefinition> $definition
+     * @param TypeDefinition $definition
      * @return ProviderInterface
      */
-    public function registerTypeDefinition(string $type, array $definition): ProviderInterface
+    public function registerTypeDefinition(string $type, TypeDefinition $definition): ProviderInterface
     {
         $provider = new DefinitionBasedTypeProvider($type, $definition);
         $providerConfig = (new ProviderConfig($provider))

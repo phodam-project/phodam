@@ -12,6 +12,7 @@ namespace PhodamTests\Phodam\Analyzer;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
+use Phodam\Analyzer\TypeDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;
@@ -45,7 +46,8 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         ];
 
         $result = $this->analyzer->analyze(SimpleType::class);
-        $this->assertEquals($expected, $result);
+        $this->assertInstanceOf(TypeDefinition::class, $result);
+        $this->assertEquals($expected, $result->getFields());
     }
 
     /**
