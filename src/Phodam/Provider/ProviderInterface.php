@@ -10,11 +10,14 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
+use Throwable;
+
 interface ProviderInterface
 {
     /**
      * @param ProviderContext $context the context in which to create a value
      * @return mixed
+     * @throws Throwable
      */
     public function create(ProviderContext $context);
 }

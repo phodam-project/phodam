@@ -10,6 +10,9 @@ declare(strict_types=1);
 
 namespace Phodam;
 
+use Phodam\Provider\CreationFailedException;
+use Phodam\Store\ProviderNotFoundException;
+
 interface PhodamInterface
 {
     /**
@@ -20,6 +23,8 @@ interface PhodamInterface
      * @param ?array<string, mixed> $config provider-specific information. an
      *     open-ended array for the provider to pass information along
      * @return array<string, mixed>
+     * @throws CreationFailedException
+     * @throws ProviderNotFoundException
      */
     public function createArray(
         string $name,
@@ -34,6 +39,8 @@ interface PhodamInterface
      * @param ?array<string, mixed> $config provider-specific information. an
      *     open-ended array for the provider to pass information along
      * @return mixed
+     * @throws CreationFailedException
+     * @throws ProviderNotFoundException
      */
     public function create(
         string $type,

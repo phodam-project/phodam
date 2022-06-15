@@ -51,11 +51,14 @@ class Phodam implements PhodamInterface
         ?array $overrides = null,
         ?array $config = null
     ): array {
+        $provider = $this->getArrayProvider($name);
         $context = new ProviderContext($this, 'array', $overrides ?? [], $config ?? []);
 
-        return $this
-            ->getArrayProvider($name)
-            ->create($context);
+        try {
+            return $provider->create($context);
+        } catch (Throwable $ex) {
+            throw new CreationFailedException('array', $name, null, $ex);
+        }
     }
 
     /**
@@ -77,7 +80,11 @@ class Phodam implements PhodamInterface
 
         $context = new ProviderContext($this, $type, $overrides ?? [], $config ?? []);
 
-        return $provider->create($context);
+        try {
+            return $provider->create($context);
+        } catch (Throwable $ex) {
+            throw new CreationFailedException($type, $name, null, $ex);
+        }
     }
 
     /**
