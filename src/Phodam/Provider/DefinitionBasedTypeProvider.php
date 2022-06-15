@@ -37,9 +37,8 @@ class DefinitionBasedTypeProvider implements ProviderInterface
     }
 
     /**
-     * @param array<string, mixed> $overrides
-     * @param array<string, mixed> $config
-     * @return mixed
+     * @inheritDoc
+     * @throws IncompleteDefinitionException
      * @throws \ReflectionException
      */
     public function create(ProviderContext $context)
@@ -86,10 +85,9 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             );
             if (!empty($stillMissingFields)) {
                 // 9. if it doesn't, then throw an exception and give up
-                throw new UnableToGenerateTypeException(
+                throw new IncompleteDefinitionException(
                     $this->type,
-                    "{$this->type}: Unable to map fields "
-                    . join(', ', $stillMissingFields)
+                    $stillMissingFields
                 );
             }
 

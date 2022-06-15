@@ -13,7 +13,7 @@ namespace Phodam\Tests\Phodam\Provider;
 use Phodam\PhodamInterface;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\ProviderContext;
-use Phodam\Provider\UnableToGenerateTypeException;
+use Phodam\Provider\IncompleteDefinitionException;
 use Phodam\Tests\Fixtures\SimpleType;
 use Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use Phodam\Tests\Fixtures\SimpleTypeWithoutTypes;
@@ -366,9 +366,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
             []
         );
 
-        $this->expectException(UnableToGenerateTypeException::class);
+        $this->expectException(IncompleteDefinitionException::class);
         $this->expectExceptionMessage(
-            'Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes: Unable to map fields myString'
+            'Phodam\Tests\Fixtures\SimpleTypeMissingSomeFieldTypes: Unable to map fields: myString'
         );
 
         $provider->create($context);
