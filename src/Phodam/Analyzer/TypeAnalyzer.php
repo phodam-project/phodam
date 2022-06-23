@@ -16,10 +16,10 @@ class TypeAnalyzer
 {
     /**
      * @param string $type
-     * @return array<string, mixed>
+     * @return TypeDefinition
      * @throws ReflectionException|TypeAnalysisException
      */
-    public function analyze(string $type): array
+    public function analyze(string $type): TypeDefinition
     {
         $class = new \ReflectionClass($type);
 
@@ -62,6 +62,7 @@ class TypeAnalyzer
             );
         }
 
-        return $mappedFields;
+        return (new TypeDefinition())
+            ->setFields($mappedFields);
     }
 }

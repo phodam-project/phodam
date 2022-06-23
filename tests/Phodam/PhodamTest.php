@@ -12,6 +12,7 @@ namespace PhodamTests\Phodam;
 use InvalidArgumentException;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
+use Phodam\Analyzer\TypeDefinition;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderNotFoundException;
@@ -242,12 +243,13 @@ class PhodamTest extends PhodamBaseTestCase
     public function testRegisterTypeDefinition(): void
     {
         $type = SimpleTypeMissingSomeFieldTypes::class;
-        $definition = [
+        $fields = [
             'myInt' => new FieldDefinition('int'),
             'myFloat' => (new FieldDefinition('float'))->setNullable(true),
             'myString' => new FieldDefinition('string'),
             'myBool' => new FieldDefinition('bool')
         ];
+        $definition = new TypeDefinition($fields);
 
         // try getting a type provider that exists already, it shouldn't, so an exception should be thrown
         try {
