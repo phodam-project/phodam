@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -12,19 +13,20 @@ namespace Phodam\Provider;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
+<<<<<<< HEAD
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
+=======
+>>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
 use ReflectionClass;
 use ReflectionProperty;
 
 /**
  * @template T
  */
-class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
+class DefinitionBasedTypeProvider implements ProviderInterface
 {
-    use PhodamAwareTrait;
-
     private string $type;
     private TypeDefinition $definition;
 
@@ -41,13 +43,15 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
     }
 
     /**
-     * @param array<string, mixed> $overrides
-     * @param array<string, mixed> $config
-     * @return mixed
+     * @inheritDoc
+     * @throws IncompleteDefinitionException
      * @throws \ReflectionException
      */
-    public function create(array $overrides = [], array $config = [])
+    public function create(ProviderContext $context)
     {
+        // TODO: We could check if $this->type is compatible with
+        // $context->getType(), but it's not as simple as checking ===.
+
         // okay, so here's some thoughts.
         // a definition shouldn't have to be complete, we should only HAVE
         //     to define the fields that the type analyzer can't handle
@@ -85,10 +89,9 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
             );
             if (!empty($stillMissingFields)) {
                 // 9. if it doesn't, then throw an exception and give up
-                throw new UnableToGenerateTypeException(
+                throw new IncompleteDefinitionException(
                     $this->type,
-                    "{$this->type}: Unable to map fields "
-                    . join(', ', $stillMissingFields)
+                    $stillMissingFields
                 );
             }
 
@@ -102,10 +105,19 @@ class DefinitionBasedTypeProvider implements ProviderInterface, PhodamAware
         $obj = $refClass->newInstanceWithoutConstructor();
         foreach ($this->definition->getFields() as $fieldName => $def) {
             $refProperty = $refClass->getProperty($fieldName);
-            if (array_key_exists($fieldName, $overrides)) {
-                $val = $overrides[$fieldName];
+            if ($context->hasOverride($fieldName)) {
+                $val = $context->getOverride($fieldName);
             } else {
+<<<<<<< HEAD
                 $val = $this->generateValueFromFieldDefinition($def);
+=======
+                $val = $context->create(
+                    $def['type'],
+                    $def['name'] ?? null,
+                    $def['overrides'] ?? null,
+                    $def['config'] ?? null
+                );
+>>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
             }
             $refProperty->setAccessible(true);
             $refProperty->setValue($obj, $val);

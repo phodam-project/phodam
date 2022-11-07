@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -9,13 +10,14 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
+use Throwable;
+
 interface ProviderInterface
 {
     /**
-     * @param array<string, mixed> $overrides values to override
-     * @param array<string, mixed> $config provider-specific information. an
-     *     open-ended array for the provider to pass information along
+     * @param ProviderContext $context the context in which to create a value
      * @return mixed
+     * @throws Throwable
      */
-    public function create(array $overrides = [], array $config = []);
+    public function create(ProviderContext $context);
 }

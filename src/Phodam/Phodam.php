@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -23,36 +24,34 @@ use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderConfig;
+use Phodam\Provider\ProviderContext;
 use Phodam\Provider\ProviderInterface;
-use Phodam\Provider\ProviderNotFoundException;
+use Phodam\Store\ProviderConflictException;
+use Phodam\Store\ProviderNotFoundException;
+use Phodam\Store\ProviderStore;
 
 class Phodam implements PhodamInterface
 {
-    /**
-     * A map of array-provider-name => ProviderInterface
-     * @var array<string, ProviderInterface>
-     */
-    private array $arrayProviders = [];
-
-    /**
-     * A map of class-string => ProviderInterface
-     * @var array<string, ProviderInterface>
-     */
-    private array $providers = [];
-
-    /**
-     * A map of class-string => { provider-name => ProviderInterface }
-     * @var array<string, array<string, ProviderInterface>>
-     */
-    private array $namedProviders = [];
+    private ProviderStore $providerStore;
 
     private TypeAnalyzer $typeAnalyzer;
 
-    public function __construct()
+    public function __construct(?ProviderStore $providerStore = null)
     {
+<<<<<<< HEAD
         $this->registerPrimitiveTypeProviders();
         $this->registerBuiltinTypeProviders();
+=======
+>>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
         $this->typeAnalyzer = new TypeAnalyzer();
+
+        if ($providerStore !== null) {
+            $this->providerStore = $providerStore;
+        } else {
+            // Fallback for now, but soon we'll require ProviderStore.
+            $this->providerStore = new ProviderStore();
+            $this->registerPrimitiveTypeProviders();
+        }
     }
 
     /**
@@ -60,12 +59,17 @@ class Phodam implements PhodamInterface
      */
     public function createArray(
         string $name,
-        array $overrides = [],
-        array $config = []
+        ?array $overrides = null,
+        ?array $config = null
     ): array {
-        return $this
-            ->getArrayProvider($name)
-            ->create($overrides, $config);
+        $provider = $this->getArrayProvider($name);
+        $context = new ProviderContext($this, 'array', $overrides ?? [], $config ?? []);
+
+        try {
+            return $provider->create($context);
+        } catch (Throwable $ex) {
+            throw new CreationFailedException('array', $name, null, $ex);
+        }
     }
 
     /**
@@ -73,9 +77,9 @@ class Phodam implements PhodamInterface
      */
     public function create(
         string $type,
-        string $name = null,
-        array $overrides = [],
-        array $config = []
+        ?string $name = null,
+        ?array $overrides = null,
+        ?array $config = null
     ) {
         try {
             $provider = $this
@@ -85,7 +89,13 @@ class Phodam implements PhodamInterface
             $provider = $this->registerTypeDefinition($type, $definition);
         }
 
-        return $provider->create($overrides, $config);
+        $context = new ProviderContext($this, $type, $overrides ?? [], $config ?? []);
+
+        try {
+            return $provider->create($context);
+        } catch (Throwable $ex) {
+            throw new CreationFailedException($type, $name, null, $ex);
+        }
     }
 
     /**
@@ -140,47 +150,28 @@ class Phodam implements PhodamInterface
      */
     public function getArrayProvider(string $name): ProviderInterface
     {
-        if (!array_key_exists($name, $this->arrayProviders)) {
-            throw new InvalidArgumentException(
-                "Unable to find an array provider with the name {$name}"
-            );
-        }
-
-        return $this->arrayProviders[$name];
+        return $this->providerStore->findNamedProvider('array', $name);
     }
 
     /**
      * Returns a type provider by type name and optionally name
      *
-     * @template T
-     * @param class-string<T> $type
+     * @param string $type
      * @param string|null $name
      * @return ProviderInterface
      * @throws ProviderNotFoundException if a provider can't be found
      */
-    public function getTypeProvider(string $type, ?string $name = null): ?ProviderInterface
+    public function getTypeProvider(string $type, ?string $name = null): ProviderInterface
     {
-        // we're looking for a named provider
         if ($name) {
-            if (
-                !array_key_exists($type, $this->namedProviders)
-                || !array_key_exists($name, $this->namedProviders[$type])
-            ) {
-                throw new InvalidArgumentException(
-                    "Unable to find a provider of type {$type} with the name {$name}"
-                );
-            }
-            return $this->namedProviders[$type][$name];
+            // We're looking for a named provider.
+            $provider = $this->providerStore->findNamedProvider($type, $name);
         } else {
-            // looking for a default provider
-            if (!array_key_exists($type, $this->providers)) {
-                throw new ProviderNotFoundException(
-                    $type,
-                    "Unable to find a default provider of type {$type}"
-                );
-            }
-            return $this->providers[$type];
+            // We're looking for a default provider.
+            $provider = $this->providerStore->findDefaultProvider($type);
         }
+
+        return $provider;
     }
 
     /**
@@ -188,21 +179,14 @@ class Phodam implements PhodamInterface
      *
      * @param ProviderConfig $config
      * @return void
+     * @throws ProviderConflictException
      */
     private function registerArrayProviderConfig(ProviderConfig $config): void
     {
-        if (array_key_exists($config->getName(), $this->arrayProviders)) {
-            throw new InvalidArgumentException(
-                "An array provider with the name {$config->getName()} already exists"
-            );
-        }
-
+        $name = $config->getName();
         $provider = $config->getProvider();
-        if ($provider instanceof PhodamAware) {
-            $provider->setPhodam($this);
-        }
 
-        $this->arrayProviders[$config->getName()] = $config->getProvider();
+        $this->providerStore->registerNamedProvider('array', $name, $provider);
     }
 
     /**
@@ -215,27 +199,12 @@ class Phodam implements PhodamInterface
     {
         $type = $config->getType();
         $name = $config->getName();
-
         $provider = $config->getProvider();
-        if ($provider instanceof PhodamAware) {
-            $provider->setPhodam($this);
-        }
 
         if ($name) {
-            // create the named type array if it doesn't exist
-            if (!array_key_exists($type, $this->namedProviders)) {
-                $this->namedProviders[$type] = [];
-            }
-
-            // check that we don't have a named provider for this type
-            if (array_key_exists($name, $this->namedProviders[$type])) {
-                throw new InvalidArgumentException(
-                    "A type provider of type {$type} with the name {$name} already exists"
-                );
-            }
-            $this->namedProviders[$type][$name] = $provider;
+            $this->providerStore->registerNamedProvider($type, $name, $provider);
         } else {
-            $this->providers[$type] = $provider;
+            $this->providerStore->registerDefaultProvider($type, $provider);
         }
     }
 

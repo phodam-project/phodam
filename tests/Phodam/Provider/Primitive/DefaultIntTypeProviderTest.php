@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -9,8 +10,15 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider\Primitive;
 
+use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
+<<<<<<< HEAD:tests/Phodam/Provider/Primitive/DefaultIntTypeProviderTest.php
 use PhodamTests\Phodam\PhodamBaseTestCase;
+=======
+use Phodam\Provider\ProviderContext;
+use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+>>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13:tests/Phodam/Provider/Builtin/DefaultIntTypeProviderTest.php
 
 /**
  * @coversDefaultClass \Phodam\Provider\Primitive\DefaultIntTypeProvider
@@ -19,20 +27,28 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultIntTypeProvider $provider;
 
+    /** @var PhodamInterface & MockObject */
+    private $phodam;
+
     public function setUp(): void
     {
         $this->provider = new DefaultIntTypeProvider();
+        $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreate()
     {
         $min = -10000;
         $max = 10000;
+
+        $context = new ProviderContext($this->phodam, 'int', [], []);
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create();
+            $value = $this->provider->create($context);
             $this->assertIsInt($value);
             $this->assertGreaterThanOrEqual($min, $value);
             $this->assertLessThanOrEqual($max, $value);
@@ -41,16 +57,22 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateWithConfigMinAndMax()
     {
         $min = -100;
         $max = 100;
+
+        $context = new ProviderContext(
+            $this->phodam,
+            'int',
+            [],
+            ['min' => $min, 'max' => $max]
+        );
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], [
-                'min' => $min,
-                'max' => $max
-            ]);
+            $value = $this->provider->create($context);
             $this->assertIsInt($value);
             $this->assertGreaterThanOrEqual($min, $value);
             $this->assertLessThanOrEqual($max, $value);
@@ -59,16 +81,22 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
 
     /**
      * @covers ::create
+     * @uses \Phodam\Provider\ProviderContext
      */
     public function testCreateWithConfigMinAndMaxWithSmallRange()
     {
         $min = -1;
         $max = 1;
+
+        $context = new ProviderContext(
+            $this->phodam,
+            'int',
+            [],
+            ['min' => $min, 'max' => $max]
+        );
+
         for ($i = 0; $i < 10; $i++) {
-            $value = $this->provider->create([], [
-                'min' => $min,
-                'max' => $max
-            ]);
+            $value = $this->provider->create($context);
             $this->assertIsInt($value);
             $this->assertGreaterThanOrEqual($min, $value);
             $this->assertLessThanOrEqual($max, $value);
