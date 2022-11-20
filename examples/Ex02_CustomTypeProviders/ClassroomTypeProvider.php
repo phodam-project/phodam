@@ -11,24 +11,24 @@ namespace PhodamExamples\Ex02_CustomTypeProviders;
 
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
+use Phodam\Provider\ProviderContext;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
  * @template T extends Classroom
  * @template-implements TypedProviderInterface<Classroom>
  */
-class ClassroomTypeProvider implements TypedProviderInterface, PhodamAware
+class ClassroomTypeProvider implements TypedProviderInterface
 {
-    use PhodamAwareTrait;
 
     /**
      * @inheritDoc
      * @return Classroom
      */
-    public function create(array $overrides = [], array $config = []): Classroom
+    public function create(ProviderContext $context): Classroom
     {
         $defaults = [
-            'roomNumber' => $this->phodam->create(
+            'roomNumber' => $context->create(
                 'int',
                 null,
                 [],
@@ -38,20 +38,20 @@ class ClassroomTypeProvider implements TypedProviderInterface, PhodamAware
 
         $numStudents =
             $config['numStudents'] ??
-            $this->phodam->create('int', null, [], ['min' => 10, 'max' => 15]);
+            $context->create('int', null, [], ['min' => 10, 'max' => 15]);
 
         $values = array_merge(
             $defaults,
-            $overrides
+            $context->getOverrides()
         );
 
         $classroom = new Classroom();
-        $classroom->setRoomNumber($values['roomNumber']);
+        $classroom->setRoomNumber((int) $values['roomNumber']);
 
         // Since PHP doesn't support giving a generic type in an array,
         // we need to make a custom provider to populate an array
         $students = array_map(
-            fn ($i) => $this->phodam->create(Student::class),
+            fn ($i) => $context->create(Student::class),
             range(0, $numStudents)
         );
         $classroom->setStudents($students);

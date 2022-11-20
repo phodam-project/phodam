@@ -87,7 +87,12 @@ class Phodam implements PhodamInterface
             $provider = $this->registerTypeDefinition($type, $definition);
         }
 
-        $context = new ProviderContext($this, $type, $overrides ?? [], $config ?? []);
+        $context = new ProviderContext(
+            $this,
+            $type,
+            $overrides ?? [],
+            $config ?? []
+        );
 
         try {
             return $provider->create($context);
