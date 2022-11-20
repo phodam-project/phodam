@@ -17,6 +17,7 @@ use Phodam\Analyzer\TypeDefinition;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionProperty;
 
 /**
@@ -42,7 +43,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
     /**
      * @inheritDoc
      * @throws IncompleteDefinitionException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function create(ProviderContext $context)
     {

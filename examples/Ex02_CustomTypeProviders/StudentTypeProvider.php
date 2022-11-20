@@ -37,7 +37,7 @@ class StudentTypeProvider implements TypedProviderInterface, PhodamAware
                 'float',
                 null,
                 [],
-                [ 'min' => 0.0, 'max' => 4.0, 'precision' => 2 ]
+                ['min' => 0.0, 'max' => 4.0, 'precision' => 2]
             ),
             'active' => true,
             'address' => $this->phodam->create(Address::class),

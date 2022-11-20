@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider;
 
-
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\PhodamInterface;
@@ -22,7 +21,6 @@ use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;
 use PhodamTests\Fixtures\SimpleTypeWithoutTypes;
 use PhodamTests\Phodam\PhodamBaseTestCase;
-
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -54,9 +52,11 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         $this->phodam->expects($this->exactly(4))
             ->method('create')
-
             ->willReturnOnConsecutiveCalls(
-                $myInt, $myFloat, $myString, $myBool
+                $myInt,
+                $myFloat,
+                $myString,
+                $myBool
             );
         // TODO: We should be checking this, but I can't get it to work right now...
 //            ->willReturnMap([
@@ -112,7 +112,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnOnConsecutiveCalls(
-                $myInt, $myFloat, $myString, $myBool
+                $myInt,
+                $myFloat,
+                $myString,
+                $myBool
             );
         // TODO: We should be checking this, but I can't get it to work right now...
 //            ->willReturnMap([
@@ -170,7 +173,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(2))
             ->method('create')
             ->willReturnOnConsecutiveCalls(
-                $myInt, $myFloat
+                $myInt,
+                $myFloat
             );
         // TODO: We should be checking this, but I can't get it to work right now...
 //            ->willReturnMap([
@@ -225,7 +229,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnOnConsecutiveCalls(
-                $myInt, $myFloat, $myString, $myBool
+                $myInt,
+                $myFloat,
+                $myString,
+                $myBool
             );
         // TODO: We should be checking this, but I can't get it to work right now...
 //            ->willReturnMap([
@@ -280,7 +287,10 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam->expects($this->exactly(4))
             ->method('create')
             ->willReturnOnConsecutiveCalls(
-                $myInt, $myString, $myFloat, $myBool
+                $myInt,
+                $myString,
+                $myFloat,
+                $myBool
             );
         // TODO: We should be checking this, but I can't get it to work right now...
 //            ->willReturnMap([
@@ -340,7 +350,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $provider = new DefinitionBasedTypeProvider($type, $definition);
 
 
-
         $context = new ProviderContext(
             $this->phodam,
             SimpleTypeMissingSomeFieldTypes::class,
@@ -376,7 +385,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
             ->willReturnCallback(function ($arg1) {
                 if ($arg1 === 'int') {
                     return 10;
-                } else if ($arg1 === SimpleType::class) {
+                } elseif ($arg1 === SimpleType::class) {
                     return [(new SimpleType())
                         ->setMyBool(true)
                         ->setMyInt(rand(0, 20))

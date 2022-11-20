@@ -12,8 +12,8 @@ namespace PhodamTests\Phodam\Provider\Primitive;
 
 use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
-use PhodamTests\Phodam\PhodamBaseTestCase;
 use Phodam\Provider\ProviderContext;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**

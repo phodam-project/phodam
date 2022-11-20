@@ -24,7 +24,8 @@ class SampleArrayProvider implements ProviderInterface
         ];
 
         return array_merge(
-            $defaults, $context->getOverrides()
+            $defaults,
+            $context->getOverrides()
         );
     }
 }

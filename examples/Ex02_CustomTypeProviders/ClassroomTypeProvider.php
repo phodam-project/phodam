@@ -32,13 +32,13 @@ class ClassroomTypeProvider implements TypedProviderInterface, PhodamAware
                 'int',
                 null,
                 [],
-                [ 'min' => 100, 'max' => 499 ]
+                ['min' => 100, 'max' => 499]
             )
         ];
 
         $numStudents =
             $config['numStudents'] ??
-            $this->phodam->create('int', null, [], [ 'min' => 10, 'max' => 15]);
+            $this->phodam->create('int', null, [], ['min' => 10, 'max' => 15]);
 
         $values = array_merge(
             $defaults,

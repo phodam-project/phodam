@@ -14,6 +14,7 @@ use Phodam\Provider\DefaultProviderBundle;
 use Phodam\Provider\ProviderBundleInterface;
 use Phodam\Store\ProviderStore;
 use Phodam\Store\Registrar;
+use ReflectionClass;
 
 class PhodamSchema implements PhodamSchemaInterface
 {
@@ -63,7 +64,7 @@ class PhodamSchema implements PhodamSchemaInterface
         if ($bundleOrClass instanceof ProviderBundleInterface) {
             $bundle = $bundleOrClass;
         } else {
-            $bundle = (new \ReflectionClass($bundleOrClass))->newInstance();
+            $bundle = (new ReflectionClass($bundleOrClass))->newInstance();
 
             if (!($bundle instanceof ProviderBundleInterface)) {
                 throw new InvalidArgumentException(

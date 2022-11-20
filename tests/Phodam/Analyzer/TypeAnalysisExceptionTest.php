@@ -29,8 +29,8 @@ class TypeAnalysisExceptionTest extends PhodamBaseTestCase
     {
         $message = 'My Message Here';
         $type = SimpleType::class;
-        $fieldNames = [ 'one', 'two', 'three', 'four' ];
-        $unmappedFields = [ 'two', 'four' ];
+        $fieldNames = ['one', 'two', 'three', 'four'];
+        $unmappedFields = ['two', 'four'];
         $mappedFields = [
             'one' => [
                 'type' => 'string',

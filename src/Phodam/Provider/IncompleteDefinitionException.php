@@ -21,7 +21,7 @@ class IncompleteDefinitionException extends PhodamException
 
     /**
      * @param string $type
-     * @param string[] $unmappedFields;
+     * @param string[] $unmappedFields ;
      * @param ?string $message
      * @param ?Throwable $previous
      */

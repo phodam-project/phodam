@@ -13,6 +13,7 @@ use InvalidArgumentException;
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\ProviderInterface;
+use ReflectionClass;
 
 class Registrar
 {
@@ -79,7 +80,7 @@ class Registrar
         if ($providerOrClass instanceof ProviderInterface) {
             $provider = $providerOrClass;
         } else {
-            $provider = (new \ReflectionClass($providerOrClass))->newInstance();
+            $provider = (new ReflectionClass($providerOrClass))->newInstance();
 
             if (!($provider instanceof ProviderInterface)) {
                 throw new InvalidArgumentException(

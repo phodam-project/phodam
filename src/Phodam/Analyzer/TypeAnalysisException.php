@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
-class TypeAnalysisException extends \Exception
+use Exception;
+
+class TypeAnalysisException extends Exception
 {
     private string $type;
     /** @var array<string> $fieldNames */

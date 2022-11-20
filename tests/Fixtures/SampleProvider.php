@@ -31,10 +31,10 @@ class SampleProvider implements ProviderInterface
         $minYear = PHP_INT_MIN;
         $maxYear = PHP_INT_MAX;
 
-        if(isset($config['minYear'])) {
+        if (isset($config['minYear'])) {
             $minYear = $config['minYear'];
         }
-        if(isset($config['maxYear'])) {
+        if (isset($config['maxYear'])) {
             $maxYear = $config['maxYear'];
         }
 

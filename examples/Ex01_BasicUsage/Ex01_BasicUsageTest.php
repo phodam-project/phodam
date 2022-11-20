@@ -30,7 +30,7 @@ class Ex01_BasicUsageTest extends TestCase
         $this->assertIsInt($int);
 
         // The default int provider can take some values in its configuration
-        $positiveIntConfig = [ 'min' => 0, 'max' => PHP_INT_MAX ];
+        $positiveIntConfig = ['min' => 0, 'max' => PHP_INT_MAX];
 
         for ($i = 0; $i < 10; $i++) {
             $positiveInt = $this->phodam->create(
@@ -117,8 +117,8 @@ class Ex01_BasicUsageTest extends TestCase
     public function testCreateStudentWithOverrides(): void
     {
         // every instance made will have a gpa = 4.0, and active = true
-        $studentOverrides = [ 'gpa' => 4.0, 'active' => true ];
-        for ($i = 0; $i < 10; $i++ ) {
+        $studentOverrides = ['gpa' => 4.0, 'active' => true];
+        for ($i = 0; $i < 10; $i++) {
             $student = $this->phodam->create(
                 Student::class,
                 null,

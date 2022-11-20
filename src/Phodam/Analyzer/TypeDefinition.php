@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
+use Exception;
+
 class TypeDefinition
 {
     /** @var array<string, FieldDefinition> */
@@ -62,7 +64,7 @@ class TypeDefinition
     public function getField(string $name): FieldDefinition
     {
         if (!array_key_exists($name, $this->fields)) {
-            throw new \Exception('Unable to find field by name: ' . $name);
+            throw new Exception('Unable to find field by name: ' . $name);
         }
         return $this->fields[$name];
     }

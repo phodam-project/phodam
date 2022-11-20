@@ -30,6 +30,9 @@ class DefaultFloatTypeProvider implements TypedProviderInterface
         $precisionMax = pow(10, $precision);
         // make sure we're not adding to an already positive max value
         $additive = (rand(0, $precisionMax) / $precisionMax) * ($isNegative) ? 1 : -1;
-        return round($val + $additive, $precision);
+        $val += $additive;
+        $val = max($min, $val);
+        $val = min($max, $val);
+        return round($val, $precision);
     }
 }

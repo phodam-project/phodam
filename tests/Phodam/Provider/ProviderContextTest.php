@@ -15,6 +15,7 @@ use Phodam\Provider\ProviderContext;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use stdClass;
 
 /**
  * @coversDefaultClass \Phodam\Provider\ProviderContext
@@ -121,16 +122,16 @@ class ProviderContextTest extends PhodamBaseTestCase
             ],
             'override with objects get foo' => [
                 'overrides' => [
-                    'foo' => ($foo = new \stdClass()),
-                    'bar' => new \stdClass(),
+                    'foo' => ($foo = new stdClass()),
+                    'bar' => new stdClass(),
                 ],
                 'key' => 'foo',
                 'expectedValue' => $foo,
             ],
             'override with objects get foo' => [
                 'overrides' => [
-                    'foo' => new \stdClass(),
-                    'bar' => ($bar = new \stdClass()),
+                    'foo' => new stdClass(),
+                    'bar' => ($bar = new stdClass()),
                 ],
                 'key' => 'bar',
                 'expectedValue' => $bar,
@@ -260,8 +261,8 @@ class ProviderContextTest extends PhodamBaseTestCase
             ],
             'config with object' => [
                 'config' => [
-                    'foo' => new \stdClass(),
-                    'bar' => new \stdClass(),
+                    'foo' => new stdClass(),
+                    'bar' => new stdClass(),
                 ],
             ],
         ];
@@ -331,8 +332,8 @@ class ProviderContextTest extends PhodamBaseTestCase
             'object overrides, no config' => [
                 'name' => 'ObjectOverridesNoConfig',
                 'overrides' => [
-                    'foo' => new \stdClass(),
-                    'bar' => new \stdClass(),
+                    'foo' => new stdClass(),
+                    'bar' => new stdClass(),
                 ],
                 'config' => null,
                 'createdValue' => [],
@@ -342,8 +343,8 @@ class ProviderContextTest extends PhodamBaseTestCase
                 'name' => 'NoOverridesObjectConfig',
                 'overrides' => null,
                 'config' => [
-                    'hello' => new \stdClass(),
-                    'world' => new \stdClass(),
+                    'hello' => new stdClass(),
+                    'world' => new stdClass(),
                 ],
                 'createdValue' => [],
                 'expectedValue' => [],
@@ -360,8 +361,8 @@ class ProviderContextTest extends PhodamBaseTestCase
                 'overrides' => null,
                 'config' => null,
                 'createdValue' => [
-                    'foo' => ($foo = new \stdClass()),
-                    'bar' => ($bar = new \stdClass()),
+                    'foo' => ($foo = new stdClass()),
+                    'bar' => ($bar = new stdClass()),
                 ],
                 'expectedValue' => ['foo' => $foo, 'bar' => $bar],
             ],
@@ -388,8 +389,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ?array $config,
         array $createdValue,
         array $expectedValue
-    ): void
-    {
+    ): void {
         $this->phodam->expects($this->once())
             ->method('createArray')
             ->with(
@@ -469,8 +469,8 @@ class ProviderContextTest extends PhodamBaseTestCase
                 'type' => SimpleType::class,
                 'name' => 'ObjectOverridesNoConfig',
                 'overrides' => [
-                    'foo' => new \stdClass(),
-                    'bar' => new \stdClass(),
+                    'foo' => new stdClass(),
+                    'bar' => new stdClass(),
                 ],
                 'config' => null,
                 'createdValue' => null,
@@ -481,8 +481,8 @@ class ProviderContextTest extends PhodamBaseTestCase
                 'name' => 'NoOverridesObjectConfig',
                 'overrides' => null,
                 'config' => [
-                    'hello' => new \stdClass(),
-                    'world' => new \stdClass(),
+                    'hello' => new stdClass(),
+                    'world' => new stdClass(),
                 ],
                 'createdValue' => null,
                 'expectedValue' => null,
@@ -504,11 +504,11 @@ class ProviderContextTest extends PhodamBaseTestCase
                 'expectedValue' => 42,
             ],
             'created stdClass' => [
-                'type' => \stdClass::class,
+                'type' => stdClass::class,
                 'name' => null,
                 'overrides' => null,
                 'config' => null,
-                'createdValue' => ($value = new \stdClass()),
+                'createdValue' => ($value = new stdClass()),
                 'expectedValue' => $value,
             ],
             'created SimpleType' => [
@@ -533,8 +533,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ?array $config,
         $createdValue,
         $expectedValue
-    ): void
-    {
+    ): void {
         $this->phodam->expects($this->once())
             ->method('create')
             ->with(

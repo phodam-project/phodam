@@ -13,5 +13,4 @@ use PHPUnit\Framework\TestCase;
 
 class PhodamBaseTestCase extends TestCase
 {
-
 }
