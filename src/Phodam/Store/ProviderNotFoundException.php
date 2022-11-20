@@ -2,19 +2,16 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
 declare(strict_types=1);
 
-namespace Phodam;
+namespace Phodam\Store;
 
-trait PhodamAwareTrait
+use Phodam\PhodamException;
+
+class ProviderNotFoundException extends PhodamException
 {
-    private PhodamInterface $phodam;
-
-    public function setPhodam(PhodamInterface $phodam): void
-    {
-        $this->phodam = $phodam;
-    }
 }

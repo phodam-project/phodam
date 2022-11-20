@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -9,13 +10,15 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam;
 
-use InvalidArgumentException;
+
+
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
-use Phodam\Provider\ProviderNotFoundException;
+use Phodam\Store\ProviderConflictException;
+use Phodam\Store\ProviderNotFoundException;
 use PhodamTests\Fixtures\SampleArrayProvider;
 use PhodamTests\Fixtures\SampleProvider;
 use PhodamTests\Fixtures\SimpleType;
@@ -88,9 +91,9 @@ class PhodamTest extends PhodamBaseTestCase
 
         $this->phodam->registerProviderConfig($config);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ProviderConflictException::class);
         $this->expectExceptionMessage(
-            "An array provider with the name MyCoolArray already exists"
+            "Provider for type array with name MyCoolArray already registered"
         );
 
         $this->phodam->registerProviderConfig($config);
@@ -101,8 +104,8 @@ class PhodamTest extends PhodamBaseTestCase
      */
     public function testGetArrayProviderWithoutRegisteredName(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find an array provider with the name MyUnregisteredName");
+        $this->expectException(ProviderNotFoundException::class);
+        $this->expectExceptionMessage("No provider found for type array with name MyUnregisteredName");
 
         $this->phodam->getArrayProvider("MyUnregisteredName");
     }
@@ -160,9 +163,9 @@ class PhodamTest extends PhodamBaseTestCase
 
         $this->phodam->registerProviderConfig($config);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(ProviderConflictException::class);
         $this->expectExceptionMessage(
-            "A type provider of type PhodamTests\Fixtures\UnregisteredClassType with the name MyCoolClassProvider already exists"
+            "Provider for type PhodamTests\Fixtures\UnregisteredClassType with name MyCoolClassProvider already registered"
         );
 
         $this->phodam->registerProviderConfig($config);
@@ -176,7 +179,7 @@ class PhodamTest extends PhodamBaseTestCase
         $type = UnregisteredClassType::class;
 
         $this->expectException(ProviderNotFoundException::class);
-        $this->expectExceptionMessage("Unable to find a default provider of type PhodamTests\Fixtures\UnregisteredClassType");
+        $this->expectExceptionMessage("No default provider found for type PhodamTests\Fixtures\UnregisteredClassType");
 
         $this->phodam->getTypeProvider($type);
     }
@@ -189,8 +192,8 @@ class PhodamTest extends PhodamBaseTestCase
         $class = UnregisteredClassType::class;
         $name = "MyName";
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a provider of type PhodamTests\Fixtures\UnregisteredClassType with the name MyName");
+        $this->expectException(ProviderNotFoundException::class);
+        $this->expectExceptionMessage("No provider found for type PhodamTests\Fixtures\UnregisteredClassType with name MyName");
 
         $this->phodam->getTypeProvider($class, $name);
     }
@@ -207,8 +210,8 @@ class PhodamTest extends PhodamBaseTestCase
             ->forType($type);
         $this->phodam->registerProviderConfig($config);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a provider of type PhodamTests\Fixtures\UnregisteredClassType with the name MyName");
+        $this->expectException(ProviderNotFoundException::class);
+        $this->expectExceptionMessage("No provider found for type PhodamTests\Fixtures\UnregisteredClassType with name MyName");
 
         $this->phodam->getTypeProvider($type, $name);
     }
@@ -228,8 +231,8 @@ class PhodamTest extends PhodamBaseTestCase
 
         $this->phodam->registerProviderConfig($config);
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Unable to find a provider of type PhodamTests\Fixtures\UnregisteredClassType with the name MyName");
+        $this->expectException(ProviderNotFoundException::class);
+        $this->expectExceptionMessage("No provider found for type PhodamTests\Fixtures\UnregisteredClassType with name MyName");
 
         $this->phodam->getTypeProvider($type, $name);
     }

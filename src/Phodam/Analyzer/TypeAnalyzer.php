@@ -37,6 +37,7 @@ class TypeAnalyzer
                 continue;
             }
 
+            // TODO: Can we check if $propertyType === 'SomeClass[]' and treat it as 'SomeClass' and array = true?
             // if this is an array, we can't map the field
             // since we don't know what the type in the array is
             if ($propertyType->getName() === 'array') {

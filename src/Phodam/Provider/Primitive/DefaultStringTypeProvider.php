@@ -2,6 +2,7 @@
 
 // This file is part of Phodam
 // Copyright (c) Andrew Vehlies <avehlies@gmail.com>
+// Copyright (c) Chris Bouchard <chris@upliftinglemma.net>
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
@@ -9,6 +10,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
+use Phodam\Provider\ProviderContext;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -30,8 +32,10 @@ class DefaultStringTypeProvider implements TypedProviderInterface
         'alphanumeric' => self::ALPHANUMERIC
     ];
 
-    public function create(array $overrides = [], array $config = []): string
+    public function create(ProviderContext $context): string
     {
+        $config = $context->getConfig();
+
         $type = $config['type'] ?? 'alphanumeric';
         $pool = self::STRING_TYPES[$type];
         $poolLength = strlen($pool);

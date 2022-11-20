@@ -9,14 +9,14 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider;
 
-use Phodam\Provider\ProviderNotFoundException;
+use Phodam\Provider\IncompleteDefinitionException;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Provider\ProviderNotFoundException
+ * @coversDefaultClass \Phodam\Provider\IncompleteDefinitionException
  */
-class ProviderNotFoundExceptionTest extends PhodamBaseTestCase
+class IncompleteDefinitionExceptionTest extends PhodamBaseTestCase
 {
     /**
      * @covers ::__construct
@@ -26,9 +26,11 @@ class ProviderNotFoundExceptionTest extends PhodamBaseTestCase
     {
         $message = 'My Message Here';
         $type = SimpleType::class;
+        $unmappedFields = ['hi', 'two'];
 
-        $ex = new ProviderNotFoundException(
+        $ex = new IncompleteDefinitionException(
             $type,
+            $unmappedFields,
             $message
         );
 
