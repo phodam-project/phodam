@@ -386,11 +386,11 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 if ($arg1 === 'int') {
                     return 10;
                 } elseif ($arg1 === SimpleType::class) {
-                    return [(new SimpleType())
+                    return (new SimpleType())
                         ->setMyBool(true)
                         ->setMyInt(rand(0, 20))
                         ->setMyString('hi there')
-                        ->setMyFloat(123.45)];
+                        ->setMyFloat(123.45);
                 }
                 return null;
             });
@@ -406,7 +406,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 
         /** @var SimpleTypeWithAnArray $created */
         $created = $provider->create($context);
-        // var_export($created);
         $this->assertInstanceOf($type, $created);
         $this->assertIsInt($created->getMyInt());
         $this->assertIsArray($created->getMyArray());
