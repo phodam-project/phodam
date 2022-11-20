@@ -85,7 +85,7 @@ class ProviderContext implements PhodamInterface
      * @throws InvalidArgumentException if there is no override for the given
      *     field in this context
      */
-    public function getOverride(string $field): mixed
+    public function getOverride(string $field)
     {
         if (!array_key_exists($field, $this->overrides)) {
             throw new InvalidArgumentException("No override for field {$field}");
@@ -124,7 +124,7 @@ class ProviderContext implements PhodamInterface
         ?string $name = null,
         ?array $overrides = null,
         ?array $config = null
-    ): mixed {
+    ) {
         return $this->phodam->create($type, $name, $overrides, $config);
     }
 }

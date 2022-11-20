@@ -13,12 +13,9 @@ namespace Phodam\Provider;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-<<<<<<< HEAD
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
-=======
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
 use ReflectionClass;
 use ReflectionProperty;
 
@@ -103,58 +100,24 @@ class DefinitionBasedTypeProvider implements ProviderInterface
         }
 
         $obj = $refClass->newInstanceWithoutConstructor();
-        foreach ($this->definition->getFields() as $fieldName => $def) {
+        foreach ($this->definition->getFields() as $fieldName => $fieldDefinition) {
+            /** @var FieldDefinition $fieldDefinition */
             $refProperty = $refClass->getProperty($fieldName);
             if ($context->hasOverride($fieldName)) {
                 $val = $context->getOverride($fieldName);
             } else {
-<<<<<<< HEAD
-                $val = $this->generateValueFromFieldDefinition($def);
-=======
+
                 $val = $context->create(
-                    $def['type'],
-                    $def['name'] ?? null,
-                    $def['overrides'] ?? null,
-                    $def['config'] ?? null
+                    $fieldDefinition->getType(),
+                    $fieldDefinition->getName() ?? null,
+                    $fieldDefinition->getOverrides() ?? null,
+                    $fieldDefinition->getConfig() ?? null
                 );
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
             }
             $refProperty->setAccessible(true);
             $refProperty->setValue($obj, $val);
         }
 
         return $obj;
-    }
-
-    /**
-     * @param FieldDefinition $def
-     * @return mixed
-     */
-    private function generateValueFromFieldDefinition(FieldDefinition $def)
-    {
-        $val = null;
-        if ($def->isArray()) {
-            $val = [];
-            for ($i = 0; $i < rand(2, 5); $i++) {
-                $val[] = $this->generateSingleValueFromFieldDefinition($def);
-            }
-        } else {
-            $val = $this->generateSingleValueFromFieldDefinition($def);
-        }
-        return $val;
-    }
-
-    /**
-     * @param FieldDefinition $def
-     * @return mixed
-     */
-    private function generateSingleValueFromFieldDefinition(FieldDefinition $def)
-    {
-        return $this->phodam->create(
-            $def->getType(),
-            $def->getName(),
-            $def->getOverrides(),
-            $def->getConfig()
-        );
     }
 }

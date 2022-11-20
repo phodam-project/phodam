@@ -36,8 +36,8 @@ class TypeAnalyzer
                 $unmappedFields[] = $property->getName();
                 continue;
             }
-<<<<<<< HEAD
 
+            // TODO: Can we check if $propertyType === 'SomeClass[]' and treat it as 'SomeClass' and array = true?
             // if this is an array, we can't map the field
             // since we don't know what the type in the array is
             if ($propertyType->getName() === 'array') {
@@ -51,14 +51,7 @@ class TypeAnalyzer
                 ->setConfig([])
                 ->setNullable($propertyType->allowsNull())
                 ->setArray(false);
-=======
-            $mappedFields[$property->getName()] = [
-                'type' => $propertyType->getName(),
-                'name' => null,
-                'nullable' => $propertyType->allowsNull(),
-                'array' => false
-            ];
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
+
         }
 
         if (!empty($unmappedFields)) {

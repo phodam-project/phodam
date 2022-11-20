@@ -7,13 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Provider;
+namespace PhodamTests\Provider;
 
 use InvalidArgumentException;
 use Phodam\PhodamInterface;
 use Phodam\Provider\ProviderContext;
-use Phodam\Tests\Fixtures\SimpleType;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Fixtures\SimpleType;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**

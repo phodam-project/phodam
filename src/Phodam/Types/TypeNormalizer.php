@@ -14,19 +14,18 @@ class TypeNormalizer
     public static function normalize(string $type): string
     {
         // Normalize types to match the names returned by gettype().
-        switch ($type)
-        {
-        case 'bool':
-            return 'boolean';
+        switch ($type) {
+            case 'bool':
+                return 'boolean';
 
-        case 'int':
-            return 'integer';
+            case 'int':
+                return 'integer';
 
-        case 'float':
-            return 'double';
+            case 'float':
+                return 'double';
 
-        default:
-            return $type;
+            default:
+                return $type;
         }
     }
 }

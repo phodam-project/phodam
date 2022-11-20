@@ -37,39 +37,12 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
     public function testAnalyze(): void
     {
         $expected = [
-<<<<<<< HEAD
             'myInt' => (new FieldDefinition('int')),
             'myFloat' => (new FieldDefinition('float'))
                 ->setNullable(true),
             'myString' => (new FieldDefinition('string'))
                 ->setNullable(true),
             'myBool' => (new FieldDefinition('bool'))
-=======
-            'myInt' => [
-                'type' => 'int',
-                'name' => null,
-                'nullable' => false,
-                'array' => false
-            ],
-            'myFloat' => [
-                'type' => 'float',
-                'name' => null,
-                'nullable' => true,
-                'array' => false
-            ],
-            'myString' => [
-                'type' => 'string',
-                'name' => null,
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'name' => null,
-                'nullable' => false,
-                'array' => false
-            ]
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
         ];
 
         $result = $this->analyzer->analyze(SimpleType::class);
@@ -91,24 +64,9 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             'myInt', 'myString'
         ];
         $expectedMappedFields = [
-<<<<<<< HEAD
             'myFloat' => (new FieldDefinition('float'))
                 ->setNullable(true),
             'myBool' => (new FieldDefinition('bool'))
-=======
-            'myFloat' => [
-                'type' => 'float',
-                'name' => null,
-                'nullable' => true,
-                'array' => false
-            ],
-            'myBool' => [
-                'type' => 'bool',
-                'name' => null,
-                'nullable' => false,
-                'array' => false
-            ]
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
         ];
 
         try {
@@ -122,7 +80,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             $this->assertEquals($expectedMappedFields, $ex->getMappedFields());
         }
     }
-<<<<<<< HEAD
 
     /**
      * @covers ::analyze
@@ -151,6 +108,3 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         }
     }
 }
-=======
-}
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13

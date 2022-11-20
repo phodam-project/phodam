@@ -12,4 +12,6 @@ namespace Phodam\Store;
 
 use Phodam\PhodamException;
 
-class ProviderNotFoundException extends PhodamException {}
+class ProviderNotFoundException extends PhodamException
+{
+}

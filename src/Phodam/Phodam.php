@@ -13,11 +13,11 @@ namespace Phodam;
 use DateTime;
 use DateTimeImmutable;
 use InvalidArgumentException;
-use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
+use Phodam\Provider\CreationFailedException;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
 use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
@@ -29,6 +29,7 @@ use Phodam\Provider\ProviderInterface;
 use Phodam\Store\ProviderConflictException;
 use Phodam\Store\ProviderNotFoundException;
 use Phodam\Store\ProviderStore;
+use Throwable;
 
 class Phodam implements PhodamInterface
 {
@@ -38,20 +39,17 @@ class Phodam implements PhodamInterface
 
     public function __construct(?ProviderStore $providerStore = null)
     {
-<<<<<<< HEAD
-        $this->registerPrimitiveTypeProviders();
-        $this->registerBuiltinTypeProviders();
-=======
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
-        $this->typeAnalyzer = new TypeAnalyzer();
-
         if ($providerStore !== null) {
             $this->providerStore = $providerStore;
         } else {
             // Fallback for now, but soon we'll require ProviderStore.
             $this->providerStore = new ProviderStore();
+            // TODO: This is replaced by `PhodamSchema::withDefaults`
             $this->registerPrimitiveTypeProviders();
+            $this->registerBuiltinTypeProviders();;
         }
+
+        $this->typeAnalyzer = new TypeAnalyzer();
     }
 
     /**
@@ -225,6 +223,10 @@ class Phodam implements PhodamInterface
         );
     }
 
+    // TODO: Figure out two things
+    //     1. Where we want to register all of these other 'Builtin' classes, because we should
+    //     2. Figure out a way to make interface/abstract -> instantiable mappings
+    //        in case the field is only an interface/abstract
     private function registerBuiltinTypeProviders(): void
     {
         // register default providers

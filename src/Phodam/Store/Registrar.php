@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Phodam\Store;
 
 use InvalidArgumentException;
+use Phodam\Analyzer\TypeDefinition;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\ProviderInterface;
 
@@ -77,8 +78,7 @@ class Registrar
 
         if ($providerOrClass instanceof ProviderInterface) {
             $provider = $providerOrClass;
-        }
-        else {
+        } else {
             $provider = (new \ReflectionClass($providerOrClass))->newInstance();
 
             if (!($provider instanceof ProviderInterface)) {
@@ -104,9 +104,9 @@ class Registrar
     }
 
     /**
-     * @param array<string, array<string, mixed>> $definition
+     * @param TypeDefinition $definition
      */
-    public function registerDefinition(array $definition): void
+    public function registerDefinition(TypeDefinition $definition): void
     {
         if (!isset($this->type)) {
             throw new InvalidArgumentException('type not set');

@@ -11,4 +11,6 @@ namespace Phodam;
 
 use Exception;
 
-abstract class PhodamException extends Exception {}
+abstract class PhodamException extends Exception
+{
+}

@@ -7,12 +7,13 @@
 
 declare(strict_types=1);
 
-namespace Phodam\Tests\Phodam\Provider;
+namespace PhodamTests\Phodam\Provider;
+
 
 use Exception;
 use Phodam\Provider\CreationFailedException;
-use Phodam\Tests\Fixtures\SimpleType;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
+use PhodamTests\Fixtures\SimpleType;
+use PhodamTests\Phodam\PhodamBaseTestCase;
 use Throwable;
 
 /**
@@ -28,7 +29,7 @@ class CreationFailedExceptionTest extends PhodamBaseTestCase
                 'name' => null,
                 'message' => null,
                 'expectedMessage' => (
-                    'Creation failed for type Phodam\Tests\Fixtures\SimpleType using default provider'
+                    'Creation failed for type PhodamTests\Fixtures\SimpleType using default provider'
                 ),
                 'previous' => null,
             ],
@@ -37,7 +38,7 @@ class CreationFailedExceptionTest extends PhodamBaseTestCase
                 'name' => 'MyProviderName',
                 'message' => null,
                 'expectedMessage' => (
-                    'Creation failed for type Phodam\Tests\Fixtures\SimpleType using provider named MyProviderName'
+                    'Creation failed for type PhodamTests\Fixtures\SimpleType using provider named MyProviderName'
                 ),
                 'previous' => null,
             ],
@@ -53,7 +54,7 @@ class CreationFailedExceptionTest extends PhodamBaseTestCase
                 'name' => null,
                 'message' => null,
                 'expectedMessage' => (
-                    'Creation failed for type Phodam\Tests\Fixtures\SimpleType using default provider'
+                    'Creation failed for type PhodamTests\Fixtures\SimpleType using default provider'
                 ),
                 'previous' => new Exception(),
             ],
@@ -62,7 +63,7 @@ class CreationFailedExceptionTest extends PhodamBaseTestCase
                 'name' => 'MyProviderName',
                 'message' => null,
                 'expectedMessage' => (
-                    'Creation failed for type Phodam\Tests\Fixtures\SimpleType using provider named MyProviderName'
+                    'Creation failed for type PhodamTests\Fixtures\SimpleType using provider named MyProviderName'
                 ),
                 'previous' => new Exception(),
             ],

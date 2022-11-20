@@ -12,13 +12,9 @@ namespace PhodamTests\Phodam\Provider\Primitive;
 
 use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultFloatTypeProvider;
-<<<<<<< HEAD:tests/Phodam/Provider/Primitive/DefaultFloatTypeProviderTest.php
 use PhodamTests\Phodam\PhodamBaseTestCase;
-=======
 use Phodam\Provider\ProviderContext;
-use Phodam\Tests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13:tests/Phodam/Provider/Builtin/DefaultFloatTypeProviderTest.php
 
 /**
  * @coversDefaultClass \Phodam\Provider\Primitive\DefaultFloatTypeProvider

@@ -21,22 +21,15 @@ class DefaultFloatTypeProvider implements TypedProviderInterface
 {
     public function create(ProviderContext $context): float
     {
-<<<<<<< HEAD
-        $min = $config['min'] ?? -10000.0;
-        $max = $config['max'] ?? 10000.0;
-        $precision = $config['precision'] ?? 4;
-
-        $additive = lcg_value() * abs($max - $min);
-        return round($min + $additive, $precision);
-=======
         $config = $context->getConfig();
         $min = $config['min'] ?? -10000;
         $max = $config['max'] ?? 10000;
+        $precision = $config['precision'] ?? 2;
         $val = rand($min, $max);
         $isNegative = $val <= 0;
+        $precisionMax = pow(10, $precision);
         // make sure we're not adding to an already positive max value
-        $additive = (rand(0, 100) / 100) * ($isNegative) ? 1 : -1;
-        return $val + $additive;
->>>>>>> ffd88404ae6d0d060da7f6d70dec810feecd1a13
+        $additive = (rand(0, $precisionMax) / $precisionMax) * ($isNegative) ? 1 : -1;
+        return round($val + $additive, $precision);
     }
 }

@@ -11,4 +11,6 @@ namespace Phodam\Store;
 
 use Phodam\PhodamException;
 
-class ProviderConflictException extends PhodamException {}
+class ProviderConflictException extends PhodamException
+{
+}
