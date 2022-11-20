@@ -106,7 +106,6 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             if ($context->hasOverride($fieldName)) {
                 $val = $context->getOverride($fieldName);
             } else {
-
                 $val = $context->create(
                     $fieldDefinition->getType(),
                     $fieldDefinition->getName() ?? null,

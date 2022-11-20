@@ -51,7 +51,6 @@ class TypeAnalyzer
                 ->setConfig([])
                 ->setNullable($propertyType->allowsNull())
                 ->setArray(false);
-
         }
 
         if (!empty($unmappedFields)) {

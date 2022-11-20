@@ -46,7 +46,7 @@ class Phodam implements PhodamInterface
             $this->providerStore = new ProviderStore();
             // TODO: This is replaced by `PhodamSchema::withDefaults`
             $this->registerPrimitiveTypeProviders();
-            $this->registerBuiltinTypeProviders();;
+            $this->registerBuiltinTypeProviders();
         }
 
         $this->typeAnalyzer = new TypeAnalyzer();
