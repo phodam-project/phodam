@@ -77,9 +77,7 @@ class Phodam implements PhodamInterface
         string $type,
         ?string $name = null,
         ?array $overrides = null,
-        ?array $config = null,
-        ?bool $nullable = null,
-        ?bool $array = null
+        ?array $config = null
     ) {
         try {
             $provider = $this
@@ -93,9 +91,7 @@ class Phodam implements PhodamInterface
             $this,
             $type,
             $overrides ?? [],
-            $config ?? [],
-            $nullable ?? false,
-            $array ?? false
+            $config ?? []
         );
 
         try {
