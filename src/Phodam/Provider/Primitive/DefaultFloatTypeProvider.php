@@ -25,7 +25,7 @@ class DefaultFloatTypeProvider implements TypedProviderInterface
         $min = $config['min'] ?? -10000;
         $max = $config['max'] ?? 10000;
         $precision = $config['precision'] ?? 2;
-        $val = rand($min, $max);
+        $val = rand((int) floor($min), (int) ceil($max));
         $isNegative = $val <= 0;
         $precisionMax = pow(10, $precision);
         // make sure we're not adding to an already positive max value

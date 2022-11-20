@@ -51,7 +51,9 @@ class Ex02_CustomTypeProvidersTest extends TestCase
         $localPhodam = new Phodam();
 
         $this->expectException(TypeAnalysisException::class);
-        $this->expectExceptionMessage('PhodamExamples\Ex02_CustomTypeProviders\Classroom: Unable to map fields: students');
+        $this->expectExceptionMessage(
+            'PhodamExamples\Ex02_CustomTypeProviders\Classroom: Unable to map fields: students'
+        );
 
         $localPhodam->create(Classroom::class);
     }
@@ -86,7 +88,6 @@ class Ex02_CustomTypeProvidersTest extends TestCase
 
         /** @var Classroom $classroom */
         $classroom = $localPhodam->create(Classroom::class);
-        // var_export($classroom);
         $this->assertInstanceOf(Classroom::class, $classroom);
         $this->assertIsInt($classroom->getRoomNumber());
         $this->assertIsArray($classroom->getStudents());

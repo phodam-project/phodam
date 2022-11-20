@@ -77,7 +77,9 @@ class Phodam implements PhodamInterface
         string $type,
         ?string $name = null,
         ?array $overrides = null,
-        ?array $config = null
+        ?array $config = null,
+        ?bool $nullable = null,
+        ?bool $array = null
     ) {
         try {
             $provider = $this
@@ -87,7 +89,14 @@ class Phodam implements PhodamInterface
             $provider = $this->registerTypeDefinition($type, $definition);
         }
 
-        $context = new ProviderContext($this, $type, $overrides ?? [], $config ?? []);
+        $context = new ProviderContext(
+            $this,
+            $type,
+            $overrides ?? [],
+            $config ?? [],
+            $nullable ?? false,
+            $array ?? false
+        );
 
         try {
             return $provider->create($context);

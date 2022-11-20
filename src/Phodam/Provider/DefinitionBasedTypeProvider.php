@@ -70,20 +70,21 @@ class DefinitionBasedTypeProvider implements ProviderInterface
         if (!empty($missingFields)) {
             // 5. if it doesn't, start up a type analyzer
             $analyzer = new TypeAnalyzer();
-            $generatedDef = [];
+            $generatedDefFields = [];
             try {
                 // 6. generate a definition for the type analyzer
                 $generatedDef = $analyzer->analyze($this->type);
-                $generatedDef = $generatedDef->getFields();
+                var_export($generatedDef);
+                $generatedDefFields = $generatedDef->getFields();
             } catch (TypeAnalysisException $ex) {
                 // 7. if it throws an exception, check the $mappedFields from
                 //    the exception
-                $generatedDef = $ex->getMappedFields();
+                $generatedDefFields = $ex->getMappedFields();
             }
 
             $stillMissingFields = array_diff(
                 $missingFields,
-                array_keys($generatedDef)
+                array_keys($generatedDefFields)
             );
             if (!empty($stillMissingFields)) {
                 // 9. if it doesn't, then throw an exception and give up
@@ -96,9 +97,18 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             // 8. if $mappedFields covers the difference in fields,
             //    then you're good
             foreach ($missingFields as $missingField) {
-                $this->definition->addField($missingField, $generatedDef[$missingField]);
+                $this->definition->addField($missingField, $generatedDefFields[$missingField]);
             }
         }
+
+        $generateField = function ($def) use ($context) {
+            return $context->create(
+                $def->getType(),
+                $def->getName() ?? null,
+                $def->getOverrides() ?? null,
+                $def->getConfig() ?? null
+            );
+        };
 
         $obj = $refClass->newInstanceWithoutConstructor();
         foreach ($this->definition->getFields() as $fieldName => $fieldDefinition) {
@@ -107,12 +117,14 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             if ($context->hasOverride($fieldName)) {
                 $val = $context->getOverride($fieldName);
             } else {
-                $val = $context->create(
-                    $fieldDefinition->getType(),
-                    $fieldDefinition->getName() ?? null,
-                    $fieldDefinition->getOverrides() ?? null,
-                    $fieldDefinition->getConfig() ?? null
-                );
+                if ($fieldDefinition->isArray()) {
+                    $val = array_map(
+                        fn () => $generateField($fieldDefinition),
+                        range(1, rand(2, 5))
+                    );
+                } else {
+                    $val = $generateField($fieldDefinition);
+                }
             }
             $refProperty->setAccessible(true);
             $refProperty->setValue($obj, $val);
