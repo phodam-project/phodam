@@ -10,8 +10,7 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam;
 
-
-
+use InvalidArgumentException;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeDefinition;
@@ -52,7 +51,7 @@ class PhodamTest extends PhodamBaseTestCase
         // an array or a type
         $config = new ProviderConfig($this->provider);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage("A provider config must be declared for an array or a type");
 
         $this->phodam->registerProviderConfig($config);
@@ -258,7 +257,7 @@ class PhodamTest extends PhodamBaseTestCase
         try {
             $this->phodam->getTypeProvider($type);
         } catch (ProviderNotFoundException $ex) {
-            $this->assertTrue(true,  "Provider was found, it shouldn't have been");
+            $this->assertTrue(true, "Provider was found, it shouldn't have been");
         }
 
         // try creating an object of the type, it shouldn't find a type provider

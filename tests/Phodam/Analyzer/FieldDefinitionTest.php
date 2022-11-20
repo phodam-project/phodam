@@ -10,10 +10,7 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam\Analyzer;
 
 use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeAnalysisException;
 use PhodamTests\Fixtures\SimpleType;
-use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
-use PhodamTests\Fixtures\SimpleTypeWithAnArray;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
@@ -57,8 +54,8 @@ class FieldDefinitionTest extends PhodamBaseTestCase
     {
         $type = SimpleType::class;
         $name = 'MyName';
-        $overrides = [ 'a' => 'b' ];
-        $config = [ 'c' => 'd' ];
+        $overrides = ['a' => 'b'];
+        $config = ['c' => 'd'];
         $nullable = true;
         $array = true;
 
@@ -86,8 +83,8 @@ class FieldDefinitionTest extends PhodamBaseTestCase
     {
         $type = SimpleType::class;
         $name = 'MyName';
-        $overrides = [ 'a' => 'b' ];
-        $config = [ 'c' => 'd' ];
+        $overrides = ['a' => 'b'];
+        $config = ['c' => 'd'];
         $nullable = true;
         $array = true;
 
@@ -109,6 +106,5 @@ class FieldDefinitionTest extends PhodamBaseTestCase
         $this->assertIsArray($def->getConfig());
         $this->assertTrue($def->isNullable());
         $this->assertTrue($def->isArray());
-
     }
 }

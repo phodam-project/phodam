@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Analyzer;
 
+use Exception;
 use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
@@ -71,7 +72,7 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
 
         try {
             $result = $this->analyzer->analyze(SimpleTypeMissingSomeFieldTypes::class);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->assertInstanceOf(TypeAnalysisException::class, $ex);
             $this->assertEquals(SimpleTypeMissingSomeFieldTypes::class, $ex->getType());
             $this->assertEquals($expectedMessage, $ex->getMessage());
@@ -98,7 +99,7 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
 
         try {
             $this->analyzer->analyze(SimpleTypeWithAnArray::class);
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->assertInstanceOf(TypeAnalysisException::class, $ex);
             $this->assertEquals(SimpleTypeWithAnArray::class, $ex->getType());
             $this->assertEquals($expectedMessage, $ex->getMessage());

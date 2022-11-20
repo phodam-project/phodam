@@ -44,7 +44,7 @@ class ProviderContext implements PhodamInterface
     }
 
     /**
-       Return the type to be created by the provider.
+     * Return the type to be created by the provider.
      *
      * @return string
      */

@@ -25,6 +25,6 @@ class DefaultBoolTypeProvider implements TypedProviderInterface
      */
     public function create(ProviderContext $context): bool
     {
-        return (bool) rand(0, 1);
+        return (bool)rand(0, 1);
     }
 }

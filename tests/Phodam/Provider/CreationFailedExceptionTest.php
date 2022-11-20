@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider;
 
-
 use Exception;
 use Phodam\Provider\CreationFailedException;
 use PhodamTests\Fixtures\SimpleType;
@@ -83,10 +82,10 @@ class CreationFailedExceptionTest extends PhodamBaseTestCase
      * @covers ::getType
      */
     public function testConstruct(
-        string $type,
-        ?string $name,
-        ?string $message,
-        string $expectedMessage,
+        string     $type,
+        ?string    $name,
+        ?string    $message,
+        string     $expectedMessage,
         ?Throwable $previous
     ): void {
         $ex = new CreationFailedException(

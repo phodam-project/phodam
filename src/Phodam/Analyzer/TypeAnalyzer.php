@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
+use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
 
@@ -21,7 +22,7 @@ class TypeAnalyzer
      */
     public function analyze(string $type): TypeDefinition
     {
-        $class = new \ReflectionClass($type);
+        $class = new ReflectionClass($type);
 
         $fieldNames = [];
         $unmappedFields = [];

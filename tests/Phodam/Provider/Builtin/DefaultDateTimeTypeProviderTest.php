@@ -22,7 +22,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class DefaultDateTimeTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultDateTimeTypeProvider $provider;
-    /** @var PhodamInterface & MockObject  */
+    /** @var PhodamInterface & MockObject */
     private $phodam;
 
     public function setUp(): void

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam\Store;
 
 use Phodam\Store\ProviderNotFoundException;
-use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
