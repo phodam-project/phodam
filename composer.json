@@ -9,12 +9,17 @@
     "testing",
     "data objects"
   ],
-  "homepage": "https://github.com/avehlies/phodam",
+  "homepage": "https://github.com/phodam-project/phodam",
   "readme": "README.md",
   "authors": [
     {
       "name": "Andrew Vehlies",
       "email": "avehlies@gmail.com",
+      "role": "Owner"
+    },
+    {
+      "name": "Chris Bouchard",
+      "email": "chris@upliftinglemma.net",
       "role": "Developer"
     }
   ],
