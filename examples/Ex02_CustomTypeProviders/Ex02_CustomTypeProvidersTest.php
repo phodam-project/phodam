@@ -14,33 +14,31 @@ use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\Phodam;
+use Phodam\PhodamInterface;
+use Phodam\PhodamSchema;
 use Phodam\Provider\ProviderConfig;
 use PHPUnit\Framework\TestCase;
 
 class Ex02_CustomTypeProvidersTest extends TestCase
 {
-    private Phodam $phodam;
+    private PhodamInterface $phodam;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->phodam = new Phodam();
+        $schema = PhodamSchema::withDefaults();
 
         // Tired of specifying active = true, 0.0 <= gpa <= 4.0 ?
         // Make a provider to have your own defaults!
-        $studentProvider = new StudentTypeProvider();
-        $studentProviderConfig = (new ProviderConfig($studentProvider))
-            ->forType(Student::class);
-
-        $this->phodam->registerProviderConfig($studentProviderConfig);
+        $schema->forType(Student::class)
+            ->registerProvider(new StudentTypeProvider());
 
         // A Classroom provider is needed because `array $students`
         // doesn't have a type, and we can't assume because of 'array'
-        $classroomProvider = new ClassroomTypeProvider();
-        $classroomProviderConfig = (new ProviderConfig($classroomProvider))
-            ->forType(Classroom::class);
+        $schema->forType(Classroom::class)
+            ->registerProvider(new ClassroomTypeProvider());
 
-        $this->phodam->registerProviderConfig($classroomProviderConfig);
+        $this->phodam = $schema->getPhodam();
     }
 
     public function testBeforeRegistering(): void
