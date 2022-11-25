@@ -11,16 +11,19 @@ namespace PhodamExamples\Ex01_BasicUsage;
 
 use DateTimeImmutable;
 use Phodam\Phodam;
+use Phodam\PhodamInterface;
+use Phodam\PhodamSchema;
 use PHPUnit\Framework\TestCase;
 
 class Ex01_BasicUsageTest extends TestCase
 {
-    private Phodam $phodam;
+    private PhodamInterface $phodam;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->phodam = new Phodam();
+        $schema = PhodamSchema::withDefaults();
+        $this->phodam = $schema->getPhodam();
     }
 
     public function testCreateInt(): void
