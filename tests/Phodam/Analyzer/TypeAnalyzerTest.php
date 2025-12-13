@@ -49,6 +49,11 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         $result = $this->analyzer->analyze(SimpleType::class);
         $this->assertInstanceOf(TypeDefinition::class, $result);
         $this->assertEquals($expected, $result->getFields());
+
+        // Verify isArray is false for all fields
+        foreach ($result->getFields() as $field) {
+            $this->assertFalse($field->isArray(), "Field {$field->getType()} should have isArray() = false");
+        }
     }
 
     /**
@@ -106,6 +111,29 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             $this->assertEquals($expectedFieldNames, $ex->getFieldNames());
             $this->assertEquals($expectedUnmappedFields, $ex->getUnmappedFields());
             $this->assertEquals($expectedMappedFields, $ex->getMappedFields());
+        }
+    }
+
+    /**
+     * @covers ::analyze
+     * 
+     * This test verifies that the isArray flag is correctly set to false
+     * for non-array types. The TypeAnalyzer contains logic to detect types
+     * ending with '[]' and set isArray to true, but standard PHP reflection
+     * doesn't return types in this format. This test ensures the default
+     * behavior (isArray = false) works correctly.
+     */
+    public function testIsArrayIsFalseForNonArrayTypes(): void
+    {
+        $result = $this->analyzer->analyze(SimpleType::class);
+        $fields = $result->getFields();
+
+        // All fields in SimpleType are scalar types, so isArray should be false
+        foreach ($fields as $fieldName => $field) {
+            $this->assertFalse(
+                $field->isArray(),
+                "Field '{$fieldName}' of type '{$field->getType()}' should have isArray() = false"
+            );
         }
     }
 }
