@@ -10,13 +10,19 @@ declare(strict_types=1);
 
 namespace Phodam;
 
+use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use DateTimeZone;
+use DatePeriod;
 use InvalidArgumentException;
 use Phodam\Analyzer\TypeAnalyzer;
 use Phodam\Analyzer\TypeDefinition;
 use Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
+use Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider;
+use Phodam\Provider\Builtin\DefaultDatePeriodTypeProvider;
+use Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider;
 use Phodam\Provider\CreationFailedException;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
@@ -236,11 +242,23 @@ class Phodam implements PhodamInterface
     {
         // register default providers
         $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultDateIntervalTypeProvider()))->forType(DateInterval::class)
+        );
+
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultDatePeriodTypeProvider()))->forType(DatePeriod::class)
+        );
+
+        $this->registerProviderConfig(
             (new ProviderConfig(new DefaultDateTimeTypeProvider()))->forType(DateTime::class)
         );
 
         $this->registerProviderConfig(
             (new ProviderConfig(new DefaultDateTimeImmutableTypeProvider()))->forType(DateTimeImmutable::class)
+        );
+
+        $this->registerProviderConfig(
+            (new ProviderConfig(new DefaultDateTimeZoneTypeProvider()))->forType(DateTimeZone::class)
         );
     }
 }
