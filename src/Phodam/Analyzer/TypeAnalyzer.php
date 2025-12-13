@@ -46,12 +46,20 @@ class TypeAnalyzer
                 continue;
             }
 
-            $mappedFields[$property->getName()] = (new FieldDefinition($propertyType->getName()))
+            $type = $propertyType->getName();
+            $isArray = false;
+
+            if (substr($type, -2, 2) === '[]') {
+                $type = substr($type, 0, strlen($type) - 2);
+                $isArray = true;
+            }
+
+            $mappedFields[$property->getName()] = (new FieldDefinition($type))
                 ->setName(null)
                 ->setOverrides([])
                 ->setConfig([])
                 ->setNullable($propertyType->allowsNull())
-                ->setArray(false);
+                ->setArray($isArray);
         }
 
         if (!empty($unmappedFields)) {
