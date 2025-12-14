@@ -23,6 +23,10 @@
       "role": "Developer"
     }
   ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "phpdocumentor/reflection-docblock": "^5.3"
+  },
   "config": {
     "platform": {
       "php": "7.4"
@@ -63,6 +67,9 @@
       "@lint:phpstan",
       "@lint:phpcs",
       "@lint:phpcsfixer"
+    ],
+    "lint-fix": [
+      "@lint:phpcsfixer:fix"
     ],
     "test": [
       "mkdir -p build",

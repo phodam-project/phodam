@@ -17,6 +17,7 @@ use Phodam\Analyzer\TypeDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;
+use PhodamTests\Fixtures\SimpleTypeWithTypedArray;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
@@ -135,5 +136,26 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
                 "Field '{$fieldName}' of type '{$field->getType()}' should have isArray() = false"
             );
         }
+    }
+
+    /**
+     * @covers ::analyze
+     * @covers ::getArrayElementTypeFromPhpDoc
+     */
+    public function testAnalyzeWithTypedArraysFromPhpDoc(): void
+    {
+        $result = $this->analyzer->analyze(SimpleTypeWithTypedArray::class);
+        $fields = $result->getFields();
+
+        // Verify that array fields with PHPDoc types are properly mapped
+        $this->assertArrayHasKey('stringArray', $fields);
+        $stringArrayField = $fields['stringArray'];
+        $this->assertEquals('string', $stringArrayField->getType());
+        $this->assertTrue($stringArrayField->isArray(), 'stringArray should have isArray() = true');
+
+        $this->assertArrayHasKey('intArray', $fields);
+        $intArrayField = $fields['intArray'];
+        $this->assertEquals('int', $intArrayField->getType());
+        $this->assertTrue($intArrayField->isArray(), 'intArray should have isArray() = true');
     }
 }
