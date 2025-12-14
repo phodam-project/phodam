@@ -9,12 +9,18 @@ declare(strict_types=1);
 
 namespace Phodam\Analyzer;
 
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
+use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\DocBlockFactoryInterface;
+use phpDocumentor\Reflection\Types\Array_;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
 
 class TypeAnalyzer
 {
+    private ?DocBlockFactoryInterface $docBlockFactory = null;
+
     /**
      * @param string $type
      * @return TypeDefinition
@@ -38,23 +44,22 @@ class TypeAnalyzer
                 continue;
             }
 
-            // TODO: Can we check if $propertyType === 'SomeClass[]' and treat it as 'SomeClass' and array = true?
-            // if this is an array, we can't map the field
-            // since we don't know what the type in the array is
-            if ($propertyType->getName() === 'array') {
-                $unmappedFields[] = $property->getName();
-                continue;
-            }
-
-            $type = $propertyType->getName();
+            $propertyTypeName = $propertyType->getName();
             $isArray = false;
 
-            if (substr($type, -2, 2) === '[]') {
-                $type = substr($type, 0, strlen($type) - 2);
+            // Check if this is an array type and try to get element type from PHPDoc
+            if ($propertyType->getName() === 'array') {
+                $elementType = $this->getArrayElementTypeFromPhpDoc($property);
+                if ($elementType === null) {
+                    $unmappedFields[] = $property->getName();
+                    continue;
+                }
+
+                $propertyTypeName = $elementType;
                 $isArray = true;
             }
 
-            $mappedFields[$property->getName()] = (new FieldDefinition($type))
+            $mappedFields[$property->getName()] = (new FieldDefinition($propertyTypeName))
                 ->setName(null)
                 ->setOverrides([])
                 ->setConfig([])
@@ -74,5 +79,58 @@ class TypeAnalyzer
 
         return (new TypeDefinition())
             ->setFields($mappedFields);
+    }
+
+    /**
+     * Attempts to extract the array element type from PHPDoc @var annotation
+     *
+     * @param \ReflectionProperty $property
+     * @return string|null The element type (e.g., 'string', 'int', 'SomeClass') or null if not found
+     */
+    private function getArrayElementTypeFromPhpDoc(\ReflectionProperty $property): ?string
+    {
+        $docComment = $property->getDocComment();
+        if ($docComment === false) {
+            return null;
+        }
+
+        if ($this->docBlockFactory === null) {
+            $this->docBlockFactory = DocBlockFactory::createInstance();
+        }
+
+        try {
+            $docblock = $this->docBlockFactory->create($docComment);
+            $varTags = $docblock->getTagsByName('var');
+
+            if (empty($varTags)) {
+                return null;
+            }
+
+            /** @var Var_ $varTag */
+            $varTag = $varTags[0];
+            $type = $varTag->getType();
+
+            // Check if the type is an array type
+            if ($type instanceof Array_) {
+                $valueType = $type->getValueType();
+                // Convert the type object to string (e.g., Object_ -> class name, String_ -> 'string')
+                $typeString = (string)$valueType;
+
+                // Handle fully qualified class names - phpDocumentor returns them with backslashes
+                // We want just the class name for consistency with reflection
+                if (strpos($typeString, '\\') !== false) {
+                    // Extract the class name from the fully qualified name
+                    $parts = explode('\\', $typeString);
+                    $typeString = end($parts);
+                }
+
+                return $typeString;
+            }
+        } catch (\Exception $e) {
+            // If parsing fails, return null
+            return null;
+        }
+
+        return null;
     }
 }

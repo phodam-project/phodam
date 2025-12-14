@@ -23,6 +23,10 @@
       "role": "Developer"
     }
   ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "phpdocumentor/reflection-docblock": "^5.3"
+  },
   "config": {
     "platform": {
       "php": "7.4"
@@ -32,10 +36,10 @@
     }
   },
   "require-dev": {
-    "phpstan/phpstan": "~1.7",
+    "phpstan/phpstan": "~1.12",
     "phpunit/phpunit": "~9.5",
     "squizlabs/php_codesniffer": "~3.6",
-    "friendsofphp/php-cs-fixer": "~3.8",
+    "friendsofphp/php-cs-fixer": "~3.25.0",
     "phpstan/extension-installer": "1.2.x-dev",
     "phpstan/phpstan-phpunit": "1.1.x-dev"
   },
@@ -63,6 +67,9 @@
       "@lint:phpstan",
       "@lint:phpcs",
       "@lint:phpcsfixer"
+    ],
+    "lint-fix": [
+      "@lint:phpcsfixer:fix"
     ],
     "test": [
       "mkdir -p build",

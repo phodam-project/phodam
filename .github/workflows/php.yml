@@ -14,6 +14,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      PHP_CS_FIXER_IGNORE_ENV: true
+
     steps:
     - uses: actions/checkout@v3
 

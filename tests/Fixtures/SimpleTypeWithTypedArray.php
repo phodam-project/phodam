@@ -29,7 +29,7 @@ class SimpleTypeWithTypedArray
     private array $intArray;
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getStringArray(): array
     {
@@ -37,7 +37,7 @@ class SimpleTypeWithTypedArray
     }
 
     /**
-     * @param array $stringArray
+     * @param string[] $stringArray
      * @return SimpleTypeWithTypedArray
      */
     public function setStringArray(array $stringArray): SimpleTypeWithTypedArray
@@ -47,7 +47,7 @@ class SimpleTypeWithTypedArray
     }
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getIntArray(): array
     {
@@ -55,7 +55,7 @@ class SimpleTypeWithTypedArray
     }
 
     /**
-     * @param array $intArray
+     * @param int[] $intArray
      * @return SimpleTypeWithTypedArray
      */
     public function setIntArray(array $intArray): SimpleTypeWithTypedArray

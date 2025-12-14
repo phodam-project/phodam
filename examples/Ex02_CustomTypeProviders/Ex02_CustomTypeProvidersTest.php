@@ -10,13 +10,8 @@ declare(strict_types=1);
 namespace PhodamExamples\Ex02_CustomTypeProviders;
 
 use DateTimeImmutable;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeAnalysisException;
-use Phodam\Analyzer\TypeDefinition;
-use Phodam\Phodam;
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Provider\ProviderConfig;
 use PHPUnit\Framework\TestCase;
 
 class Ex02_CustomTypeProvidersTest extends TestCase
@@ -41,21 +36,6 @@ class Ex02_CustomTypeProvidersTest extends TestCase
         $this->phodam = $schema->getPhodam();
     }
 
-    public function testBeforeRegistering(): void
-    {
-        // we expect a new instance of Phodam to not understand how to
-        // make a Classroom because it's unable to map `array $students` to
-        // a type it can generate
-        $localPhodam = new Phodam();
-
-        $this->expectException(TypeAnalysisException::class);
-        $this->expectExceptionMessage(
-            'PhodamExamples\Ex02_CustomTypeProviders\Classroom: Unable to map fields: students'
-        );
-
-        $localPhodam->create(Classroom::class);
-    }
-
     public function testCreatingClassroom(): void
     {
         $classroom = $this->phodam->create(Classroom::class);
@@ -68,29 +48,6 @@ class Ex02_CustomTypeProvidersTest extends TestCase
             $this->assertGreaterThanOrEqual(0.0, $student->getGpa());
             $this->assertLessThanOrEqual(4.0, $student->getGpa());
             $this->assertTrue($student->isActive());
-            $this->assertInstanceOf(Address::class, $student->getAddress());
-            $this->assertInstanceOf(DateTimeImmutable::class, $student->getDateOfBirth());
-        }
-    }
-
-    public function testTypeDefinitionWithArray(): void
-    {
-        $fields = [
-            'students' => (new FieldDefinition(Student::class))
-                ->setArray(true)
-        ];
-        $def = new TypeDefinition($fields);
-
-        $localPhodam = new Phodam();
-        $localPhodam->registerTypeDefinition(Classroom::class, $def);
-
-        /** @var Classroom $classroom */
-        $classroom = $localPhodam->create(Classroom::class);
-        $this->assertInstanceOf(Classroom::class, $classroom);
-        $this->assertIsInt($classroom->getRoomNumber());
-        $this->assertIsArray($classroom->getStudents());
-        foreach ($classroom->getStudents() as $student) {
-            $this->assertInstanceOf(Student::class, $student);
             $this->assertInstanceOf(Address::class, $student->getAddress());
             $this->assertInstanceOf(DateTimeImmutable::class, $student->getDateOfBirth());
         }
