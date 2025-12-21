@@ -25,4 +25,9 @@
             <directory suffix=".php">src</directory>
         </include>
     </coverage>
+
+    <php>
+        <env name="XDEBUG_MODE" value="debug"/>
+        <env name="XDEBUG_TRIGGER" value="1"/>
+    </php>
 </phpunit>
