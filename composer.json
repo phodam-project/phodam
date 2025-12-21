@@ -75,6 +75,10 @@
       "mkdir -p build",
       "@test:phpunit"
     ],
+    "test:debug": [
+      "mkdir -p build",
+      "XDEBUG_MODE=debug XDEBUG_TRIGGER=1 phpunit -c phpunit.xml"
+    ],
     "precommit": [
       "@lint",
       "@test"
