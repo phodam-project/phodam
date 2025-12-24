@@ -85,14 +85,13 @@ class TypeAnalyzer
      * Attempts to extract the array element type from PHPDoc @var annotation
      *
      * @param \ReflectionProperty $property
-     * @param \ReflectionClass $class
+     * @param \ReflectionClass<*> $context
      * @return string|null The element type (e.g., 'string', 'int', 'SomeClass') or null if not found
      */
     private function getArrayElementTypeFromPhpDoc(
         \ReflectionProperty $property,
         \ReflectionClass $context
-    ): ?string
-    {
+    ): ?string {
         $docComment = $property->getDocComment();
         if ($docComment === false) {
             return null;
