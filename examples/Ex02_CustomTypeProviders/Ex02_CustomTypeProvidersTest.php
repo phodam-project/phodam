@@ -28,11 +28,6 @@ class Ex02_CustomTypeProvidersTest extends TestCase
         $schema->forType(Student::class)
             ->registerProvider(new StudentTypeProvider());
 
-        // A Classroom provider is needed because `array $students`
-        // doesn't have a type, and we can't assume because of 'array'
-        $schema->forType(Classroom::class)
-            ->registerProvider(new ClassroomTypeProvider());
-
         $this->phodam = $schema->getPhodam();
     }
 

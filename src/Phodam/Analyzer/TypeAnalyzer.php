@@ -49,7 +49,7 @@ class TypeAnalyzer
 
             // Check if this is an array type and try to get element type from PHPDoc
             if ($propertyType->getName() === 'array') {
-                $elementType = $this->getArrayElementTypeFromPhpDoc($property);
+                $elementType = $this->getArrayElementTypeFromPhpDoc($property, $class);
                 if ($elementType === null) {
                     $unmappedFields[] = $property->getName();
                     continue;
@@ -85,10 +85,13 @@ class TypeAnalyzer
      * Attempts to extract the array element type from PHPDoc @var annotation
      *
      * @param \ReflectionProperty $property
+     * @param \ReflectionClass<*> $context
      * @return string|null The element type (e.g., 'string', 'int', 'SomeClass') or null if not found
      */
-    private function getArrayElementTypeFromPhpDoc(\ReflectionProperty $property): ?string
-    {
+    private function getArrayElementTypeFromPhpDoc(
+        \ReflectionProperty $property,
+        \ReflectionClass $context
+    ): ?string {
         $docComment = $property->getDocComment();
         if ($docComment === false) {
             return null;
@@ -122,6 +125,15 @@ class TypeAnalyzer
                     // Extract the class name from the fully qualified name
                     $parts = explode('\\', $typeString);
                     $typeString = end($parts);
+                }
+
+                if ($typeString[0] === '\\') {
+                    return ltrim($typeString, '\\');
+                }
+
+                $nsGuess = $context->getnamespaceName() . '\\' . $typeString;
+                if (class_exists($nsGuess)) {
+                    return $nsGuess;
                 }
 
                 return $typeString;
