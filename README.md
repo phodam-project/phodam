@@ -8,6 +8,10 @@ Phodam, in its current state, will populate objects as long as it's given a `Typ
 
 ## Usage
 
+1. [Initializing Phodam](docs/001-Initializing%20Phodam.md)
+
+## Usage
+
 ### Basic Usage
 ```php
 $value = $this->phodam->create(SimpleType::class);
