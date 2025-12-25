@@ -17,6 +17,7 @@ use Phodam\Analyzer\TypeDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;
+use PhodamTests\Fixtures\SimpleTypeWithPhpDocTypes;
 use PhodamTests\Fixtures\SimpleTypeWithTypedArray;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
@@ -157,5 +158,56 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         $intArrayField = $fields['intArray'];
         $this->assertEquals('int', $intArrayField->getType());
         $this->assertTrue($intArrayField->isArray(), 'intArray should have isArray() = true');
+    }
+
+    /**
+     * @covers ::analyze
+     * @covers ::getTypeFromPhpDoc
+     * 
+     * This test verifies that the TypeAnalyzer can extract types from PHPDoc
+     * @var annotations when properties have no type declarations. This is useful
+     * for legacy code or code that relies on PHPDoc for type information.
+     */
+    public function testAnalyzeWithPhpDocTypesForUntypedProperties(): void
+    {
+        $result = $this->analyzer->analyze(SimpleTypeWithPhpDocTypes::class);
+        $this->assertInstanceOf(TypeDefinition::class, $result);
+        
+        $fields = $result->getFields();
+
+        // Verify all fields are mapped (none should be unmapped)
+        $this->assertCount(5, $fields, 'All 5 fields should be mapped');
+
+        // Verify scalar types from PHPDoc
+        $this->assertArrayHasKey('myInt', $fields);
+        $myIntField = $fields['myInt'];
+        $this->assertEquals('int', $myIntField->getType());
+        $this->assertFalse($myIntField->isArray(), 'myInt should have isArray() = false');
+        $this->assertTrue($myIntField->isNullable(), 'myInt should be nullable when type comes from PHPDoc only');
+
+        $this->assertArrayHasKey('myFloat', $fields);
+        $myFloatField = $fields['myFloat'];
+        $this->assertEquals('float', $myFloatField->getType());
+        $this->assertFalse($myFloatField->isArray(), 'myFloat should have isArray() = false');
+        $this->assertTrue($myFloatField->isNullable(), 'myFloat should be nullable when type comes from PHPDoc only');
+
+        $this->assertArrayHasKey('myString', $fields);
+        $myStringField = $fields['myString'];
+        $this->assertEquals('string', $myStringField->getType());
+        $this->assertFalse($myStringField->isArray(), 'myString should have isArray() = false');
+        $this->assertTrue($myStringField->isNullable(), 'myString should be nullable when type comes from PHPDoc only');
+
+        $this->assertArrayHasKey('myBool', $fields);
+        $myBoolField = $fields['myBool'];
+        $this->assertEquals('bool', $myBoolField->getType());
+        $this->assertFalse($myBoolField->isArray(), 'myBool should have isArray() = false');
+        $this->assertTrue($myBoolField->isNullable(), 'myBool should be nullable when type comes from PHPDoc only');
+
+        // Verify array type from PHPDoc
+        $this->assertArrayHasKey('stringArray', $fields);
+        $stringArrayField = $fields['stringArray'];
+        $this->assertEquals('string', $stringArrayField->getType());
+        $this->assertTrue($stringArrayField->isArray(), 'stringArray should have isArray() = true');
+        $this->assertTrue($stringArrayField->isNullable(), 'stringArray should be nullable when type comes from PHPDoc only');
     }
 }
