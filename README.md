@@ -10,11 +10,11 @@ Phodam, in its current state, will populate objects as long as it's given a `Typ
 
 1. [Initializing Phodam](docs/001-Initializing%20Phodam.md)
 2. [Primitive Types](docs/002-Primitive%20Types.md)
-3. Built-in Types
-4. Associative Arrays
-5. Custom Type Definitions
-5. Custom Providers
-7. [Named Providers](007-Named%20Providers.md)
+3. [Built-in Types](docs/003-Builtin%20Types.md)
+4. [Associative Arrays](docs/004-Associative%20Arrays.md)
+5. Definition-based Type Providers
+5. Custom Type Providers
+7. [Named Type Providers](docs/007-Named%20Providers.md)
 
 
 ## Usage
