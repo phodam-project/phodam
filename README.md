@@ -4,55 +4,17 @@ Phodam is inspired by [PODAM](https://mtedone.github.io/podam/).
 
 Phodam (pronounced Faux-dam) is a PHP library used to generate objects for unit tests. The main feature of PODAM is that you can give it a class and it generates a populated Object with all fields populated.
 
-Phodam, in its current state, will populate objects as long as it's given a `TypeProviderInterface` for a specific class.
+## Documentation
 
-## Usage
+**New to Phodam?** Start with the [Quick Start Guide](docs/Quick%20Start%20Guide.md)!
 
-1. [Initializing Phodam](docs/Initializing%20Phodam.md)
-1. [Primitive Types](docs/Primitive%20Types.md)
-1. [Built-in Types](docs/Builtin%20Types.md)
-1. [Associative Arrays](docs/Associative%20Arrays.md)
-1. [Automatic Type Analysis](docs/Automatic%20Type%20Analysis.md)
-1. [Definition-based Type Providers](docs/Definition-based%20Type%20Providers.md)
-1. [Custom Type Providers](docs/Custom%20Type%20Providers.md)
-1. [Named Type Providers](docs/Named%20Providers.md)
+1. [Quick Start Guide](docs/Quick%20Start%20Guide.md) - Get started in minutes
+2. [Initializing Phodam](docs/Initializing%20Phodam.md) - Setting up Phodam
+3. [Automatic Type Analysis](docs/Automatic%20Type%20Analysis.md) - How Phodam automatically analyzes your classes
+4. [Primitive Types](docs/Primitive%20Types.md) - Generating `int`, `float`, `string`, `bool`
+5. [Built-in Types](docs/Builtin%20Types.md) - Working with `DateTime`, `DateTimeImmutable`, etc.
+6. [Associative Arrays](docs/Associative%20Arrays.md) - Creating structured arrays
+7. [Definition-based Type Providers](docs/Definition-based%20Type%20Providers.md) - Specifying field types
+8. [Custom Type Providers](docs/Custom%20Type%20Providers.md) - Full control over object creation
+9. [Named Providers](docs/Named%20Providers.md) - Multiple ways to generate the same type
 
-
-## Usage
-
-### Basic Usage
-```php
-$value = $this->phodam->create(SimpleType::class);
-```
-
-### Populating a Type with untyped fields
-```php
-// Since PHP classes don't require types on fields, you may need to provide some hints
-// You only need to provide field definitions for fields that can't automatically be mapped
-$definition = [
-    'myInt' => new FieldDefinition('int'),
-    'myString' => new FieldDefinition('string')
-];
-
-$this->phodam->registerTypeDefinition(SimpleTypeMissingSomeFieldTypes::class, $definition);
-
-$value = $this->phodam->create(SimpleTypeMissingSomeFieldsTypes::class);
-```
-
-### Populating a Type with array (list) fields
-```php
-$definition = [
-    'myArray' => (new FieldDefinition(SimpleType::class))
-        ->setArray(true)
-];
-
-$this->phodam->registerTypeDefinition(SimpleTypeWithAnArray::class, $definition);
-
-$value = $this->phodam->create(SimpleTypeWithAnArray::class);
-```
-
-## Local Build
-
-```sh
-./quickBuild.sh
-```
