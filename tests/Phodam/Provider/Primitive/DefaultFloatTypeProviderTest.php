@@ -91,7 +91,7 @@ class DefaultFloatTypeProviderTest extends PhodamBaseTestCase
             $this->phodam,
             'float',
             [],
-            ['min' => $min, 'max' => $max]
+            ['min' => $min, 'max' => $max, 'precision' => 5]
         );
 
         for ($i = 0; $i < 10; $i++) {
