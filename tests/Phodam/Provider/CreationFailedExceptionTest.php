@@ -20,7 +20,7 @@ use Throwable;
  */
 class CreationFailedExceptionTest extends PhodamBaseTestCase
 {
-    public function provideConstructorArgs()
+    public static function provideConstructorArgs(): array
     {
         return [
             'type, no name, no message, no previous' => [
