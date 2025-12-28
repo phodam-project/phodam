@@ -1,4 +1,4 @@
-ARG SOURCE_IMAGE="php:7.4-cli"
+ARG SOURCE_IMAGE="php:8.4-cli"
 
 FROM ${SOURCE_IMAGE}
 
