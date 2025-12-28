@@ -31,7 +31,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideTypes(): array
+    public static function provideTypes(): array
     {
         return [
             'int type' => [
@@ -60,7 +60,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideOverridesWithKeyPresent(): array
+    public static function provideOverridesWithKeyPresent(): array
     {
         return [
             'one override get foo' => [
@@ -139,7 +139,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    public function provideOverridesWithKeyMissing(): array
+    public static function provideOverridesWithKeyMissing(): array
     {
         return [
             'no overrides get foo' => [
@@ -157,10 +157,9 @@ class ProviderContextTest extends PhodamBaseTestCase
 
     /**
      * @dataProvider provideOverridesWithKeyPresent
-     * @dataProvider provideOverridesWithKeyMissing
      * @covers ::getOverrides
      */
-    public function testGetOverrides(array $overrides): void
+    public function testGetOverrides(array $overrides, string $key, mixed $expectedValue): void
     {
         $context = new ProviderContext(
             $this->phodam,
@@ -177,7 +176,8 @@ class ProviderContextTest extends PhodamBaseTestCase
      */
     public function testHasOverrideTrue(
         array $overrides,
-        string $key
+        string $key,
+        mixed $expectedValue
     ): void {
         $context = new ProviderContext(
             $this->phodam,
@@ -234,7 +234,8 @@ class ProviderContextTest extends PhodamBaseTestCase
      */
     public function testHasOverrideFalse(
         array $overrides,
-        string $key
+        string $key,
+        string $expectedMessage
     ): void {
         $context = new ProviderContext(
             $this->phodam,
@@ -246,7 +247,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideConfigs(): array
+    public static function provideConfigs(): array
     {
         return [
             'empty config' => [
@@ -284,7 +285,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideCreateArrays(): array
+    public static function provideCreateArrays(): array
     {
         return [
             'no overrides, no config' => [
@@ -406,7 +407,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideCreates(): array
+    public static function provideCreates(): array
     {
         return [
             'no name, no overrides, no config' => [

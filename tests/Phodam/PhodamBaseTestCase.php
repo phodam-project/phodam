@@ -11,6 +11,6 @@ namespace PhodamTests\Phodam;
 
 use PHPUnit\Framework\TestCase;
 
-class PhodamBaseTestCase extends TestCase
+abstract class PhodamBaseTestCase extends TestCase
 {
 }
