@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace PhodamTests\Fixtures;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
 class SampleArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context)
+    public function create(ProviderContextInterface $context)
     {
         $defaults = [
             'field1' => 'value1',
             'field2' => 'second value',
-            'field3' => $context->create('int')
+            'field3' => $context->getPhodam()->create('int')
         ];
 
         return array_merge(

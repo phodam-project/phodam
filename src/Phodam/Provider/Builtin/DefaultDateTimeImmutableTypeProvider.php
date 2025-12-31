@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Phodam\Provider\Builtin;
 
 use DateTimeImmutable;
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -19,7 +19,7 @@ use Phodam\Provider\TypedProviderInterface;
  */
 class DefaultDateTimeImmutableTypeProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): DateTimeImmutable
+    public function create(ProviderContextInterface $context): DateTimeImmutable
     {
         return new DateTimeImmutable();
     }

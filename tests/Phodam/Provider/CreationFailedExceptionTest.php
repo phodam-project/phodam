@@ -13,14 +13,17 @@ use Exception;
 use Phodam\Provider\CreationFailedException;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Throwable;
 
-/**
- * @coversDefaultClass \Phodam\Provider\CreationFailedException
- */
+#[CoversClass(\Phodam\Provider\CreationFailedException::class)]
+#[CoversMethod(\Phodam\Provider\CreationFailedException::class, '__construct')]
+#[CoversMethod(\Phodam\Provider\CreationFailedException::class, 'getType')]
 class CreationFailedExceptionTest extends PhodamBaseTestCase
 {
-    public function provideConstructorArgs()
+    public static function provideConstructorArgs(): array
     {
         return [
             'type, no name, no message, no previous' => [
@@ -76,11 +79,7 @@ class CreationFailedExceptionTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideConstructorArgs
-     * @covers ::__construct
-     * @covers ::getType
-     */
+    #[DataProvider('provideConstructorArgs')]
     public function testConstruct(
         string     $type,
         ?string    $name,

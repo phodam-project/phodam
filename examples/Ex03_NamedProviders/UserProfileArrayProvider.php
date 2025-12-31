@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex03_NamedProviders;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
 class UserProfileArrayProvider implements ProviderInterface
@@ -18,13 +18,13 @@ class UserProfileArrayProvider implements ProviderInterface
      * @inheritDoc
      * @return array
      */
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $defaults = [
-            'firstName' => $context->create('string'),
-            'lastName' => $context->create('string'),
-            'email' => $context->create('string'),
-            'age' => $context->create('int', null, [], ['min' => 18, 'max' => 100])
+            'firstName' => $context->getPhodam()->create('string'),
+            'lastName' => $context->getPhodam()->create('string'),
+            'email' => $context->getPhodam()->create('string'),
+            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100])
         ];
 
         // Merge with any overrides

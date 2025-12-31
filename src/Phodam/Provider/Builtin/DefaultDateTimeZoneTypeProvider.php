@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Phodam\Provider\Builtin;
 
 use DateTimeZone;
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -19,7 +19,7 @@ use Phodam\Provider\TypedProviderInterface;
  */
 class DefaultDateTimeZoneTypeProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): DateTimeZone
+    public function create(ProviderContextInterface $context): DateTimeZone
     {
         return new DateTimeZone('UTC');
     }

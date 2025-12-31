@@ -14,11 +14,12 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @coversDefaultClass \Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider
- */
+#[CoversClass(\Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider::class)]
+#[CoversMethod(\Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider::class, 'create')]
 class DefaultDateIntervalTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultDateIntervalTypeProvider $provider;
@@ -31,9 +32,6 @@ class DefaultDateIntervalTypeProviderTest extends PhodamBaseTestCase
         $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
-    /**
-     * @covers ::create
-     */
     public function testCreate()
     {
         $context = new ProviderContext(

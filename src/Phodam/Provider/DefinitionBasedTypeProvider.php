@@ -10,12 +10,11 @@ declare(strict_types=1);
 
 namespace Phodam\Provider;
 
-use Phodam\Analyzer\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\Analyzer\TypeDefinition;
-use Phodam\PhodamAware;
-use Phodam\PhodamAwareTrait;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
@@ -45,7 +44,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
      * @throws IncompleteDefinitionException
      * @throws ReflectionException
      */
-    public function create(ProviderContext $context)
+    public function create(ProviderContextInterface $context)
     {
         // TODO: We could check if $this->type is compatible with
         // $context->getType(), but it's not as simple as checking ===.
@@ -74,7 +73,6 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             try {
                 // 6. generate a definition for the type analyzer
                 $generatedDef = $analyzer->analyze($this->type);
-                var_export($generatedDef);
                 $generatedDefFields = $generatedDef->getFields();
             } catch (TypeAnalysisException $ex) {
                 // 7. if it throws an exception, check the $mappedFields from
@@ -102,7 +100,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
         }
 
         $generateField = function ($def) use ($context) {
-            return $context->create(
+            return $context->getPhodam()->create(
                 $def->getType(),
                 $def->getName() ?? null,
                 $def->getOverrides() ?? null,

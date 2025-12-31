@@ -59,11 +59,11 @@ class UserProfileArrayProvider implements ProviderInterface
     public function create(ProviderContext $context): array
     {
         $defaults = [
-            'firstName' => $context->create('string'),
-            'lastName' => $context->create('string'),
-            'email' => $context->create('string'),
-            'age' => $context->create('int', null, [], ['min' => 18, 'max' => 100]),
-            'isActive' => $context->create('bool')
+            'firstName' => $context->getPhodam()->create('string'),
+            'lastName' => $context->getPhodam()->create('string'),
+            'email' => $context->getPhodam()->create('string'),
+            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100]),
+            'isActive' => $context->getPhodam()->create('bool')
         ];
 
         return array_merge($defaults, $context->getOverrides());
@@ -90,14 +90,14 @@ class ProductArrayProvider implements ProviderInterface
         $maxPrice = $config['maxPrice'] ?? 1000.0;
         
         $defaults = [
-            'name' => $context->create('string'),
-            'description' => $context->create('string'),
-            'price' => $context->create('float', null, [], [
+            'name' => $context->getPhodam()->create('string'),
+            'description' => $context->getPhodam()->create('string'),
+            'price' => $context->getPhodam()->create('float', null, [], [
                 'min' => $minPrice,
                 'max' => $maxPrice,
                 'precision' => 2
             ]),
-            'inStock' => $context->create('bool')
+            'inStock' => $context->getPhodam()->create('bool')
         ];
 
         return array_merge($defaults, $context->getOverrides());
@@ -185,13 +185,13 @@ class UserProfileArrayProvider implements ProviderInterface
     public function create(ProviderContext $context): array
     {
         $defaults = [
-            'id' => $context->create('int', null, [], ['min' => 1, 'max' => 10000]),
-            'firstName' => $context->create('string', null, [], ['minLength' => 3, 'maxLength' => 20]),
-            'lastName' => $context->create('string', null, [], ['minLength' => 3, 'maxLength' => 20]),
-            'email' => $context->create('string', null, [], ['type' => 'lower', 'minLength' => 10, 'maxLength' => 50]),
-            'age' => $context->create('int', null, [], ['min' => 18, 'max' => 100]),
-            'isActive' => $context->create('bool'),
-            'createdAt' => $context->create(\DateTimeImmutable::class)
+            'id' => $context->getPhodam()->create('int', null, [], ['min' => 1, 'max' => 10000]),
+            'firstName' => $context->getPhodam()->create('string', null, [], ['minLength' => 3, 'maxLength' => 20]),
+            'lastName' => $context->getPhodam()->create('string', null, [], ['minLength' => 3, 'maxLength' => 20]),
+            'email' => $context->getPhodam()->create('string', null, [], ['type' => 'lower', 'minLength' => 10, 'maxLength' => 50]),
+            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100]),
+            'isActive' => $context->getPhodam()->create('bool'),
+            'createdAt' => $context->getPhodam()->create(\DateTimeImmutable::class)
         ];
 
         return array_merge($defaults, $context->getOverrides());
@@ -236,14 +236,14 @@ class ApiResponseArrayProvider implements ProviderInterface
         $defaults = [
             'status' => $statusCode >= 200 && $statusCode < 300 ? 'success' : 'error',
             'statusCode' => $statusCode,
-            'data' => $context->create('string'),
+            'data' => $context->getPhodam()->create('string'),
             'timestamp' => time()
         ];
         
         if ($includeMetadata) {
             $defaults['metadata'] = [
                 'version' => '1.0',
-                'requestId' => $context->create('string', null, [], ['length' => 32])
+                'requestId' => $context->getPhodam()->create('string', null, [], ['length' => 32])
             ];
         }
         
@@ -284,11 +284,11 @@ $schema->forArray()->withName('data')->registerProvider(...);
 
 ### 2. Leverage ProviderContext for Dynamic Values
 
-Use `$context->create()` to generate dynamic values instead of hardcoding:
+Use `$context->getPhodam()->create()` to generate dynamic values instead of hardcoding:
 
 ```php
 // Good - generates different values each time
-'id' => $context->create('int', null, [], ['min' => 1, 'max' => 10000])
+'id' => $context->getPhodam()->create('int', null, [], ['min' => 1, 'max' => 10000])
 
 // Avoid - same value every time
 'id' => 123

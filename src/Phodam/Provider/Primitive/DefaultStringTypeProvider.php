@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -32,7 +32,7 @@ class DefaultStringTypeProvider implements TypedProviderInterface
         'alphanumeric' => self::ALPHANUMERIC
     ];
 
-    public function create(ProviderContext $context): string
+    public function create(ProviderContextInterface $context): string
     {
         $config = $context->getConfig();
 

@@ -14,12 +14,20 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 
-/**
- * @coversDefaultClass \Phodam\Provider\ProviderContext
- */
+#[CoversClass(\Phodam\Provider\ProviderContext::class)]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getType')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getOverrides')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'hasOverride')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getOverride')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getConfig')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'createArray')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'create')]
 class ProviderContextTest extends PhodamBaseTestCase
 {
     /** @var PhodamInterface & MockObject */
@@ -31,7 +39,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideTypes(): array
+    public static function provideTypes(): array
     {
         return [
             'int type' => [
@@ -49,10 +57,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTypes
-     * @covers ::getType
-     */
+    #[DataProvider('provideTypes')]
     public function testGetType(string $type): void
     {
         $context = new ProviderContext($this->phodam, $type, [], []);
@@ -60,7 +65,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideOverridesWithKeyPresent(): array
+    public static function provideOverridesWithKeyPresent(): array
     {
         return [
             'one override get foo' => [
@@ -139,7 +144,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    public function provideOverridesWithKeyMissing(): array
+    public static function provideOverridesWithKeyMissing(): array
     {
         return [
             'no overrides get foo' => [
@@ -155,12 +160,8 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyPresent
-     * @dataProvider provideOverridesWithKeyMissing
-     * @covers ::getOverrides
-     */
-    public function testGetOverrides(array $overrides): void
+    #[DataProvider('provideOverridesWithKeyPresent')]
+    public function testGetOverrides(array $overrides, string $key, mixed $expectedValue): void
     {
         $context = new ProviderContext(
             $this->phodam,
@@ -171,13 +172,11 @@ class ProviderContextTest extends PhodamBaseTestCase
         $this->assertSame($overrides, $context->getOverrides());
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyPresent
-     * @covers ::hasOverride
-     */
+    #[DataProvider('provideOverridesWithKeyPresent')]
     public function testHasOverrideTrue(
         array $overrides,
-        string $key
+        string $key,
+        mixed $expectedValue
     ): void {
         $context = new ProviderContext(
             $this->phodam,
@@ -188,10 +187,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         $this->assertTrue($context->hasOverride($key));
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyPresent
-     * @covers ::getOverride
-     */
+    #[DataProvider('provideOverridesWithKeyPresent')]
     public function testGetOverrideSuccess(
         array $overrides,
         string $key,
@@ -206,10 +202,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         $this->assertSame($expectedValue, $context->getOverride($key));
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyMissing
-     * @covers ::getOverride
-     */
+    #[DataProvider('provideOverridesWithKeyMissing')]
     public function testGetOverrideFailure(
         array $overrides,
         string $key,
@@ -228,13 +221,11 @@ class ProviderContextTest extends PhodamBaseTestCase
         $context->getOverride($key);
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyMissing
-     * @covers ::hasOverride
-     */
+    #[DataProvider('provideOverridesWithKeyMissing')]
     public function testHasOverrideFalse(
         array $overrides,
-        string $key
+        string $key,
+        string $expectedMessage
     ): void {
         $context = new ProviderContext(
             $this->phodam,
@@ -246,7 +237,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideConfigs(): array
+    public static function provideConfigs(): array
     {
         return [
             'empty config' => [
@@ -268,10 +259,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideConfigs
-     * @covers ::getConfig
-     */
+    #[DataProvider('provideConfigs')]
     public function testGetConfig(array $config): void
     {
         $context = new ProviderContext(
@@ -284,7 +272,7 @@ class ProviderContextTest extends PhodamBaseTestCase
     }
 
 
-    public function provideCreateArrays(): array
+    public static function provideCreateArrays(): array
     {
         return [
             'no overrides, no config' => [
@@ -379,10 +367,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideCreateArrays
-     * @covers ::createArray
-     */
+    #[DataProvider('provideCreateArrays')]
     public function testCreateArray(
         string $name,
         ?array $overrides,
@@ -400,13 +385,13 @@ class ProviderContextTest extends PhodamBaseTestCase
             ->willReturn($createdValue);
 
         $context = new ProviderContext($this->phodam, 'array', [], []);
-        $actualValue = $context->createArray($name, $overrides, $config);
+        $actualValue = $context->getPhodam()->createArray($name, $overrides, $config);
 
         $this->assertSame($expectedValue, $actualValue);
     }
 
 
-    public function provideCreates(): array
+    public static function provideCreates(): array
     {
         return [
             'no name, no overrides, no config' => [
@@ -522,10 +507,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideCreates
-     * @covers ::create
-     */
+    #[DataProvider('provideCreates')]
     public function testCreate(
         string $type,
         ?string $name,
@@ -545,7 +527,7 @@ class ProviderContextTest extends PhodamBaseTestCase
             ->willReturn($createdValue);
 
         $context = new ProviderContext($this->phodam, $type, [], []);
-        $actualValue = $context->create($type, $name, $overrides, $config);
+        $actualValue = $context->getPhodam()->create($type, $name, $overrides, $config);
 
         $this->assertSame($expectedValue, $actualValue);
     }
