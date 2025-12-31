@@ -14,10 +14,11 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider
- */
+#[CoversClass(\Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider::class)]
+#[CoversMethod(\Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider::class, 'create')]
 class DefaultDateTimeImmutableTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultDateTimeImmutableTypeProvider $provider;
@@ -30,9 +31,6 @@ class DefaultDateTimeImmutableTypeProviderTest extends PhodamBaseTestCase
         $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
-    /**
-     * @covers ::create
-     */
     public function testCreate()
     {
         $context = new ProviderContext(

@@ -11,16 +11,14 @@ namespace PhodamTests\Phodam\Store;
 
 use Phodam\Store\ProviderNotFoundException;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Store\ProviderNotFoundException
- */
+#[CoversClass(\Phodam\Store\ProviderNotFoundException::class)]
+#[CoversMethod(\Phodam\Store\ProviderNotFoundException::class, '__construct')]
+#[CoversMethod(\Phodam\Store\ProviderNotFoundException::class, 'getType')]
 class ProviderNotFoundExceptionTest extends PhodamBaseTestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::getType
-     */
     public function testConstruct(): void
     {
         $message = 'My Message Here';

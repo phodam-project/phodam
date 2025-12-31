@@ -12,15 +12,25 @@ namespace PhodamTests\Phodam\Analyzer;
 use Phodam\Types\FieldDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Types\FieldDefinition
- */
+#[CoversClass(\Phodam\Types\FieldDefinition::class)]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, '__construct')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'setName')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'setConfig')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'setOverrides')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'setNullable')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'setArray')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'getType')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'getName')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'getConfig')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'getOverrides')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'isNullable')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'isArray')]
+#[CoversMethod(\Phodam\Types\FieldDefinition::class, 'fromArray')]
 class FieldDefinitionTest extends PhodamBaseTestCase
 {
-    /**
-     * @covers ::__construct
-     */
     public function testDefaultConstructor(): void
     {
         $type = SimpleType::class;
@@ -36,20 +46,6 @@ class FieldDefinitionTest extends PhodamBaseTestCase
         $this->assertFalse($def->isArray());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::setName
-     * @covers ::setConfig
-     * @covers ::setOverrides
-     * @covers ::setNullable
-     * @covers ::setArray
-     * @covers ::getType
-     * @covers ::getName
-     * @covers ::getConfig
-     * @covers ::getOverrides
-     * @covers ::isNullable
-     * @covers ::isArray
-     */
     public function testGettersSetters(): void
     {
         $type = SimpleType::class;
@@ -76,9 +72,6 @@ class FieldDefinitionTest extends PhodamBaseTestCase
         $this->assertTrue($def->isArray());
     }
 
-    /**
-     * @covers ::fromArray
-     */
     public function testFromArray()
     {
         $type = SimpleType::class;

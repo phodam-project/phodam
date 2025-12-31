@@ -12,19 +12,17 @@ namespace PhodamTests\Phodam\Analyzer;
 use Phodam\Analyzer\TypeAnalysisException;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Analyzer\TypeAnalysisException
- */
+#[CoversClass(\Phodam\Analyzer\TypeAnalysisException::class)]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalysisException::class, '__construct')]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalysisException::class, 'getType')]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalysisException::class, 'getFieldNames')]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalysisException::class, 'getMappedFields')]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalysisException::class, 'getUnmappedFields')]
 class TypeAnalysisExceptionTest extends PhodamBaseTestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::getType
-     * @covers ::getFieldNames
-     * @covers ::getMappedFields
-     * @covers ::getUnmappedFields
-     */
     public function testConstruct(): void
     {
         $message = 'My Message Here';

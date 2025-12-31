@@ -14,12 +14,20 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 
-/**
- * @coversDefaultClass \Phodam\Provider\ProviderContext
- */
+#[CoversClass(\Phodam\Provider\ProviderContext::class)]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getType')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getOverrides')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'hasOverride')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getOverride')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getConfig')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'createArray')]
+#[CoversMethod(\Phodam\Provider\ProviderContext::class, 'create')]
 class ProviderContextTest extends PhodamBaseTestCase
 {
     /** @var PhodamInterface & MockObject */
@@ -49,10 +57,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTypes
-     * @covers ::getType
-     */
+    #[DataProvider('provideTypes')]
     public function testGetType(string $type): void
     {
         $context = new ProviderContext($this->phodam, $type, [], []);
@@ -155,10 +160,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyPresent
-     * @covers ::getOverrides
-     */
+    #[DataProvider('provideOverridesWithKeyPresent')]
     public function testGetOverrides(array $overrides, string $key, mixed $expectedValue): void
     {
         $context = new ProviderContext(
@@ -170,10 +172,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         $this->assertSame($overrides, $context->getOverrides());
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyPresent
-     * @covers ::hasOverride
-     */
+    #[DataProvider('provideOverridesWithKeyPresent')]
     public function testHasOverrideTrue(
         array $overrides,
         string $key,
@@ -188,10 +187,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         $this->assertTrue($context->hasOverride($key));
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyPresent
-     * @covers ::getOverride
-     */
+    #[DataProvider('provideOverridesWithKeyPresent')]
     public function testGetOverrideSuccess(
         array $overrides,
         string $key,
@@ -206,10 +202,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         $this->assertSame($expectedValue, $context->getOverride($key));
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyMissing
-     * @covers ::getOverride
-     */
+    #[DataProvider('provideOverridesWithKeyMissing')]
     public function testGetOverrideFailure(
         array $overrides,
         string $key,
@@ -228,10 +221,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         $context->getOverride($key);
     }
 
-    /**
-     * @dataProvider provideOverridesWithKeyMissing
-     * @covers ::hasOverride
-     */
+    #[DataProvider('provideOverridesWithKeyMissing')]
     public function testHasOverrideFalse(
         array $overrides,
         string $key,
@@ -269,10 +259,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideConfigs
-     * @covers ::getConfig
-     */
+    #[DataProvider('provideConfigs')]
     public function testGetConfig(array $config): void
     {
         $context = new ProviderContext(
@@ -380,10 +367,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideCreateArrays
-     * @covers ::createArray
-     */
+    #[DataProvider('provideCreateArrays')]
     public function testCreateArray(
         string $name,
         ?array $overrides,
@@ -523,10 +507,7 @@ class ProviderContextTest extends PhodamBaseTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideCreates
-     * @covers ::create
-     */
+    #[DataProvider('provideCreates')]
     public function testCreate(
         string $type,
         ?string $name,
