@@ -10,8 +10,10 @@ declare(strict_types=1);
 namespace PhodamExamples\Ex04_DefinitionBasedProviders;
 
 use DateTimeImmutable;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
+use Phodam\Provider\TypedProviderInterface;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
 use PHPUnit\Framework\TestCase;
@@ -210,14 +212,14 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
         $schema = PhodamSchema::withDefaults();
         $schema->forType(OrderItem::class)
             ->withName('expensive')
-            ->registerProvider(new class implements \Phodam\Provider\TypedProviderInterface {
-                public function create(\Phodam\Provider\ProviderContext $context): OrderItem
+            ->registerProvider(new class implements TypedProviderInterface {
+                public function create(ProviderContextInterface $context): OrderItem
                 {
                     return (new OrderItem())
-                        ->setItemId($context->create('int'))
-                        ->setProductName($context->create('string'))
-                        ->setQuantity($context->create('float', null, [], ['min' => 1.0, 'max' => 10.0]))
-                        ->setUnitPrice($context->create('float', null, [], ['min' => 100.0, 'max' => 1000.0]));
+                        ->setItemId($context->getPhodam()->create('int'))
+                        ->setProductName($context->getPhodam()->create('string'))
+                        ->setQuantity($context->getPhodam()->create('float', null, [], ['min' => 1.0, 'max' => 10.0]))
+                        ->setUnitPrice($context->getPhodam()->create('float', null, [], ['min' => 100.0, 'max' => 1000.0]));
                 }
             });
 

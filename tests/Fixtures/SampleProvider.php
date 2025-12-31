@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace PhodamTests\Fixtures;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
 class SampleProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context)
+    public function create(ProviderContextInterface $context)
     {
         $defaults = [
-            'field1' => $context->create('string'),
-            'field2' => $context->create('string'),
-            'field3' => $context->create('int')
+            'field1' => $context->getPhodam()->create('string'),
+            'field2' => $context->getPhodam()->create('string'),
+            'field3' => $context->getPhodam()->create('int')
         ];
         $values = array_merge(
             $defaults,

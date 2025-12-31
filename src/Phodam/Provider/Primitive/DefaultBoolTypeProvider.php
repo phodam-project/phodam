@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -23,7 +23,7 @@ class DefaultBoolTypeProvider implements TypedProviderInterface
      * @inheritDoc
      * @return bool
      */
-    public function create(ProviderContext $context): bool
+    public function create(ProviderContextInterface $context): bool
     {
         return (bool)rand(0, 1);
     }

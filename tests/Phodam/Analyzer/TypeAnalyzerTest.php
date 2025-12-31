@@ -10,20 +10,23 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam\Analyzer;
 
 use Exception;
-use Phodam\Analyzer\FieldDefinition;
+use Phodam\Types\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\TypeDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;
 use PhodamTests\Fixtures\SimpleTypeWithPhpDocTypes;
 use PhodamTests\Fixtures\SimpleTypeWithTypedArray;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Analyzer\TypeAnalyzer
- */
+#[CoversClass(\Phodam\Analyzer\TypeAnalyzer::class)]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalyzer::class, 'analyze')]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalyzer::class, 'getArrayElementTypeFromPhpDoc')]
+#[CoversMethod(\Phodam\Analyzer\TypeAnalyzer::class, 'getTypeFromPhpDoc')]
 class TypeAnalyzerTest extends PhodamBaseTestCase
 {
     private TypeAnalyzer $analyzer;
@@ -34,9 +37,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         $this->analyzer = new TypeAnalyzer();
     }
 
-    /**
-     * @covers ::analyze
-     */
     public function testAnalyze(): void
     {
         $expected = [
@@ -58,9 +58,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::analyze
-     */
     public function testAnalyzeWithUnmappedFields(): void
     {
         $expectedMessage = "PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes: "
@@ -89,9 +86,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::analyze
-     */
     public function testAnalyzeWithAnArray(): void
     {
         $expectedMessage = "PhodamTests\Fixtures\SimpleTypeWithAnArray: "
@@ -117,8 +111,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
     }
 
     /**
-     * @covers ::analyze
-     * 
      * This test verifies that the isArray flag is correctly set to false
      * for non-array types. The TypeAnalyzer contains logic to detect types
      * ending with '[]' and set isArray to true, but standard PHP reflection
@@ -139,10 +131,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::analyze
-     * @covers ::getArrayElementTypeFromPhpDoc
-     */
     public function testAnalyzeWithTypedArraysFromPhpDoc(): void
     {
         $result = $this->analyzer->analyze(SimpleTypeWithTypedArray::class);
@@ -161,9 +149,6 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
     }
 
     /**
-     * @covers ::analyze
-     * @covers ::getTypeFromPhpDoc
-     * 
      * This test verifies that the TypeAnalyzer can extract types from PHPDoc
      * @var annotations when properties have no type declarations. This is useful
      * for legacy code or code that relies on PHPDoc for type information.
