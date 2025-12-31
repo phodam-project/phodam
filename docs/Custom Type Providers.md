@@ -50,13 +50,13 @@ The `ProviderContext` is your gateway to Phodam's functionality within a provide
 
 ### Creating Nested Objects
 
-Use `$context->create()` to create nested objects:
+Use `$context->getPhodam()->create()` to create nested objects:
 
 ```php
 public function create(ProviderContext $context): Student
 {
-    $address = $context->create(Address::class);
-    $dateOfBirth = $context->create(DateTimeImmutable::class);
+    $address = $context->getPhodam()->create(Address::class);
+    $dateOfBirth = $context->getPhodam()->create(DateTimeImmutable::class);
     
     // Use the created objects
     return new Student($address, $dateOfBirth);
@@ -70,7 +70,7 @@ You can create primitives with configuration:
 ```php
 public function create(ProviderContext $context): Product
 {
-    $price = $context->create('float', null, [], [
+    $price = $context->getPhodam()->create('float', null, [], [
         'min' => 0.01,
         'max' => 1000.0,
         'precision' => 2
@@ -88,8 +88,8 @@ Always merge your defaults with overrides from the context:
 public function create(ProviderContext $context): User
 {
     $defaults = [
-        'name' => $context->create('string'),
-        'email' => $context->create('string'),
+        'name' => $context->getPhodam()->create('string'),
+        'email' => $context->getPhodam()->create('string'),
         'active' => true
     ];
     
@@ -145,16 +145,16 @@ class StudentTypeProvider implements TypedProviderInterface
     {
         $defaults = [
             'id' => 1,
-            'name' => $context->create('string'),
-            'gpa' => $context->create(
+            'name' => $context->getPhodam()->create('string'),
+            'gpa' => $context->getPhodam()->create(
                 'float',
                 null,
                 [],
                 ['min' => 0.0, 'max' => 4.0, 'precision' => 2]
             ),
             'active' => true,  // Custom default: always active
-            'address' => $context->create(Address::class),
-            'dateOfBirth' => $context->create(DateTimeImmutable::class)
+            'address' => $context->getPhodam()->create(Address::class),
+            'dateOfBirth' => $context->getPhodam()->create(DateTimeImmutable::class)
         ];
 
         // Merge with any overrides
@@ -173,7 +173,7 @@ class StudentTypeProvider implements TypedProviderInterface
 
 **Key Points:**
 - Sets custom defaults (`active => true`, GPA range 0.0-4.0)
-- Creates nested objects using `$context->create()`
+- Creates nested objects using `$context->getPhodam()->create()`
 - Merges defaults with overrides
 - Returns a fully configured object
 
@@ -198,7 +198,7 @@ class StudentTypeProvider implements TypedProviderInterface
     {
         $defaults = [
             'id' => $this->id++,  // Auto-incrementing ID
-            'name' => $context->create('string'),
+            'name' => $context->getPhodam()->create('string'),
             // ... other fields
         ];
 
@@ -234,7 +234,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
     public function create(ProviderContext $context): Classroom
     {
         $defaults = [
-            'roomNumber' => $context->create(
+            'roomNumber' => $context->getPhodam()->create(
                 'int',
                 null,
                 [],
@@ -245,7 +245,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
         // Get numStudents from config or use default
         $config = $context->getConfig();
         $numStudents = $config['numStudents'] ?? 
-            $context->create('int', null, [], ['min' => 10, 'max' => 15]);
+            $context->getPhodam()->create('int', null, [], ['min' => 10, 'max' => 15]);
 
         $values = array_merge($defaults, $context->getOverrides());
 
@@ -255,7 +255,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
         // Create an array of Student objects
         // Since PHP doesn't support generic array types, we use array_map
         $students = array_map(
-            fn ($i) => $context->create(Student::class),
+            fn ($i) => $context->getPhodam()->create(Student::class),
             range(0, $numStudents - 1)
         );
         $classroom->setStudents($students);
@@ -293,20 +293,20 @@ class OrderTypeProvider implements TypedProviderInterface
         $maxItems = $config['maxItems'] ?? 5;
         $status = $config['status'] ?? 'pending';
         
-        $numItems = $context->create('int', null, [], [
+        $numItems = $context->getPhodam()->create('int', null, [], [
             'min' => $minItems,
             'max' => $maxItems
         ]);
         
         $items = array_map(
-            fn ($i) => $context->create(OrderItem::class),
+            fn ($i) => $context->getPhodam()->create(OrderItem::class),
             range(0, $numItems - 1)
         );
         
         $defaults = [
             'items' => $items,
             'status' => $status,
-            'total' => $context->create('float', null, [], [
+            'total' => $context->getPhodam()->create('float', null, [], [
                 'min' => 0.01,
                 'max' => 10000.0,
                 'precision' => 2
@@ -408,8 +408,8 @@ $order = $phodam->create(Order::class, null, [
 
 | Method | Description | Example |
 |--------|-------------|---------|
-| `create(string $type, ?string $name, ?array $overrides, ?array $config)` | Create any type | `$context->create('string')` |
-| `createArray(string $name, ?array $overrides, ?array $config)` | Create a named array | `$context->createArray('userProfile')` |
+| `create(string $type, ?string $name, ?array $overrides, ?array $config)` | Create any type | `$context->getPhodam()->create('string')` |
+| `createArray(string $name, ?array $overrides, ?array $config)` | Create a named array | `$context->getPhodam()->createArray('userProfile')` |
 | `getOverrides()` | Get all overrides | `$context->getOverrides()` |
 | `hasOverride(string $field)` | Check if field is overridden | `$context->hasOverride('name')` |
 | `getOverride(string $field)` | Get specific override | `$context->getOverride('name')` |
@@ -432,11 +432,11 @@ return new MyClass($defaults['field1'], $defaults['field2']);
 
 ### 2. Use Context for Nested Objects
 
-Use `$context->create()` for nested objects rather than `new`:
+Use `$context->getPhodam()->create()` for nested objects rather than `new`:
 
 ```php
 // Good - allows Phodam to handle nested objects
-$address = $context->create(Address::class);
+$address = $context->getPhodam()->create(Address::class);
 
 // Avoid - bypasses Phodam's provider system
 $address = new Address();
@@ -449,7 +449,7 @@ Set defaults that make sense for your domain:
 ```php
 // Good - realistic defaults
 'active' => true,
-'gpa' => $context->create('float', null, [], ['min' => 0.0, 'max' => 4.0])
+'gpa' => $context->getPhodam()->create('float', null, [], ['min' => 0.0, 'max' => 4.0])
 
 // Avoid - unrealistic defaults
 'active' => false,  // Most students should be active

@@ -100,7 +100,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
         }
 
         $generateField = function ($def) use ($context) {
-            return $context->create(
+            return $context->getPhodam()->create(
                 $def->getType(),
                 $def->getName() ?? null,
                 $def->getOverrides() ?? null,

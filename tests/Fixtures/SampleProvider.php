@@ -18,9 +18,9 @@ class SampleProvider implements ProviderInterface
     public function create(ProviderContextInterface $context)
     {
         $defaults = [
-            'field1' => $context->create('string'),
-            'field2' => $context->create('string'),
-            'field3' => $context->create('int')
+            'field1' => $context->getPhodam()->create('string'),
+            'field2' => $context->getPhodam()->create('string'),
+            'field3' => $context->getPhodam()->create('int')
         ];
         $values = array_merge(
             $defaults,

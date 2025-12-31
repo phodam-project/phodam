@@ -108,23 +108,8 @@ class ProviderContext implements ProviderContextInterface
     /**
      * @inheritDoc
      */
-    public function createArray(
-        string $name,
-        ?array $overrides = null,
-        ?array $config = null
-    ): array {
-        return $this->phodam->createArray($name, $overrides, $config);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function create(
-        string $type,
-        ?string $name = null,
-        ?array $overrides = null,
-        ?array $config = null
-    ) {
-        return $this->phodam->create($type, $name, $overrides, $config);
+    public function getPhodam(): PhodamInterface
+    {
+        return $this->phodam;
     }
 }

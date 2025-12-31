@@ -21,10 +21,10 @@ class UserProfileArrayProvider implements ProviderInterface
     public function create(ProviderContextInterface $context): array
     {
         $defaults = [
-            'firstName' => $context->create('string'),
-            'lastName' => $context->create('string'),
-            'email' => $context->create('string'),
-            'age' => $context->create('int', null, [], ['min' => 18, 'max' => 100])
+            'firstName' => $context->getPhodam()->create('string'),
+            'lastName' => $context->getPhodam()->create('string'),
+            'email' => $context->getPhodam()->create('string'),
+            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100])
         ];
 
         // Merge with any overrides

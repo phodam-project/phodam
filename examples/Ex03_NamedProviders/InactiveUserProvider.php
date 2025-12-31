@@ -25,8 +25,8 @@ class InactiveUserProvider implements TypedProviderInterface
     public function create(ProviderContextInterface $context): User
     {
         $defaults = [
-            'name' => $context->create('string'),
-            'email' => $context->create('string'),
+            'name' => $context->getPhodam()->create('string'),
+            'email' => $context->getPhodam()->create('string'),
             'active' => false  // Always inactive
         ];
 

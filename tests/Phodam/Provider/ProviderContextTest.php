@@ -385,7 +385,7 @@ class ProviderContextTest extends PhodamBaseTestCase
             ->willReturn($createdValue);
 
         $context = new ProviderContext($this->phodam, 'array', [], []);
-        $actualValue = $context->createArray($name, $overrides, $config);
+        $actualValue = $context->getPhodam()->createArray($name, $overrides, $config);
 
         $this->assertSame($expectedValue, $actualValue);
     }
@@ -527,7 +527,7 @@ class ProviderContextTest extends PhodamBaseTestCase
             ->willReturn($createdValue);
 
         $context = new ProviderContext($this->phodam, $type, [], []);
-        $actualValue = $context->create($type, $name, $overrides, $config);
+        $actualValue = $context->getPhodam()->create($type, $name, $overrides, $config);
 
         $this->assertSame($expectedValue, $actualValue);
     }

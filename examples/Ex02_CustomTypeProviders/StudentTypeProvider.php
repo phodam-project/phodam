@@ -29,16 +29,16 @@ class StudentTypeProvider implements TypedProviderInterface
     {
         $defaults = [
             'id' => $this->id++,
-            'name' => $context->create('string'),
-            'gpa' => $context->create(
+            'name' => $context->getPhodam()->create('string'),
+            'gpa' => $context->getPhodam()->create(
                 'float',
                 null,
                 [],
                 ['min' => 0.0, 'max' => 4.0, 'precision' => 2]
             ),
             'active' => true,
-            'address' => $context->create(Address::class),
-            'dateOfBirth' => $context->create(DateTimeImmutable::class)
+            'address' => $context->getPhodam()->create(Address::class),
+            'dateOfBirth' => $context->getPhodam()->create(DateTimeImmutable::class)
         ];
 
         $values = array_merge(
