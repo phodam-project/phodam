@@ -9,12 +9,12 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Analyzer;
 
-use Phodam\Analyzer\FieldDefinition;
+use Phodam\Types\FieldDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 
 /**
- * @coversDefaultClass \Phodam\Analyzer\FieldDefinition
+ * @coversDefaultClass \Phodam\Types\FieldDefinition
  */
 class FieldDefinitionTest extends PhodamBaseTestCase
 {

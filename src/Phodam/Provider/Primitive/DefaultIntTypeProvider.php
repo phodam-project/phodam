@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -19,7 +19,7 @@ use Phodam\Provider\TypedProviderInterface;
  */
 class DefaultIntTypeProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): int
+    public function create(ProviderContextInterface $context): int
     {
         $config = $context->getConfig();
         $min = $config['min'] ?? -10000;

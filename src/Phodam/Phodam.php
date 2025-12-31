@@ -17,7 +17,7 @@ use DateTimeZone;
 use DatePeriod;
 use InvalidArgumentException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\TypeDefinition;
 use Phodam\Provider\Builtin\DefaultDateTimeImmutableTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider;

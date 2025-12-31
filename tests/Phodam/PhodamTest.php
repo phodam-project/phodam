@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam;
 
 use InvalidArgumentException;
-use Phodam\Analyzer\FieldDefinition;
+use Phodam\Types\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\TypeDefinition;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Store\ProviderConflictException;

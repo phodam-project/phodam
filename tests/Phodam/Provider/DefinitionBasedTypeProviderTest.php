@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider;
 
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 use Phodam\PhodamInterface;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\IncompleteDefinitionException;

@@ -14,6 +14,7 @@ use Phodam\Provider\DefaultProviderBundle;
 use Phodam\Provider\ProviderBundleInterface;
 use Phodam\Store\ProviderStore;
 use Phodam\Store\Registrar;
+use Phodam\Store\RegistrarInterface;
 use ReflectionClass;
 
 class PhodamSchema implements PhodamSchemaInterface
@@ -41,7 +42,7 @@ class PhodamSchema implements PhodamSchemaInterface
     /**
      * @inheritDoc
      */
-    public function forType(string $type): Registrar
+    public function forType(string $type): RegistrarInterface
     {
         return (new Registrar($this->providerStore))
             ->withType($type);
@@ -50,7 +51,7 @@ class PhodamSchema implements PhodamSchemaInterface
     /**
      * @inheritDoc
      */
-    public function forArray(): Registrar
+    public function forArray(): RegistrarInterface
     {
         // TODO: Is this method necessary? Users could just use forType('array') directly.
         return $this->forType('array');

@@ -27,8 +27,8 @@ A `TypeDefinition` is a collection of field definitions. Each field is defined u
 ### Basic Type Definition
 
 ```php
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 $fields = [
     'myInt' => new FieldDefinition('int'),
@@ -55,7 +55,7 @@ A `FieldDefinition` supports several options:
 ### Complete FieldDefinition Example
 
 ```php
-use Phodam\Analyzer\FieldDefinition;
+use Phodam\Types\FieldDefinition;
 
 // Simple field
 $intField = new FieldDefinition('int');
@@ -91,8 +91,8 @@ You can register a type definition in two ways:
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 $schema = PhodamSchema::withDefaults();
 $phodam = $schema->getPhodam();
@@ -116,8 +116,8 @@ You can also register definitions using the schema's fluent API:
 
 ```php
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 $schema = PhodamSchema::withDefaults();
 
@@ -164,8 +164,8 @@ This is the most common use case - when your class has properties without type d
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 class User
 {
@@ -205,8 +205,8 @@ When you have an array field, you need to specify the element type:
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 class Order
 {
@@ -238,8 +238,8 @@ You can provide configuration for specific fields:
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 class Student
 {
@@ -275,8 +275,8 @@ $student = $phodam->create(Student::class);
 You can mark fields as nullable:
 
 ```php
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 $definition = new TypeDefinition([
     'requiredField' => new FieldDefinition('string'),
@@ -293,8 +293,8 @@ You can use named providers for specific fields:
 
 ```php
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 
 // First, register a named provider for User
 $schema = PhodamSchema::withDefaults();
@@ -322,8 +322,8 @@ $project = $phodam->create(Project::class);
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 use DateTimeImmutable;
 
 class Product

@@ -10,10 +10,10 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam\Analyzer;
 
 use Exception;
-use Phodam\Analyzer\FieldDefinition;
+use Phodam\Types\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Analyzer\TypeAnalyzer;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\TypeDefinition;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;

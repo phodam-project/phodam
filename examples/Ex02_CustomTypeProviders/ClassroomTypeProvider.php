@@ -11,7 +11,7 @@ namespace PhodamExamples\Ex02_CustomTypeProviders;
 
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -25,7 +25,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
      * @inheritDoc
      * @return Classroom
      */
-    public function create(ProviderContext $context): Classroom
+    public function create(ProviderContextInterface $context): Classroom
     {
         $defaults = [
             'roomNumber' => $context->create(

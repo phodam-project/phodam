@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex03_NamedProviders;
 
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -22,7 +22,7 @@ class ActiveUserProvider implements TypedProviderInterface
      * @inheritDoc
      * @return User
      */
-    public function create(ProviderContext $context): User
+    public function create(ProviderContextInterface $context): User
     {
         $defaults = [
             'name' => $context->create('string'),

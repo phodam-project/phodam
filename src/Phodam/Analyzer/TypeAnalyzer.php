@@ -13,6 +13,8 @@ use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\DocBlockFactoryInterface;
 use phpDocumentor\Reflection\Types\Array_;
+use Phodam\Types\TypeDefinition;
+use Phodam\Types\FieldDefinition;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
