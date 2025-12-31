@@ -10,12 +10,12 @@ declare(strict_types=1);
 namespace Phodam\Store;
 
 use InvalidArgumentException;
-use Phodam\Analyzer\TypeDefinition;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\ProviderInterface;
+use Phodam\Types\TypeDefinition;
 use ReflectionClass;
 
-class Registrar
+class Registrar implements RegistrarInterface
 {
     private ProviderStoreInterface $store;
 

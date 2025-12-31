@@ -10,8 +10,10 @@ declare(strict_types=1);
 namespace PhodamExamples\Ex04_DefinitionBasedProviders;
 
 use DateTimeImmutable;
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
+use Phodam\Provider\TypedProviderInterface;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
 use PHPUnit\Framework\TestCase;
@@ -210,8 +212,8 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
         $schema = PhodamSchema::withDefaults();
         $schema->forType(OrderItem::class)
             ->withName('expensive')
-            ->registerProvider(new class implements \Phodam\Provider\TypedProviderInterface {
-                public function create(\Phodam\Provider\ProviderContext $context): OrderItem
+            ->registerProvider(new class implements TypedProviderInterface {
+                public function create(ProviderContextInterface $context): OrderItem
                 {
                     return (new OrderItem())
                         ->setItemId($context->create('int'))

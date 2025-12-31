@@ -12,7 +12,7 @@ namespace Phodam\Provider\Builtin;
 use DateInterval;
 use DatePeriod;
 use DateTime;
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -21,7 +21,7 @@ use Phodam\Provider\TypedProviderInterface;
  */
 class DefaultDatePeriodTypeProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): DatePeriod
+    public function create(ProviderContextInterface $context): DatePeriod
     {
         $start = new DateTime();
         $interval = new DateInterval('P1D');

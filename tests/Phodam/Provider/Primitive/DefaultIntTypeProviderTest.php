@@ -14,11 +14,12 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @coversDefaultClass \Phodam\Provider\Primitive\DefaultIntTypeProvider
- */
+#[CoversClass(\Phodam\Provider\Primitive\DefaultIntTypeProvider::class)]
+#[CoversMethod(\Phodam\Provider\Primitive\DefaultIntTypeProvider::class, 'create')]
 class DefaultIntTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultIntTypeProvider $provider;
@@ -32,10 +33,6 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
         $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreate()
     {
         $min = -10000;
@@ -51,10 +48,6 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithConfigMinAndMax()
     {
         $min = -100;
@@ -75,10 +68,6 @@ class DefaultIntTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithConfigMinAndMaxWithSmallRange()
     {
         $min = -1;

@@ -12,16 +12,14 @@ namespace PhodamTests\Phodam\Provider;
 use Phodam\Provider\IncompleteDefinitionException;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Provider\IncompleteDefinitionException
- */
+#[CoversClass(\Phodam\Provider\IncompleteDefinitionException::class)]
+#[CoversMethod(\Phodam\Provider\IncompleteDefinitionException::class, '__construct')]
+#[CoversMethod(\Phodam\Provider\IncompleteDefinitionException::class, 'getType')]
 class IncompleteDefinitionExceptionTest extends PhodamBaseTestCase
 {
-    /**
-     * @covers ::__construct
-     * @covers ::getType
-     */
     public function testConstruct(): void
     {
         $message = 'My Message Here';

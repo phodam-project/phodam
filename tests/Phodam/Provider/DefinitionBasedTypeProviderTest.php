@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace PhodamTests\Phodam\Provider;
 
-use Phodam\Analyzer\FieldDefinition;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
 use Phodam\PhodamInterface;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\IncompleteDefinitionException;
@@ -21,11 +21,15 @@ use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithAnArray;
 use PhodamTests\Fixtures\SimpleTypeWithoutTypes;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @coversDefaultClass \Phodam\Provider\DefinitionBasedTypeProvider
- */
+#[CoversClass(\Phodam\Provider\DefinitionBasedTypeProvider::class)]
+#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, '__construct')]
+#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'create')]
+#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'generateValueFromFieldDefinition')]
+#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'generateSingleValueFromFieldDefinition')]
 class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 {
     /** @var PhodamInterface & MockObject */
@@ -36,13 +40,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreate()
     {
         $myInt = 42;
@@ -95,13 +92,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
     }
 
 
-    /**
-     * @covers ::__construct
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithNamedProvider()
     {
         $myInt = 42;
@@ -154,13 +144,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->assertEquals($myBool, $result->isMyBool());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithOverrides()
     {
         $myInt = 42;
@@ -212,13 +195,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->assertEquals($overrides['myBool'], $result->isMyBool());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateSimpleTypeWithoutTypesHasFullDefinition()
     {
         $myInt = 42;
@@ -270,13 +246,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->assertEquals($myBool, $result->isMyBool());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateSimpleTypeMissingSomeFieldsButDefined()
     {
         $myInt = 42;
@@ -325,13 +294,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $this->assertEquals($myBool, $result->isMyBool());
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateSimpleTypeMissingSomeFieldsNotAllDefined()
     {
         $this->phodam->expects($this->never())
@@ -365,11 +327,6 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $provider->create($context);
     }
 
-    /**
-     * @covers ::create
-     * @covers ::generateValueFromFieldDefinition
-     * @covers ::generateSingleValueFromFieldDefinition
-     */
     public function testCreateSimpleTypeWithAnArray()
     {
         $type = SimpleTypeWithAnArray::class;

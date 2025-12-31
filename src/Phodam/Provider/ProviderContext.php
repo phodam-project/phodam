@@ -12,7 +12,7 @@ namespace Phodam\Provider;
 use InvalidArgumentException;
 use Phodam\PhodamInterface;
 
-class ProviderContext implements PhodamInterface
+class ProviderContext implements ProviderContextInterface
 {
     private PhodamInterface $phodam;
 

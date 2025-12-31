@@ -14,11 +14,12 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @coversDefaultClass \Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider
- */
+#[CoversClass(\Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider::class)]
+#[CoversMethod(\Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider::class, 'create')]
 class DefaultDateTimeZoneTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultDateTimeZoneTypeProvider $provider;
@@ -31,9 +32,6 @@ class DefaultDateTimeZoneTypeProviderTest extends PhodamBaseTestCase
         $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
-    /**
-     * @covers ::create
-     */
     public function testCreate()
     {
         $context = new ProviderContext(

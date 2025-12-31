@@ -11,9 +11,9 @@ declare(strict_types=1);
 namespace PhodamTests\Phodam;
 
 use InvalidArgumentException;
-use Phodam\Analyzer\FieldDefinition;
+use Phodam\Types\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
-use Phodam\Analyzer\TypeDefinition;
+use Phodam\Types\TypeDefinition;
 use Phodam\Phodam;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Store\ProviderConflictException;
@@ -23,12 +23,20 @@ use PhodamTests\Fixtures\SampleProvider;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\UnregisteredClassType;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Phodam
- * @covers ::__construct
- * @covers ::registerPrimitiveTypeProviders
- */
+#[CoversClass(\Phodam\Phodam::class)]
+#[CoversMethod(\Phodam\Phodam::class, '__construct')]
+#[CoversMethod(\Phodam\Phodam::class, 'registerPrimitiveTypeProviders')]
+#[CoversMethod(\Phodam\Phodam::class, 'registerProviderConfig')]
+#[CoversMethod(\Phodam\Phodam::class, 'getArrayProvider')]
+#[CoversMethod(\Phodam\Phodam::class, 'registerArrayProviderConfig')]
+#[CoversMethod(\Phodam\Phodam::class, 'registerTypeProviderConfig')]
+#[CoversMethod(\Phodam\Phodam::class, 'getTypeProvider')]
+#[CoversMethod(\Phodam\Phodam::class, 'registerTypeDefinition')]
+#[CoversMethod(\Phodam\Phodam::class, 'createArray')]
+#[CoversMethod(\Phodam\Phodam::class, 'create')]
 class PhodamTest extends PhodamBaseTestCase
 {
     private Phodam $phodam;
@@ -42,9 +50,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->provider = new SampleProvider();
     }
 
-    /**
-     * @covers ::registerProviderConfig
-     */
     public function testRegisterProviderConfigWithoutValidConfig(): void
     {
         // without any configuring, we don't know if it's
@@ -57,11 +62,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->phodam->registerProviderConfig($config);
     }
 
-    /**
-     * @covers ::getArrayProvider
-     * @covers ::registerProviderConfig
-     * @covers ::registerArrayProviderConfig
-     */
     public function testRegisterProviderConfigForArray(): void
     {
         $name = "MyCoolArray";
@@ -77,10 +77,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertSame($this->provider, $result);
     }
 
-    /**
-     * @covers ::registerTypeProviderConfig
-     * @covers ::registerArrayProviderConfig
-     */
     public function testRegisterProviderConfigForArrayWithNameThatAlreadyExists(): void
     {
         $name = "MyCoolArray";
@@ -98,9 +94,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->phodam->registerProviderConfig($config);
     }
 
-    /**
-     * @covers ::getArrayProvider
-     */
     public function testGetArrayProviderWithoutRegisteredName(): void
     {
         $this->expectException(ProviderNotFoundException::class);
@@ -109,11 +102,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->phodam->getArrayProvider("MyUnregisteredName");
     }
 
-    /**
-     * @covers ::getTypeProvider
-     * @covers ::registerProviderConfig
-     * @covers ::registerTypeProviderConfig
-     */
     public function testRegisterProviderConfigForClassWithoutName(): void
     {
         $type = UnregisteredClassType::class;
@@ -127,11 +115,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertSame($this->provider, $result);
     }
 
-    /**
-     * @covers ::getTypeProvider
-     * @covers ::registerProviderConfig
-     * @covers ::registerTypeProviderConfig
-     */
     public function testRegisterProviderConfigForClassWithName(): void
     {
         $type = UnregisteredClassType::class;
@@ -147,11 +130,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertSame($this->provider, $result);
     }
 
-    /**
-     * @covers ::getTypeProvider
-     * @covers ::registerProviderConfig
-     * @covers ::registerTypeProviderConfig
-     */
     public function testRegisterProviderConfigForTypeWithNameThatAlreadyExists(): void
     {
         $type = UnregisteredClassType::class;
@@ -170,9 +148,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->phodam->registerProviderConfig($config);
     }
 
-    /**
-     * @covers ::getTypeProvider
-     */
     public function testGetTypeProviderForTypeThatHasNoDefaultProvider(): void
     {
         $type = UnregisteredClassType::class;
@@ -183,9 +158,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->phodam->getTypeProvider($type);
     }
 
-    /**
-     * @covers ::getTypeProvider
-     */
     public function testGetTypeProviderByNameForTypeThatHasNoProviders(): void
     {
         $class = UnregisteredClassType::class;
@@ -197,9 +169,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->phodam->getTypeProvider($class, $name);
     }
 
-    /**
-     * @covers ::getTypeProvider
-     */
     public function testGetTypeProviderByNameForTypeThatHasNoNamedProviders(): void
     {
         $type = UnregisteredClassType::class;
@@ -216,9 +185,6 @@ class PhodamTest extends PhodamBaseTestCase
     }
 
 
-    /**
-     * @covers ::getTypeProvider
-     */
     public function testGetTypeProviderByNameForTypeWithoutRegisteredName(): void
     {
         $type = UnregisteredClassType::class;
@@ -239,8 +205,6 @@ class PhodamTest extends PhodamBaseTestCase
     /**
      * Tests that a TypeProvider doesn't exist for a type, then after registering a definition,
      * it can create a value of that type
-     *
-     * @covers ::registerTypeDefinition
      */
     public function testRegisterTypeDefinition(): void
     {
@@ -283,9 +247,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertIsBool($result->isMyBool());
     }
 
-    /**
-     * @covers ::createArray
-     */
     public function testCreateArray(): void
     {
         $name = 'MyArrayName';
@@ -304,9 +265,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertIsInt($result['field3']);
     }
 
-    /**
-     * @covers ::create
-     */
     public function testCreate(): void
     {
         $name = 'MyUnregisteredClassType';
@@ -337,9 +295,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertLessThanOrEqual(2000, $result->getField3());
     }
 
-    /**
-     * @covers ::create
-     */
     public function testCreateWithoutTypeProviderExisting(): void
     {
         $result = $this->phodam->create(SimpleType::class);
@@ -351,9 +306,6 @@ class PhodamTest extends PhodamBaseTestCase
         $this->assertIsBool($result->isMyBool());
     }
 
-    /**
-     * @covers ::create
-     */
     public function testCreateWithoutTypeProviderExistingAndWithOverrides(): void
     {
         $overrides = [

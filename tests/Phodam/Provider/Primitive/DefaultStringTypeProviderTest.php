@@ -14,11 +14,12 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @coversDefaultClass \Phodam\Provider\Primitive\DefaultStringTypeProvider
- */
+#[CoversClass(\Phodam\Provider\Primitive\DefaultStringTypeProvider::class)]
+#[CoversMethod(\Phodam\Provider\Primitive\DefaultStringTypeProvider::class, 'create')]
 class DefaultStringTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultStringTypeProvider $provider;
@@ -32,10 +33,6 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
         $this->phodam = $this->createMock(PhodamInterface::class);
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreate()
     {
         $context = new ProviderContext($this->phodam, 'string', [], []);
@@ -46,10 +43,6 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithTypeLower()
     {
         $context = new ProviderContext(
@@ -66,10 +59,6 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithTypeUpper()
     {
         $context = new ProviderContext(
@@ -86,10 +75,6 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithTypeNumeric()
     {
         $context = new ProviderContext(
@@ -109,10 +94,6 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithLength()
     {
         $length = 18;
@@ -138,10 +119,6 @@ class DefaultStringTypeProviderTest extends PhodamBaseTestCase
         }
     }
 
-    /**
-     * @covers ::create
-     * @uses \Phodam\Provider\ProviderContext
-     */
     public function testCreateWithMinAndMaxLength()
     {
         $minLength = 5;

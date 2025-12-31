@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e06aafc2a15cbe7086e50ca0242d122",
+    "content-hash": "edfd8d914c51e34fa13145d4ddb602f2",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -54,6 +54,97 @@
                 "source": "https://github.com/doctrine/deprecations/tree/1.1.x"
             },
             "time": "2025-12-15T15:02:56+00:00"
+        },
+        {
+            "name": "phodam/phodam-api",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../phodam-api",
+                "reference": "72266c47ae0d3b1ae1cb4f5f65d65314ee1de1a2"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.32.0",
+                "phpstan/extension-installer": "^1.3",
+                "phpstan/phpstan": "^1.10",
+                "phpstan/phpstan-phpunit": "^1.3",
+                "phpunit/phpunit": "^11.0",
+                "sebastian/diff": "^6.0.2",
+                "squizlabs/php_codesniffer": "~3.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Phodam\\": "src/Phodam"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "PhodamTests\\": "tests"
+                }
+            },
+            "scripts": {
+                "lint:phpcs": [
+                    "phpcs --standard=PSR12 src"
+                ],
+                "lint:phpcsfixer": [
+                    "php-cs-fixer fix src --rules=@PSR12 --dry-run --cache-file=build/.php-cs-fixer.cache"
+                ],
+                "lint:phpcsfixer:fix": [
+                    "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache"
+                ],
+                "lint:phpstan": [
+                    "phpstan analyse -l 6 src"
+                ],
+                "test:phpunit": [
+                    "phpunit -c phpunit.xml"
+                ],
+                "lint": [
+                    "mkdir -p build",
+                    "@lint:phpstan",
+                    "@lint:phpcs",
+                    "@lint:phpcsfixer"
+                ],
+                "lint-fix": [
+                    "@lint:phpcsfixer:fix"
+                ],
+                "test": [
+                    "mkdir -p build",
+                    "@test:phpunit"
+                ],
+                "precommit": [
+                    "@lint",
+                    "@test"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrew Vehlies",
+                    "email": "avehlies@gmail.com",
+                    "role": "Owner"
+                },
+                {
+                    "name": "Chris Bouchard",
+                    "email": "chris@upliftinglemma.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The API for Phodam",
+            "homepage": "https://github.com/phodam-project/phodam-api",
+            "keywords": [
+                "data objects",
+                "testing",
+                "unit tests"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -847,12 +938,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a"
+                "reference": "5ee4e978b7fec6dbd844282126a5a32daa2044c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/07d290f0c47959fd5eed98c95ee5602db07e0b6a",
-                "reference": "07d290f0c47959fd5eed98c95ee5602db07e0b6a",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/5ee4e978b7fec6dbd844282126a5a32daa2044c6",
+                "reference": "5ee4e978b7fec6dbd844282126a5a32daa2044c6",
                 "shasum": ""
             },
             "require": {
@@ -892,7 +983,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.4"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.x"
             },
             "funding": [
                 {
@@ -900,7 +991,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-01T08:46:24+00:00"
+            "time": "2025-12-30T16:10:21+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -5134,7 +5225,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "phodam/phodam-api": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

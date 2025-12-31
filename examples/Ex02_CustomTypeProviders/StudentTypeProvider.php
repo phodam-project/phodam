@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace PhodamExamples\Ex02_CustomTypeProviders;
 
 use DateTimeImmutable;
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -25,7 +25,7 @@ class StudentTypeProvider implements TypedProviderInterface
      * @inheritDoc
      * @return Student
      */
-    public function create(ProviderContext $context): Student
+    public function create(ProviderContextInterface $context): Student
     {
         $defaults = [
             'id' => $this->id++,

@@ -15,10 +15,19 @@ use Phodam\Provider\ProviderConfig;
 use Phodam\Provider\ProviderInterface;
 use PhodamTests\Fixtures\SampleProvider;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversMethod;
 
-/**
- * @coversDefaultClass \Phodam\Provider\ProviderConfig
- */
+#[CoversClass(\Phodam\Provider\ProviderConfig::class)]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, '__construct')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'getProvider')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'forArray')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'withName')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'isArray')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'getType')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'getName')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'forType')]
+#[CoversMethod(\Phodam\Provider\ProviderConfig::class, 'validate')]
 class ProviderConfigTest extends PhodamBaseTestCase
 {
     private ProviderInterface $provider;
@@ -28,24 +37,12 @@ class ProviderConfigTest extends PhodamBaseTestCase
         $this->provider = new SampleProvider();
     }
 
-    /**
-     * @covers ::__construct
-     * @covers ::getProvider
-     */
     public function testConstruct()
     {
         $config = new ProviderConfig($this->provider);
         $this->assertEquals($this->provider, $config->getProvider());
     }
 
-    /**
-     * @covers ::forArray
-     * @covers ::withName
-     * @covers ::isArray
-     * @covers ::getType
-     * @covers ::getName
-     * @covers ::getProvider
-     */
     public function testForArray()
     {
         $name = "MyArrayName";
@@ -59,14 +56,6 @@ class ProviderConfigTest extends PhodamBaseTestCase
         $this->assertEquals($this->provider, $config->getProvider());
     }
 
-    /**
-     * @covers ::forType
-     * @covers ::withName
-     * @covers ::isArray
-     * @covers ::getType
-     * @covers ::getName
-     * @covers ::getProvider
-     */
     public function testForClass()
     {
         $name = "MyDateTimeName";
@@ -80,9 +69,6 @@ class ProviderConfigTest extends PhodamBaseTestCase
         $this->assertEquals($this->provider, $config->getProvider());
     }
 
-    /**
-     * @covers ::validate
-     */
     public function testValidate(): void
     {
         $config = (new ProviderConfig($this->provider))
@@ -93,9 +79,6 @@ class ProviderConfigTest extends PhodamBaseTestCase
         $this->assertEquals('string', $config->getType());
     }
 
-    /**
-     * @covers ::validate
-     */
     public function testValidateWithArrayWithoutName(): void
     {
         $config = (new ProviderConfig($this->provider))
@@ -107,9 +90,6 @@ class ProviderConfigTest extends PhodamBaseTestCase
         $config->validate();
     }
 
-    /**
-     * @covers ::validate
-     */
     public function testValidateWithoutAnyValidType(): void
     {
         $config = (new ProviderConfig($this->provider));
