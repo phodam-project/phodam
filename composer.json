@@ -24,12 +24,13 @@
     }
   ],
   "require": {
-    "php": "^7.4|^8.0",
+    "phodam/phodam-api": "2.0.0-alpha.1",
+    "php": "^8.4",
     "phpdocumentor/reflection-docblock": "^5.3"
   },
   "config": {
     "platform": {
-      "php": "7.4"
+      "php": "8.4"
     },
     "allow-plugins": {
       "phpstan/extension-installer": true
