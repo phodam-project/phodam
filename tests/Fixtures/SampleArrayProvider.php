@@ -20,7 +20,7 @@ class SampleArrayProvider implements ProviderInterface
         $defaults = [
             'field1' => 'value1',
             'field2' => 'second value',
-            'field3' => $context->create('int')
+            'field3' => $context->getPhodam()->create('int')
         ];
 
         return array_merge(

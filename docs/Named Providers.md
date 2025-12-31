@@ -109,8 +109,8 @@ class ActiveUserProvider implements TypedProviderInterface
     public function create(ProviderContext $context): User
     {
         return new User(
-            $context->create('string'),  // name
-            $context->create('string'),  // email
+            $context->getPhodam()->create('string'),  // name
+            $context->getPhodam()->create('string'),  // email
             true                          // active = true
         );
     }
@@ -121,8 +121,8 @@ class InactiveUserProvider implements TypedProviderInterface
     public function create(ProviderContext $context): User
     {
         return new User(
-            $context->create('string'),  // name
-            $context->create('string'),  // email
+            $context->getPhodam()->create('string'),  // name
+            $context->getPhodam()->create('string'),  // email
             false                         // active = false
         );
     }
@@ -164,10 +164,10 @@ class UserProfileArrayProvider implements ProviderInterface
     public function create(ProviderContext $context): array
     {
         $defaults = [
-            'firstName' => $context->create('string'),
-            'lastName' => $context->create('string'),
-            'email' => $context->create('string'),
-            'age' => $context->create('int', null, [], ['min' => 18, 'max' => 100])
+            'firstName' => $context->getPhodam()->create('string'),
+            'lastName' => $context->getPhodam()->create('string'),
+            'email' => $context->getPhodam()->create('string'),
+            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100])
         ];
 
         // Merge with any overrides

@@ -28,7 +28,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
     public function create(ProviderContextInterface $context): Classroom
     {
         $defaults = [
-            'roomNumber' => $context->create(
+            'roomNumber' => $context->getPhodam()->create(
                 'int',
                 null,
                 [],
@@ -38,7 +38,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
 
         $numStudents =
             $config['numStudents'] ??
-            $context->create('int', null, [], ['min' => 10, 'max' => 15]);
+            $context->getPhodam()->create('int', null, [], ['min' => 10, 'max' => 15]);
 
         $values = array_merge(
             $defaults,
@@ -51,7 +51,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
         // Since PHP doesn't support giving a generic type in an array,
         // we need to make a custom provider to populate an array
         $students = array_map(
-            fn ($i) => $context->create(Student::class),
+            fn ($i) => $context->getPhodam()->create(Student::class),
             range(0, $numStudents)
         );
         $classroom->setStudents($students);

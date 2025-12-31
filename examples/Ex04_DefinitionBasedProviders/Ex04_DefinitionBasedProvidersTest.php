@@ -216,10 +216,10 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
                 public function create(ProviderContextInterface $context): OrderItem
                 {
                     return (new OrderItem())
-                        ->setItemId($context->create('int'))
-                        ->setProductName($context->create('string'))
-                        ->setQuantity($context->create('float', null, [], ['min' => 1.0, 'max' => 10.0]))
-                        ->setUnitPrice($context->create('float', null, [], ['min' => 100.0, 'max' => 1000.0]));
+                        ->setItemId($context->getPhodam()->create('int'))
+                        ->setProductName($context->getPhodam()->create('string'))
+                        ->setQuantity($context->getPhodam()->create('float', null, [], ['min' => 1.0, 'max' => 10.0]))
+                        ->setUnitPrice($context->getPhodam()->create('float', null, [], ['min' => 100.0, 'max' => 1000.0]));
                 }
             });
 
