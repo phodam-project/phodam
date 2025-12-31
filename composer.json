@@ -24,6 +24,7 @@
     }
   ],
   "require": {
+    "phodam/phodam-api": "2.0.0-alpha.1",
     "php": "^8.4",
     "phpdocumentor/reflection-docblock": "^5.3"
   },
