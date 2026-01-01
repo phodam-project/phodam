@@ -28,8 +28,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 #[CoversClass(\Phodam\Provider\DefinitionBasedTypeProvider::class)]
 #[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, '__construct')]
 #[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'create')]
-#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'generateValueFromFieldDefinition')]
-#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'generateSingleValueFromFieldDefinition')]
+#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'analyze')]
 class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 {
     /** @var PhodamInterface & MockObject */
