@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34096618028c09b032fb1aca6c650b9d",
+    "content-hash": "a4dfeb2f6a56421b7cdd676ca304e805",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -3585,12 +3585,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "432e00cb44ff26fda995bb237a9acc51ea459c98"
+                "reference": "bc37991ce495831a35c3f9e07f2e12801b2a19b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/432e00cb44ff26fda995bb237a9acc51ea459c98",
-                "reference": "432e00cb44ff26fda995bb237a9acc51ea459c98",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/bc37991ce495831a35c3f9e07f2e12801b2a19b4",
+                "reference": "bc37991ce495831a35c3f9e07f2e12801b2a19b4",
                 "shasum": ""
             },
             "require": {
@@ -3656,7 +3656,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-12-24T21:51:44+00:00"
+            "time": "2026-01-01T02:41:53+00:00"
         },
         {
             "name": "staabm/side-effects-detector",
