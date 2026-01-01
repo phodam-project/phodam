@@ -57,16 +57,16 @@
         },
         {
             "name": "phodam/phodam-api",
-            "version": "v2.0.0-alpha.1",
+            "version": "v2.0.0-alpha.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phodam-project/phodam-api.git",
-                "reference": "4e8287f386e637726027c33c22dc2dbb620bec24"
+                "reference": "5192ca4e11e832948a72cfb355c391b78e0f97b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phodam-project/phodam-api/zipball/4e8287f386e637726027c33c22dc2dbb620bec24",
-                "reference": "4e8287f386e637726027c33c22dc2dbb620bec24",
+                "url": "https://api.github.com/repos/phodam-project/phodam-api/zipball/5192ca4e11e832948a72cfb355c391b78e0f97b7",
+                "reference": "5192ca4e11e832948a72cfb355c391b78e0f97b7",
                 "shasum": ""
             },
             "require": {
@@ -112,9 +112,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phodam-project/phodam-api/issues",
-                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-alpha.1"
+                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-alpha.2"
             },
-            "time": "2025-12-31T21:27:36+00:00"
+            "time": "2026-01-01T19:57:15+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -201,7 +201,6 @@
                 "phpunit/phpunit": "^9.5",
                 "psalm/phar": "^5.26"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1683,12 +1682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c9ce478f69c145a64c136c704260a49c1fa0ce6e"
+                "reference": "51c9557e2e3af34f504f996465998cd80a3dec70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c9ce478f69c145a64c136c704260a49c1fa0ce6e",
-                "reference": "c9ce478f69c145a64c136c704260a49c1fa0ce6e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/51c9557e2e3af34f504f996465998cd80a3dec70",
+                "reference": "51c9557e2e3af34f504f996465998cd80a3dec70",
                 "shasum": ""
             },
             "require": {
@@ -1784,7 +1783,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-31T13:09:28+00:00"
+            "time": "2026-01-01T17:01:44+00:00"
         },
         {
             "name": "psr/container",
