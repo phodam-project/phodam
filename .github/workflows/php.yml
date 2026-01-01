@@ -51,13 +51,11 @@ jobs:
       run: composer lint
     
     - name: Run unit tests
-      run: composer test
+      run: composer test:unit
+    
+    - name: Run integration tests
+      run: composer test:integration
     
     - name: Run examples
       run: composer examples
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
-
-    # - name: Run test suite
-    #   run: composer run-script test
