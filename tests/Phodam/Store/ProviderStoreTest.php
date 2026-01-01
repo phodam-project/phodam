@@ -18,7 +18,6 @@ use PhodamTests\Fixtures\SampleProvider;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
-use PHPUnit\Framework\MockObject\MockObject;
 
 #[CoversClass(\Phodam\Store\ProviderStore::class)]
 #[CoversMethod(\Phodam\Store\ProviderStore::class, 'hasNamedProvider')]

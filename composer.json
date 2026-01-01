@@ -53,6 +53,7 @@
   "autoload-dev": {
     "psr-4": {
       "PhodamTests\\": "tests",
+      "PhodamTests\\Integration\\": "integrationTests",
       "PhodamExamples\\": "examples"
     }
   },
@@ -64,6 +65,7 @@
     "lint:phpcsfixer:fix": "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache",
     "lint:phpstan": "phpstan analyse -l 6 src",
     "test:phpunit": "phpunit -c phpunit.xml",
+    "test:integration": "phpunit -c integrationTests.phpunit.xml",
     "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=build/phpunit",
     "lint": [
       "mkdir -p build",
@@ -76,7 +78,8 @@
     ],
     "test": [
       "mkdir -p build",
-      "@test:phpunit"
+      "@test:phpunit",
+      "@test:integration"
     ],
     "test:debug": [
       "mkdir -p build",

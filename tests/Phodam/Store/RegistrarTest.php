@@ -16,7 +16,6 @@ use Phodam\Store\ProviderStoreInterface;
 use Phodam\Store\Registrar;
 use Phodam\Types\FieldDefinition;
 use Phodam\Types\TypeDefinition;
-use PhodamTests\Fixtures\SampleProvider;
 use PhodamTests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
