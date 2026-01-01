@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
+        cacheResult="true"
+        executionOrder="depends,defects"
+        requireCoverageMetadata="true"
+        failOnRisky="true"
+        failOnWarning="true"
+        testdox="false" 
+        displayDetailsOnIncompleteTests="true"
+        displayDetailsOnSkippedTests="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        cacheDirectory="build/.phpunit.cache"
+        >
+    <testsuites>
+        <testsuite name="default">
+            <directory>integrationTests</directory>
+        </testsuite>
+    </testsuites>
+
+    <source>
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+    </source>
+
+    <coverage
+        includeUncoveredFiles="true"
+        >
+    </coverage>
+
+    <php>
+        <env name="XDEBUG_MODE" value="debug"/>
+        <env name="XDEBUG_TRIGGER" value="1"/>
+        <ini name="beStrictAboutCoversAnnotation" value="true"/>
+        <ini name="beStrictAboutOutputDuringTests" value="true"/>
+        <ini name="beStrictAboutTodoAnnotatedTests" value="true"/>
+        <ini name="convertDeprecationsToExceptions" value="true"/>
+    </php>
+</phpunit>
