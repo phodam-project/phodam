@@ -47,7 +47,7 @@ use Phodam\PhodamInterface;
 $schema = PhodamSchema::withDefaults();
 
 // Register a named array provider
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new UserProfileArrayProvider());
 
@@ -178,7 +178,7 @@ class UserProfileArrayProvider implements ProviderInterface
 // Register the array provider
 $schema = PhodamSchema::withDefaults();
 
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new UserProfileArrayProvider());
 

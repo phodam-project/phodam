@@ -118,7 +118,7 @@ use Phodam\PhodamInterface;
 $schema = PhodamSchema::withDefaults();
 
 // Register an array provider
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new UserProfileArrayProvider());
 
@@ -132,7 +132,7 @@ You can also register providers by passing the class name as a string:
 ```php
 $schema = PhodamSchema::withDefaults();
 
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(UserProfileArrayProvider::class);
 
@@ -200,7 +200,7 @@ class UserProfileArrayProvider implements ProviderInterface
 
 // Register and use
 $schema = PhodamSchema::withDefaults();
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new UserProfileArrayProvider());
 
@@ -253,7 +253,7 @@ class ApiResponseArrayProvider implements ProviderInterface
 
 // Register
 $schema = PhodamSchema::withDefaults();
-$schema->forArray()
+$schema->forType('array')
     ->withName('apiResponse')
     ->registerProvider(new ApiResponseArrayProvider());
 
@@ -274,12 +274,12 @@ Choose names that clearly indicate the purpose of the array:
 
 ```php
 // Good
-$schema->forArray()->withName('userProfile')->registerProvider(...);
-$schema->forArray()->withName('orderSummary')->registerProvider(...);
+$schema->forType('array')->withName('userProfile')->registerProvider(...);
+$schema->forType('array')->withName('orderSummary')->registerProvider(...);
 
 // Avoid
-$schema->forArray()->withName('array1')->registerProvider(...);
-$schema->forArray()->withName('data')->registerProvider(...);
+$schema->forType('array')->withName('array1')->registerProvider(...);
+$schema->forType('array')->withName('data')->registerProvider(...);
 ```
 
 ### 2. Leverage ProviderContext for Dynamic Values
@@ -344,15 +344,15 @@ You can register multiple array providers for different use cases:
 $schema = PhodamSchema::withDefaults();
 
 // Different array structures for different purposes
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new UserProfileArrayProvider());
 
-$schema->forArray()
+$schema->forType('array')
     ->withName('userSummary')
     ->registerProvider(new UserSummaryArrayProvider());
 
-$schema->forArray()
+$schema->forType('array')
     ->withName('orderDetails')
     ->registerProvider(new OrderDetailsArrayProvider());
 
@@ -380,17 +380,17 @@ $phodam->createArray('nonexistent');
 This exception is thrown when trying to register an array provider with a name that already exists:
 
 ```php
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new UserProfileArrayProvider());
 
 // This will throw ProviderConflictException
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->registerProvider(new AnotherProvider());
 
 // To override, use overriding()
-$schema->forArray()
+$schema->forType('array')
     ->withName('userProfile')
     ->overriding()
     ->registerProvider(new AnotherProvider());

@@ -67,7 +67,7 @@ class PhodamTest extends PhodamBaseTestCase
         $name = "MyCoolArray";
 
         $config = (new ProviderConfig($this->provider))
-            ->forArray()
+            ->forType('array')
             ->withName($name);
 
         $this->phodam->registerProviderConfig($config);
@@ -81,7 +81,7 @@ class PhodamTest extends PhodamBaseTestCase
     {
         $name = "MyCoolArray";
         $config = (new ProviderConfig($this->provider))
-            ->forArray()
+            ->forType('array')
             ->withName($name);
 
         $this->phodam->registerProviderConfig($config);
@@ -255,7 +255,7 @@ class PhodamTest extends PhodamBaseTestCase
         ];
 
         $provider = new SampleArrayProvider();
-        $config = (new ProviderConfig($provider))->forArray()->withName($name);
+        $config = (new ProviderConfig($provider))->forType('array')->withName($name);
         $this->phodam->registerProviderConfig($config);
 
         $result = $this->phodam->createArray($name, $overrides);

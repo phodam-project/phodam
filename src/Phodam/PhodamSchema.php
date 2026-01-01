@@ -51,15 +51,6 @@ class PhodamSchema implements PhodamSchemaInterface
     /**
      * @inheritDoc
      */
-    public function forArray(): RegistrarInterface
-    {
-        // TODO: Is this method necessary? Users could just use forType('array') directly.
-        return $this->forType('array');
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function add($bundleOrClass): void
     {
         if ($bundleOrClass instanceof ProviderBundleInterface) {

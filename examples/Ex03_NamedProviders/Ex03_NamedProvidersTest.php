@@ -34,7 +34,7 @@ class Ex03_NamedProvidersTest extends TestCase
 
         // Register a named array provider
         // Array providers MUST be named (you cannot register a default array provider)
-        $schema->forArray()
+        $schema->forType('array')
             ->withName('userProfile')
             ->registerProvider(new UserProfileArrayProvider());
 

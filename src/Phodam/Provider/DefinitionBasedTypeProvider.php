@@ -26,6 +26,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
 {
     private string $type;
     private TypeDefinition $definition;
+    private bool $analyzed = false;
 
     /**
      * @param class-string<T> $type
@@ -55,6 +56,49 @@ class DefinitionBasedTypeProvider implements ProviderInterface
         // not sure the order on how i want to do this, but...
         // 1. get a list of class fields
         $refClass = new ReflectionClass($this->type);
+
+        if (!$this->analyzed) {
+            $this->analyze($refClass);
+        }
+
+        $generateField = function ($def) use ($context) {
+            return $context->getPhodam()->create(
+                $def->getType(),
+                $def->getName() ?? null,
+                $def->getOverrides() ?? null,
+                $def->getConfig() ?? null
+            );
+        };
+
+        $obj = $refClass->newInstanceWithoutConstructor();
+        foreach ($this->definition->getFields() as $fieldName => $fieldDefinition) {
+            /** @var FieldDefinition $fieldDefinition */
+            $refProperty = $refClass->getProperty($fieldName);
+            if ($context->hasOverride($fieldName)) {
+                $val = $context->getOverride($fieldName);
+            } else {
+                if ($fieldDefinition->isArray()) {
+                    $val = array_map(
+                        fn () => $generateField($fieldDefinition),
+                        range(1, rand(2, 5))
+                    );
+                } else {
+                    $val = $generateField($fieldDefinition);
+                }
+            }
+            $refProperty->setValue($obj, $val);
+        }
+
+        return $obj;
+    }
+
+    /**
+     * @param ReflectionClass<*> $refClass
+     * @throws TypeAnalysisException|IncompleteDefinitionException
+     * @throws ReflectionException
+     */
+    private function analyze(ReflectionClass $refClass): void
+    {
         $classFields = array_map(
             fn (ReflectionProperty $refProperty) => $refProperty->getName(),
             $refClass->getProperties()
@@ -99,35 +143,6 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             }
         }
 
-        $generateField = function ($def) use ($context) {
-            return $context->getPhodam()->create(
-                $def->getType(),
-                $def->getName() ?? null,
-                $def->getOverrides() ?? null,
-                $def->getConfig() ?? null
-            );
-        };
-
-        $obj = $refClass->newInstanceWithoutConstructor();
-        foreach ($this->definition->getFields() as $fieldName => $fieldDefinition) {
-            /** @var FieldDefinition $fieldDefinition */
-            $refProperty = $refClass->getProperty($fieldName);
-            if ($context->hasOverride($fieldName)) {
-                $val = $context->getOverride($fieldName);
-            } else {
-                if ($fieldDefinition->isArray()) {
-                    $val = array_map(
-                        fn () => $generateField($fieldDefinition),
-                        range(1, rand(2, 5))
-                    );
-                } else {
-                    $val = $generateField($fieldDefinition);
-                }
-            }
-            $refProperty->setAccessible(true);
-            $refProperty->setValue($obj, $val);
-        }
-
-        return $obj;
+        $this->analyzed = true;
     }
 }
