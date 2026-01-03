@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace PhodamExamples\Ex02_CustomTypeProviders;
 
 use DateTimeImmutable;
+use Phodam\Provider\PhodamProvider;
 use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
@@ -17,6 +18,7 @@ use Phodam\Provider\TypedProviderInterface;
  * @template T extends Student
  * @template-implements TypedProviderInterface<Student>
  */
+#[PhodamProvider(Student::class)]
 class StudentTypeProvider implements TypedProviderInterface
 {
     private int $id = 1;

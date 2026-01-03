@@ -11,6 +11,7 @@ namespace PhodamExamples\Ex02_CustomTypeProviders;
 
 use Phodam\PhodamAware;
 use Phodam\PhodamAwareTrait;
+use Phodam\Provider\PhodamProvider;
 use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
@@ -18,6 +19,7 @@ use Phodam\Provider\TypedProviderInterface;
  * @template T extends Classroom
  * @template-implements TypedProviderInterface<Classroom>
  */
+#[PhodamProvider(Classroom::class)]
 class ClassroomTypeProvider implements TypedProviderInterface
 {
 
@@ -36,6 +38,7 @@ class ClassroomTypeProvider implements TypedProviderInterface
             )
         ];
 
+        $config = $context->getConfig();
         $numStudents =
             $config['numStudents'] ??
             $context->getPhodam()->create('int', null, [], ['min' => 10, 'max' => 15]);

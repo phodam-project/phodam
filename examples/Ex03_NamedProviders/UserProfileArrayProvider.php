@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex03_NamedProviders;
 
+use Phodam\Provider\PhodamArrayProvider;
 use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
+#[PhodamArrayProvider('userProfile')]
 class UserProfileArrayProvider implements ProviderInterface
 {
     /**

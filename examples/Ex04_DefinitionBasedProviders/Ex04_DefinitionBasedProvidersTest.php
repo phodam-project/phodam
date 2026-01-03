@@ -29,26 +29,34 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
 
         // Example 1: Define untyped fields
         // Product has some typed fields (auto-detected) and some untyped fields (need definition)
-        $productDefinition = new TypeDefinition([
-            'id' => new FieldDefinition('int'),
-            'description' => new FieldDefinition('string'),
-            'tags' => (new FieldDefinition('string'))->setArray(true),
-            'price' => (new FieldDefinition('float'))
-                ->setConfig(['min' => 0.01, 'max' => 1000.0, 'precision' => 2])
-        ]);
+        $productDefinition = new TypeDefinition(
+            Product::class,
+            null,
+            false,
+            [
+                'id' => new FieldDefinition('int'),
+                'description' => new FieldDefinition('string'),
+                'tags' => (new FieldDefinition('string'))->setArray(true),
+                'price' => (new FieldDefinition('float'))
+                    ->setConfig(['min' => 0.01, 'max' => 1000.0, 'precision' => 2])
+            ]
+        );
 
-        $schema->forType(Product::class)
-            ->registerDefinition($productDefinition);
+        $schema->registerTypeDefinition($productDefinition);
 
         // Example 2: Define array field with element type
         // Order has an array field that needs element type specification
-        $orderDefinition = new TypeDefinition([
-            'items' => (new FieldDefinition(OrderItem::class))
-                ->setArray(true)
-        ]);
+        $orderDefinition = new TypeDefinition(
+            Order::class,
+            null,
+            false,
+            [
+                'items' => (new FieldDefinition(OrderItem::class))
+                    ->setArray(true)
+            ]
+        );
 
-        $schema->forType(Order::class)
-            ->registerDefinition($orderDefinition);
+        $schema->registerTypeDefinition($orderDefinition);
 
         $this->phodam = $schema->getPhodam();
     }
@@ -126,16 +134,20 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
         // Phodam will auto-complete the rest using TypeAnalyzer
         // Note: For untyped fields, you must define all of them
         // Typed fields can be auto-completed
-        $minimalDefinition = new TypeDefinition([
-            'id' => new FieldDefinition('int'),
-            'description' => new FieldDefinition('string'),
-            'tags' => (new FieldDefinition('string'))->setArray(true),
-            'price' => new FieldDefinition('float')
-        ]);
+        $minimalDefinition = new TypeDefinition(
+            Product::class,
+            null,
+            false,
+            [
+                'id' => new FieldDefinition('int'),
+                'description' => new FieldDefinition('string'),
+                'tags' => (new FieldDefinition('string'))->setArray(true),
+                'price' => new FieldDefinition('float')
+            ]
+        );
 
         $schema = PhodamSchema::withDefaults();
-        $schema->forType(Product::class)
-            ->registerDefinition($minimalDefinition);
+        $schema->registerTypeDefinition($minimalDefinition);
         $phodam = $schema->getPhodam();
 
         $product = $phodam->create(Product::class);
@@ -154,18 +166,22 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
     {
         // Fields can have configuration for their type providers
         // Note: Must define all untyped fields (id, description, tags, price)
-        $definition = new TypeDefinition([
-            'id' => (new FieldDefinition('int'))
-                ->setConfig(['min' => 1000, 'max' => 9999]),
-            'description' => new FieldDefinition('string'),
-            'tags' => (new FieldDefinition('string'))->setArray(true),
-            'price' => (new FieldDefinition('float'))
-                ->setConfig(['min' => 10.0, 'max' => 50.0, 'precision' => 2])
-        ]);
+        $definition = new TypeDefinition(
+            Product::class,
+            null,
+            false,
+            [
+                'id' => (new FieldDefinition('int'))
+                    ->setConfig(['min' => 1000, 'max' => 9999]),
+                'description' => new FieldDefinition('string'),
+                'tags' => (new FieldDefinition('string'))->setArray(true),
+                'price' => (new FieldDefinition('float'))
+                    ->setConfig(['min' => 10.0, 'max' => 50.0, 'precision' => 2])
+            ]
+        );
 
         $schema = PhodamSchema::withDefaults();
-        $schema->forType(Product::class)
-            ->registerDefinition($definition);
+        $schema->registerTypeDefinition($definition);
         $phodam = $schema->getPhodam();
 
         $product = $phodam->create(Product::class);
@@ -179,17 +195,21 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
     {
         // Nullable fields can be explicitly marked
         // Note: Must define all untyped fields (id, description, tags, price)
-        $definition = new TypeDefinition([
-            'id' => new FieldDefinition('int'),
-            'description' => (new FieldDefinition('string'))
-                ->setNullable(true),  // Can be null
-            'tags' => (new FieldDefinition('string'))->setArray(true),
-            'price' => new FieldDefinition('float')
-        ]);
+        $definition = new TypeDefinition(
+            Product::class,
+            null,
+            false,
+            [
+                'id' => new FieldDefinition('int'),
+                'description' => (new FieldDefinition('string'))
+                    ->setNullable(true),  // Can be null
+                'tags' => (new FieldDefinition('string'))->setArray(true),
+                'price' => new FieldDefinition('float')
+            ]
+        );
 
         $schema = PhodamSchema::withDefaults();
-        $schema->forType(Product::class)
-            ->registerDefinition($definition);
+        $schema->registerTypeDefinition($definition);
         $phodam = $schema->getPhodam();
 
         // Generate multiple products - some may have null description
@@ -208,30 +228,38 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
 
     public function testNamedProviderInFieldDefinition(): void
     {
-        // First, register a named provider for OrderItem
+        // First, register a named provider for OrderItem using TypeDefinition
         $schema = PhodamSchema::withDefaults();
-        $schema->forType(OrderItem::class)
-            ->withName('expensive')
-            ->registerProvider(new class implements TypedProviderInterface {
-                public function create(ProviderContextInterface $context): OrderItem
-                {
-                    return (new OrderItem())
-                        ->setItemId($context->getPhodam()->create('int'))
-                        ->setProductName($context->getPhodam()->create('string'))
-                        ->setQuantity($context->getPhodam()->create('float', null, [], ['min' => 1.0, 'max' => 10.0]))
-                        ->setUnitPrice($context->getPhodam()->create('float', null, [], ['min' => 100.0, 'max' => 1000.0]));
-                }
-            });
+        
+        // Create a named provider using TypeDefinition
+        $expensiveItemDefinition = new TypeDefinition(
+            OrderItem::class,
+            'expensive',
+            false,
+            [
+                'itemId' => new FieldDefinition('int'),
+                'productName' => new FieldDefinition('string'),
+                'quantity' => (new FieldDefinition('float'))
+                    ->setConfig(['min' => 1.0, 'max' => 10.0]),
+                'unitPrice' => (new FieldDefinition('float'))
+                    ->setConfig(['min' => 100.0, 'max' => 1000.0])
+            ]
+        );
+        $schema->registerTypeDefinition($expensiveItemDefinition);
 
         // Then use it in a field definition
-        $orderDefinition = new TypeDefinition([
-            'items' => (new FieldDefinition(OrderItem::class))
-                ->setArray(true)
-                ->setName('expensive')  // Use the named provider
-        ]);
+        $orderDefinition = new TypeDefinition(
+            Order::class,
+            null,
+            false,
+            [
+                'items' => (new FieldDefinition(OrderItem::class))
+                    ->setArray(true)
+                    ->setName('expensive')  // Use the named provider
+            ]
+        );
 
-        $schema->forType(Order::class)
-            ->registerDefinition($orderDefinition);
+        $schema->registerTypeDefinition($orderDefinition);
 
         $phodam = $schema->getPhodam();
         $order = $phodam->create(Order::class);

@@ -112,7 +112,7 @@ class Phodam implements PhodamInterface
     {
         $type = $definition->getType();
 
-        if ($type === null || $type === '') {
+        if ($type == null || $type == '') {
             throw new InvalidArgumentException('TypeDefinition must have a type set');
         }
 

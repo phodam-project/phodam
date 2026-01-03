@@ -141,7 +141,7 @@ class PhodamSchema implements PhodamSchemaInterface
             return;
         }
 
-        $providerClass = is_object($provider) ? get_class($provider) : $provider;
+        $providerClass = get_class($provider);
         throw new InvalidArgumentException(
             "Provider class {$providerClass} must have a PhodamProvider or PhodamArrayProvider attribute"
         );
@@ -154,7 +154,7 @@ class PhodamSchema implements PhodamSchemaInterface
     {
         $type = $definition->getType();
 
-        if ($type === null || $type == '') {
+        if ($type == null || $type == '') {
             throw new InvalidArgumentException('TypeDefinition must have a type set');
         }
 

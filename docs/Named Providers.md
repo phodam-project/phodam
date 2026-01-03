@@ -16,50 +16,59 @@ Named providers are particularly useful for:
 
 ## Registering Named Providers
 
-Named providers are registered using the `PhodamSchema` fluent API through the `Registrar` class.
+Named providers are registered using PHP attributes on provider classes. The `PhodamProvider` attribute accepts a `name` parameter for named providers.
 
 ### Registering a Named Provider for a Type
 
-To register a named provider for a specific type, use `forType()` followed by `withName()` and `registerProvider()`:
+To register a named provider for a specific type, add the `#[PhodamProvider]` attribute with a `name` parameter:
 
 ```php
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\TypedProviderInterface;
+
+#[PhodamProvider(MyClass::class, name: 'activeInstance')]
+class MyActiveClassProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): MyClass
+    {
+        // Your provider implementation
+    }
+}
+
+// Register the provider
 use Phodam\PhodamSchema;
 use Phodam\PhodamInterface;
 
 $schema = PhodamSchema::withDefaults();
-
-// Register a named provider for a class
-$schema->forType(MyClass::class)
-    ->withName('activeInstance')
-    ->registerProvider(new MyActiveClassProvider());
+$schema->registerProvider(MyActiveClassProvider::class);
 
 $phodam = $schema->getPhodam();
 ```
 
 ### Registering a Named Provider for an Array
 
-Array providers **must** be named (you cannot register a default array provider). Use `forArray()` instead of `forType()`:
+Array providers **must** be named (you cannot register a default array provider). Use the `#[PhodamArrayProvider]` attribute:
 
 ```php
-use Phodam\PhodamSchema;
-use Phodam\PhodamInterface;
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
 
+#[PhodamArrayProvider('userProfile')]
+class UserProfileArrayProvider implements ProviderInterface
+{
+    public function create(ProviderContextInterface $context): array
+    {
+        // Your provider implementation
+    }
+}
+
+// Register the array provider
 $schema = PhodamSchema::withDefaults();
-
-// Register a named array provider
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
+$schema->registerProvider(UserProfileArrayProvider::class);
 
 $phodam = $schema->getPhodam();
-```
-
-Alternatively, you can use `forType('array')`:
-
-```php
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
 ```
 
 ## Using Named Providers
@@ -104,9 +113,14 @@ use Phodam\Provider\ProviderContext;
 use Phodam\Provider\TypedProviderInterface;
 
 // Define providers for different user states
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\TypedProviderInterface;
+
+#[PhodamProvider(User::class, name: 'active')]
 class ActiveUserProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): User
+    public function create(ProviderContextInterface $context): User
     {
         return new User(
             $context->getPhodam()->create('string'),  // name
@@ -116,9 +130,10 @@ class ActiveUserProvider implements TypedProviderInterface
     }
 }
 
+#[PhodamProvider(User::class, name: 'inactive')]
 class InactiveUserProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): User
+    public function create(ProviderContextInterface $context): User
     {
         return new User(
             $context->getPhodam()->create('string'),  // name
@@ -130,14 +145,8 @@ class InactiveUserProvider implements TypedProviderInterface
 
 // Register both providers
 $schema = PhodamSchema::withDefaults();
-
-$schema->forType(User::class)
-    ->withName('active')
-    ->registerProvider(new ActiveUserProvider());
-
-$schema->forType(User::class)
-    ->withName('inactive')
-    ->registerProvider(new InactiveUserProvider());
+$schema->registerProvider(ActiveUserProvider::class);
+$schema->registerProvider(InactiveUserProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -159,9 +168,14 @@ use Phodam\PhodamSchema;
 use Phodam\Provider\ProviderContext;
 use Phodam\Provider\ProviderInterface;
 
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
+
+#[PhodamArrayProvider('userProfile')]
 class UserProfileArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $defaults = [
             'firstName' => $context->getPhodam()->create('string'),
@@ -177,10 +191,7 @@ class UserProfileArrayProvider implements ProviderInterface
 
 // Register the array provider
 $schema = PhodamSchema::withDefaults();
-
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
+$schema->registerProvider(UserProfileArrayProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -195,50 +206,79 @@ $profile = $phodam->createArray('userProfile', ['email' => 'john@example.com']);
 
 ### Example 3: Registering with Class String
 
-You can also register providers by passing the class name as a string, and Phodam will instantiate it:
+You can register providers by passing the class name as a string, and Phodam will instantiate it:
 
 ```php
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\TypedProviderInterface;
+
+#[PhodamProvider(User::class, name: 'admin')]
+class AdminUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User
+    {
+        // Implementation
+    }
+}
+
 $schema = PhodamSchema::withDefaults();
 
-// Register by class name string (must be a class implementing ProviderInterface)
-$schema->forType(User::class)
-    ->withName('admin')
-    ->registerProvider(AdminUserProvider::class);
+// Register by class name string (must be a class implementing ProviderInterface with attribute)
+$schema->registerProvider(AdminUserProvider::class);
 
 $phodam = $schema->getPhodam();
 ```
 
 ## Overriding Existing Providers
 
-If you need to replace an existing provider (default or named), you can use the `overriding()` method before `registerProvider()`:
+If you need to replace an existing provider (default or named), you can use the `overriding` parameter in the `#[PhodamProvider]` attribute:
 
 ```php
-$schema = PhodamSchema::withDefaults();
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\TypedProviderInterface;
 
 // Register a provider
-$schema->forType(User::class)
-    ->withName('active')
-    ->registerProvider(new ActiveUserProvider());
+#[PhodamProvider(User::class, name: 'active')]
+class ActiveUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User
+    {
+        // Implementation
+    }
+}
 
-// Later, replace it with a new provider
-$schema->forType(User::class)
-    ->withName('active')
-    ->overriding()  // This allows overriding the existing provider
-    ->registerProvider(new ImprovedActiveUserProvider());
+// Later, replace it with a new provider using overriding flag
+#[PhodamProvider(User::class, name: 'active', overriding: true)]
+class ImprovedActiveUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User
+    {
+        // Improved implementation
+    }
+}
+
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(ActiveUserProvider::class);
+$schema->registerProvider(ImprovedActiveUserProvider::class);  // Overrides the previous one
 ```
 
-**Note:** Without `overriding()`, attempting to register a provider with a name that already exists will throw a `ProviderConflictException`.
+**Note:** Without `overriding: true`, attempting to register a provider with a name that already exists will throw a `ProviderConflictException`.
 
 ## Provider Registration Methods
 
-The `Registrar` class (returned by `forType()` and `forArray()`) provides a fluent API:
+Providers are registered using PHP attributes and the `PhodamSchema::registerProvider()` method:
+
+| Attribute | Description |
+|-----------|-------------|
+| `#[PhodamProvider(string $type, ?string $name = null, bool $overriding = false)]` | Declares a type provider. Use `name` parameter for named providers. Use `overriding: true` to override existing providers. |
+| `#[PhodamArrayProvider(string $name, bool $overriding = false)]` | Declares an array provider. Array providers must have a name. |
 
 | Method | Description |
 |--------|-------------|
-| `withName(string $name)` | Sets the name for a named provider. Required for named providers. |
-| `registerProvider($providerOrClass)` | Registers the provider. Can accept an instance or class name string. |
-| `overriding()` | Allows overriding an existing provider with the same name. |
-| `registerDefinition(TypeDefinition $definition)` | Registers a type definition instead of a provider (advanced usage). |
+| `registerProvider($providerOrClass)` | Registers a provider. Can accept an instance or class name string. The provider class must have a `PhodamProvider` or `PhodamArrayProvider` attribute. |
+| `registerTypeDefinition(TypeDefinition $definition)` | Registers a type definition directly (advanced usage). |
 
 ## Default vs Named Providers
 
@@ -249,9 +289,22 @@ The `Registrar` class (returned by `forType()` and `forArray()`) provides a flue
 - Cannot have a default provider for arrays
 
 ```php
-// Register a default provider
-$schema->forType(User::class)
-    ->registerProvider(new DefaultUserProvider());
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\TypedProviderInterface;
+
+#[PhodamProvider(User::class)]
+class DefaultUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User
+    {
+        // Implementation
+    }
+}
+
+// Register a default provider (no name in attribute)
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(DefaultUserProvider::class);
 
 // Use it (no name needed)
 $user = $phodam->create(User::class);
@@ -265,18 +318,29 @@ $user = $phodam->create(User::class);
 - You can have both default and named providers for the same type
 
 ```php
-// Register a default provider
-$schema->forType(User::class)
-    ->registerProvider(new DefaultUserProvider());
+#[PhodamProvider(User::class)]
+class DefaultUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User { /* ... */ }
+}
 
-// Register named providers
-$schema->forType(User::class)
-    ->withName('admin')
-    ->registerProvider(new AdminUserProvider());
+#[PhodamProvider(User::class, name: 'admin')]
+class AdminUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User { /* ... */ }
+}
 
-$schema->forType(User::class)
-    ->withName('guest')
-    ->registerProvider(new GuestUserProvider());
+#[PhodamProvider(User::class, name: 'guest')]
+class GuestUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User { /* ... */ }
+}
+
+// Register providers
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(DefaultUserProvider::class);
+$schema->registerProvider(AdminUserProvider::class);
+$schema->registerProvider(GuestUserProvider::class);
 
 // Use them
 $defaultUser = $phodam->create(User::class);        // Uses default provider
@@ -297,23 +361,35 @@ $phodam->create(User::class, 'nonexistent');
 
 ### ProviderConflictException
 
-This exception is thrown when trying to register a provider with a name that already exists (unless using `overriding()`):
+This exception is thrown when trying to register a provider with a name that already exists (unless using `overriding: true`):
 
 ```php
-$schema->forType(User::class)
-    ->withName('active')
-    ->registerProvider(new ActiveUserProvider());
+#[PhodamProvider(User::class, name: 'active')]
+class ActiveUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User { /* ... */ }
+}
+
+#[PhodamProvider(User::class, name: 'active')]
+class AnotherActiveUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User { /* ... */ }
+}
+
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(ActiveUserProvider::class);
 
 // This will throw ProviderConflictException
-$schema->forType(User::class)
-    ->withName('active')
-    ->registerProvider(new AnotherActiveUserProvider());
+$schema->registerProvider(AnotherActiveUserProvider::class);
 
 // This will work (overrides the existing provider)
-$schema->forType(User::class)
-    ->withName('active')
-    ->overriding()
-    ->registerProvider(new AnotherActiveUserProvider());
+#[PhodamProvider(User::class, name: 'active', overriding: true)]
+class ImprovedActiveUserProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): User { /* ... */ }
+}
+
+$schema->registerProvider(ImprovedActiveUserProvider::class);
 ```
 
 ## Best Practices
@@ -331,13 +407,21 @@ $user = $phodam->create(User::class, 'admin', ['name' => 'John'], ['role' => 'su
 4. **Use for testing scenarios**: Named providers are excellent for creating different test scenarios:
 
 ```php
-$schema->forType(Order::class)
-    ->withName('pending')
-    ->registerProvider(new PendingOrderProvider());
+#[PhodamProvider(Order::class, name: 'pending')]
+class PendingOrderProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): Order { /* ... */ }
+}
 
-$schema->forType(Order::class)
-    ->withName('completed')
-    ->registerProvider(new CompletedOrderProvider());
+#[PhodamProvider(Order::class, name: 'completed')]
+class CompletedOrderProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): Order { /* ... */ }
+}
+
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(PendingOrderProvider::class);
+$schema->registerProvider(CompletedOrderProvider::class);
 
 // In tests
 $pendingOrder = $phodam->create(Order::class, 'pending');
