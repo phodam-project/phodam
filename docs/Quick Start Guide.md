@@ -394,10 +394,11 @@ Now that you've got the basics, explore these topics:
 2. **[Automatic Type Analysis](Automatic%20Type%20Analysis.md)** - How Phodam automatically analyzes your classes
 3. **[Primitive Types](Primitive%20Types.md)** - Learn about configuring `int`, `float`, `string`, and `bool`
 4. **[Built-in Types](Builtin%20Types.md)** - Working with `DateTime`, `DateTimeImmutable`, etc.
-5. **[Associative Arrays](Associative%20Arrays.md)** - Creating structured arrays
-6. **[Definition-based Type Providers](Definition-based%20Type%20Providers.md)** - When automatic analysis isn't enough
-7. **[Custom Type Providers](Custom%20Type%20Providers.md)** - Full control over object creation
-8. **[Named Providers](Named%20Providers.md)** - Multiple ways to generate the same type
+5. **[Enum Types](Enum%20Types.md)** - Generating PHP 8 enum values
+6. **[Associative Arrays](Associative%20Arrays.md)** - Creating structured arrays
+7. **[Definition-based Type Providers](Definition-based%20Type%20Providers.md)** - When automatic analysis isn't enough
+8. **[Custom Type Providers](Custom%20Type%20Providers.md)** - Full control over object creation
+9. **[Named Providers](Named%20Providers.md)** - Multiple ways to generate the same type
 
 ## Common Questions
 
