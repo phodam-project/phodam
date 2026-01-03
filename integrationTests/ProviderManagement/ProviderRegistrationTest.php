@@ -10,24 +10,21 @@ declare(strict_types=1);
 namespace PhodamTests\Integration\ProviderManagement;
 
 use Phodam\PhodamSchema;
+use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Types\FieldDefinition;
 use Phodam\Types\TypeDefinition;
-use PhodamTests\Fixtures\SampleProvider;
+use PhodamTests\Fixtures\TestProviderWithAttribute;
 use PhodamTests\Fixtures\UnregisteredClassType;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Phodam\PhodamSchema::class)]
-#[CoversClass(\Phodam\Store\Registrar::class)]
+#[CoversClass(PhodamSchema::class)]
 class ProviderRegistrationTest extends IntegrationBaseTestCase
 {
-    public function testRegisterDefaultProvider(): void
+    public function testRegisterDefaultProviderWithAttribute(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider = new SampleProvider();
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($provider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);
@@ -38,10 +35,7 @@ class ProviderRegistrationTest extends IntegrationBaseTestCase
     public function testRegisterDefaultProviderThroughSchema(): void
     {
         $schema = PhodamSchema::blank();
-        $provider = new \Phodam\Provider\Primitive\DefaultStringTypeProvider();
-
-        $schema->forType('string')
-            ->registerProvider($provider);
+        $schema->registerProvider(DefaultStringTypeProvider::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create('string');
@@ -52,15 +46,14 @@ class ProviderRegistrationTest extends IntegrationBaseTestCase
     public function testRegisterProviderWithDefinition(): void
     {
         $schema = PhodamSchema::withDefaults(); // Need defaults for primitive types
-        $fields = [
+        $type = UnregisteredClassType::class;
+        $definition = new TypeDefinition($type, null, false, [
             'field1' => new FieldDefinition('string'),
             'field2' => new FieldDefinition('string'),
             'field3' => new FieldDefinition('int'),
-        ];
-        $definition = new TypeDefinition($fields);
+        ]);
 
-        $schema->forType(UnregisteredClassType::class)
-            ->registerDefinition($definition);
+        $schema->registerTypeDefinition($definition);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);
@@ -74,9 +67,7 @@ class ProviderRegistrationTest extends IntegrationBaseTestCase
     public function testRegisterProviderWithClassString(): void
     {
         $schema = PhodamSchema::blank();
-
-        $schema->forType('string')
-            ->registerProvider(\Phodam\Provider\Primitive\DefaultStringTypeProvider::class);
+        $schema->registerProvider(DefaultStringTypeProvider::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create('string');
@@ -87,10 +78,8 @@ class ProviderRegistrationTest extends IntegrationBaseTestCase
     public function testRegisterProviderWithInstance(): void
     {
         $schema = PhodamSchema::blank();
-        $provider = new \Phodam\Provider\Primitive\DefaultStringTypeProvider();
-
-        $schema->forType('string')
-            ->registerProvider($provider);
+        $provider = new DefaultStringTypeProvider();
+        $schema->registerProvider($provider);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create('string');
@@ -100,11 +89,8 @@ class ProviderRegistrationTest extends IntegrationBaseTestCase
 
     public function testRegisteredProviderIsUsed(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider = new SampleProvider();
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($provider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);
@@ -116,10 +102,7 @@ class ProviderRegistrationTest extends IntegrationBaseTestCase
     public function testProviderRegistrationPersists(): void
     {
         $schema = PhodamSchema::blank();
-        $provider = new \Phodam\Provider\Primitive\DefaultStringTypeProvider();
-
-        $schema->forType('string')
-            ->registerProvider($provider);
+        $schema->registerProvider(DefaultStringTypeProvider::class);
 
         $phodam = $schema->getPhodam();
 

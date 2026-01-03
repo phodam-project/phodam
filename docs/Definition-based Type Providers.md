@@ -30,13 +30,16 @@ A `TypeDefinition` is a collection of field definitions. Each field is defined u
 use Phodam\Types\FieldDefinition;
 use Phodam\Types\TypeDefinition;
 
-$fields = [
-    'myInt' => new FieldDefinition('int'),
-    'myString' => new FieldDefinition('string'),
-    'myBool' => new FieldDefinition('bool')
-];
-
-$definition = new TypeDefinition($fields);
+$definition = new TypeDefinition(
+    MyClass::class,  // Type name
+    null,            // Provider name (null for default)
+    false,           // Overriding flag
+    [
+        'myInt' => new FieldDefinition('int'),
+        'myString' => new FieldDefinition('string'),
+        'myBool' => new FieldDefinition('bool')
+    ]
+);
 ```
 
 ### FieldDefinition Options
@@ -84,35 +87,7 @@ $complexField = (new FieldDefinition('float'))
 
 ## Registering a Type Definition
 
-You can register a type definition in two ways:
-
-### Using `registerTypeDefinition()` on Phodam
-
-```php
-use Phodam\PhodamInterface;
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
-$schema = PhodamSchema::withDefaults();
-$phodam = $schema->getPhodam();
-
-$fields = [
-    'myInt' => new FieldDefinition('int'),
-    'myString' => new FieldDefinition('string')
-];
-$definition = new TypeDefinition($fields);
-
-// Register the definition
-$phodam->registerTypeDefinition(MyClass::class, $definition);
-
-// Now you can create instances
-$instance = $phodam->create(MyClass::class);
-```
-
-### Using `registerDefinition()` on PhodamSchema
-
-You can also register definitions using the schema's fluent API:
+You can register a type definition using `PhodamSchema::registerTypeDefinition()`:
 
 ```php
 use Phodam\PhodamSchema;
@@ -121,15 +96,18 @@ use Phodam\Types\TypeDefinition;
 
 $schema = PhodamSchema::withDefaults();
 
-$fields = [
-    'myInt' => new FieldDefinition('int'),
-    'myString' => new FieldDefinition('string')
-];
-$definition = new TypeDefinition($fields);
+$definition = new TypeDefinition(
+    MyClass::class,  // Type name
+    null,            // Provider name (null for default)
+    false,           // Overriding flag
+    [
+        'myInt' => new FieldDefinition('int'),
+        'myString' => new FieldDefinition('string')
+    ]
+);
 
 // Register using schema
-$schema->forType(MyClass::class)
-    ->registerDefinition($definition);
+$schema->registerTypeDefinition($definition);
 
 $phodam = $schema->getPhodam();
 $instance = $phodam->create(MyClass::class);
@@ -137,19 +115,22 @@ $instance = $phodam->create(MyClass::class);
 
 ### Registering as a Named Provider
 
-You can register a definition as a named provider:
+You can register a definition as a named provider by providing a name in the constructor:
 
 ```php
 $schema = PhodamSchema::withDefaults();
 
-$definition = new TypeDefinition([
-    'myInt' => new FieldDefinition('int'),
-    'myString' => new FieldDefinition('string')
-]);
+$definition = new TypeDefinition(
+    MyClass::class,        // Type name
+    'myCustomProvider',    // Provider name
+    false,                 // Overriding flag
+    [
+        'myInt' => new FieldDefinition('int'),
+        'myString' => new FieldDefinition('string')
+    ]
+);
 
-$schema->forType(MyClass::class)
-    ->withName('myCustomProvider')
-    ->registerDefinition($definition);
+$schema->registerTypeDefinition($definition);
 
 $phodam = $schema->getPhodam();
 $instance = $phodam->create(MyClass::class, 'myCustomProvider');
@@ -178,15 +159,20 @@ class User
 }
 
 $schema = PhodamSchema::withDefaults();
-$phodam = $schema->getPhodam();
 
 // Define only the untyped fields - Phodam will auto-complete the rest
-$definition = new TypeDefinition([
-    'id' => new FieldDefinition('int'),
-    'name' => new FieldDefinition('string')
-]);
+$definition = new TypeDefinition(
+    User::class,
+    null,
+    false,
+    [
+        'id' => new FieldDefinition('int'),
+        'name' => new FieldDefinition('string')
+    ]
+);
 
-$phodam->registerTypeDefinition(User::class, $definition);
+$schema->registerTypeDefinition($definition);
+$phodam = $schema->getPhodam();
 
 // Now you can create User instances
 $user = $phodam->create(User::class);
@@ -217,15 +203,20 @@ class Order
 }
 
 $schema = PhodamSchema::withDefaults();
-$phodam = $schema->getPhodam();
 
 // Define the array field with its element type
-$definition = new TypeDefinition([
-    'items' => (new FieldDefinition(OrderItem::class))
-        ->setArray(true)
-]);
+$definition = new TypeDefinition(
+    Order::class,
+    null,
+    false,
+    [
+        'items' => (new FieldDefinition(OrderItem::class))
+            ->setArray(true)
+    ]
+);
 
-$phodam->registerTypeDefinition(Order::class, $definition);
+$schema->registerTypeDefinition($definition);
+$phodam = $schema->getPhodam();
 
 $order = $phodam->create(Order::class);
 // $order->getItems() will be an array of OrderItem instances (2-5 items by default)
@@ -252,18 +243,23 @@ class Student
 }
 
 $schema = PhodamSchema::withDefaults();
+
+$definition = new TypeDefinition(
+    Student::class,
+    null,
+    false,
+    [
+        'id' => new FieldDefinition('int'),
+        'name' => new FieldDefinition('string'),
+        'age' => (new FieldDefinition('int'))
+            ->setConfig(['min' => 18, 'max' => 100]),
+        'gpa' => (new FieldDefinition('float'))
+            ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2])
+    ]
+);
+
+$schema->registerTypeDefinition($definition);
 $phodam = $schema->getPhodam();
-
-$definition = new TypeDefinition([
-    'id' => new FieldDefinition('int'),
-    'name' => new FieldDefinition('string'),
-    'age' => (new FieldDefinition('int'))
-        ->setConfig(['min' => 18, 'max' => 100]),
-    'gpa' => (new FieldDefinition('float'))
-        ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2])
-]);
-
-$phodam->registerTypeDefinition(Student::class, $definition);
 
 $student = $phodam->create(Student::class);
 // $student->getAge() will be between 18 and 100
@@ -278,13 +274,18 @@ You can mark fields as nullable:
 use Phodam\Types\FieldDefinition;
 use Phodam\Types\TypeDefinition;
 
-$definition = new TypeDefinition([
-    'requiredField' => new FieldDefinition('string'),
-    'optionalField' => (new FieldDefinition('string'))
-        ->setNullable(true),
-    'optionalInt' => (new FieldDefinition('int'))
-        ->setNullable(true)
-]);
+$definition = new TypeDefinition(
+    MyClass::class,
+    null,
+    false,
+    [
+        'requiredField' => new FieldDefinition('string'),
+        'optionalField' => (new FieldDefinition('string'))
+            ->setNullable(true),
+        'optionalInt' => (new FieldDefinition('int'))
+            ->setNullable(true)
+    ]
+);
 ```
 
 ### Example 5: Using Named Providers for Fields
@@ -296,21 +297,34 @@ use Phodam\PhodamSchema;
 use Phodam\Types\FieldDefinition;
 use Phodam\Types\TypeDefinition;
 
-// First, register a named provider for User
+// First, register a named provider for User using TypeDefinition
 $schema = PhodamSchema::withDefaults();
-$schema->forType(User::class)
-    ->withName('activeUser')
-    ->registerProvider(new ActiveUserProvider());
+
+$activeUserDefinition = new TypeDefinition(
+    User::class,
+    'activeUser',  // Named provider
+    false,
+    [
+        'name' => new FieldDefinition('string'),
+        'email' => new FieldDefinition('string'),
+        'active' => new FieldDefinition('bool')
+    ]
+);
+$schema->registerTypeDefinition($activeUserDefinition);
 
 // Then use it in a field definition
-$definition = new TypeDefinition([
-    'owner' => (new FieldDefinition(User::class))
-        ->setName('activeUser'),
-    'name' => new FieldDefinition('string')
-]);
+$definition = new TypeDefinition(
+    Project::class,
+    null,
+    false,
+    [
+        'owner' => (new FieldDefinition(User::class))
+            ->setName('activeUser'),  // Use the named provider
+        'name' => new FieldDefinition('string')
+    ]
+);
 
-$schema->forType(Project::class)
-    ->registerDefinition($definition);
+$schema->registerTypeDefinition($definition);
 
 $phodam = $schema->getPhodam();
 $project = $phodam->create(Project::class);
@@ -340,29 +354,34 @@ class Product
 }
 
 $schema = PhodamSchema::withDefaults();
+
+$definition = new TypeDefinition(
+    Product::class,
+    null,
+    false,
+    [
+        // Untyped field
+        'id' => new FieldDefinition('int'),
+        
+        // Array field with element type
+        'tags' => (new FieldDefinition('string'))
+            ->setArray(true),
+        
+        // Field with configuration
+        'price' => (new FieldDefinition('float'))
+            ->setConfig(['min' => 0.01, 'max' => 1000.0, 'precision' => 2]),
+        
+        // Built-in type (auto-detected, but can be explicit)
+        'createdAt' => new FieldDefinition(DateTimeImmutable::class),
+        
+        // Field with configuration for string
+        'name' => (new FieldDefinition('string'))
+            ->setConfig(['minLength' => 5, 'maxLength' => 50])
+    ]
+);
+
+$schema->registerTypeDefinition($definition);
 $phodam = $schema->getPhodam();
-
-$definition = new TypeDefinition([
-    // Untyped field
-    'id' => new FieldDefinition('int'),
-    
-    // Array field with element type
-    'tags' => (new FieldDefinition('string'))
-        ->setArray(true),
-    
-    // Field with configuration
-    'price' => (new FieldDefinition('float'))
-        ->setConfig(['min' => 0.01, 'max' => 1000.0, 'precision' => 2]),
-    
-    // Built-in type (auto-detected, but can be explicit)
-    'createdAt' => new FieldDefinition(DateTimeImmutable::class),
-    
-    // Field with configuration for string
-    'name' => (new FieldDefinition('string'))
-        ->setConfig(['minLength' => 5, 'maxLength' => 50])
-]);
-
-$phodam->registerTypeDefinition(Product::class, $definition);
 
 $product = $phodam->create(Product::class);
 // All fields will be properly populated according to their definitions
@@ -381,12 +400,18 @@ class MyClass
 }
 
 // Only define the untyped field
-$definition = new TypeDefinition([
-    'untypedField' => new FieldDefinition('string')
-]);
+$definition = new TypeDefinition(
+    MyClass::class,
+    null,
+    false,
+    [
+        'untypedField' => new FieldDefinition('string')
+    ]
+);
 
 // Phodam will auto-complete 'typedField' and 'anotherTyped'
-$phodam->registerTypeDefinition(MyClass::class, $definition);
+$schema->registerTypeDefinition($definition);
+$phodam = $schema->getPhodam();
 ```
 
 **Note**: If Phodam cannot determine a field type and you haven't defined it, an `IncompleteDefinitionException` will be thrown.
@@ -408,10 +433,15 @@ $user = $phodam->create(User::class, null, [
 When a field is marked as an array (`setArray(true)`), Phodam will generate an array containing 2-5 elements of the specified type:
 
 ```php
-$definition = new TypeDefinition([
-    'items' => (new FieldDefinition(OrderItem::class))
-        ->setArray(true)
-]);
+$definition = new TypeDefinition(
+    Order::class,
+    null,
+    false,
+    [
+        'items' => (new FieldDefinition(OrderItem::class))
+            ->setArray(true)
+    ]
+);
 
 // When creating an instance, items will be an array with 2-5 OrderItem objects
 $order = $phodam->create(Order::class);
@@ -445,10 +475,17 @@ new FieldDefinition('array')  // Doesn't specify element type
 4. **Use Named Providers for Reusability**: If you need the same field configuration in multiple definitions, consider creating a named provider:
 
 ```php
-// Register once
-$schema->forType(User::class)
-    ->withName('activeUser')
-    ->registerProvider(new ActiveUserProvider());
+// Register once using TypeDefinition
+$activeUserDefinition = new TypeDefinition(
+    User::class,
+    'activeUser',  // Named provider
+    false,
+    [
+        'name' => new FieldDefinition('string'),
+        'active' => new FieldDefinition('bool')
+    ]
+);
+$schema->registerTypeDefinition($activeUserDefinition);
 
 // Use in multiple definitions
 ->setName('activeUser')
@@ -480,7 +517,8 @@ try {
 
 - Definition-based providers use `FieldDefinition` and `TypeDefinition` to specify how fields should be populated
 - Use them for classes with untyped fields or when you need custom configuration
-- Register using `registerTypeDefinition()` on Phodam or `registerDefinition()` on PhodamSchema
+- Register using `PhodamSchema::registerTypeDefinition()` with a `TypeDefinition` object
+- `TypeDefinition` constructor: `TypeDefinition(string $type, ?string $name = null, bool $overriding = false, array $fields = [])`
 - Only define fields that cannot be automatically determined - Phodam will auto-complete the rest
 - Support for nullable fields, arrays, configuration, and named providers
 - Perfect for classes with untyped properties or complex field requirements

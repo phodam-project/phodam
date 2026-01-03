@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace PhodamTests\Integration\ObjectCreation;
 
+use Phodam\Analyzer\TypeAnalysisException;
+use Phodam\Analyzer\TypeAnalyzer;
+use Phodam\Phodam;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
 use PhodamTests\Fixtures\SimpleTypeWithPhpDocTypes;
@@ -16,8 +19,8 @@ use PhodamTests\Fixtures\SimpleTypeWithTypedArray;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Phodam\Phodam::class)]
-#[CoversClass(\Phodam\Analyzer\TypeAnalyzer::class)]
+#[CoversClass(Phodam::class)]
+#[CoversClass(TypeAnalyzer::class)]
 class AutomaticAnalysisTest extends IntegrationBaseTestCase
 {
     public function testAutomaticAnalysisForTypedProperties(): void
@@ -113,7 +116,7 @@ class AutomaticAnalysisTest extends IntegrationBaseTestCase
     {
         $phodam = $this->createPhodamWithDefaults();
 
-        $this->expectException(\Phodam\Analyzer\TypeAnalysisException::class);
+        $this->expectException(TypeAnalysisException::class);
 
         $phodam->create(SimpleTypeMissingSomeFieldTypes::class);
     }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Phodam\Provider\Builtin;
 
 use DateTime;
+use Phodam\Provider\PhodamProvider;
 use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
@@ -17,6 +18,7 @@ use Phodam\Provider\TypedProviderInterface;
  * @template T extends DateTime
  * @template-implements TypedProviderInterface<DateTime>
  */
+#[PhodamProvider(DateTime::class)]
 class DefaultDateTimeTypeProvider implements TypedProviderInterface
 {
     public function create(ProviderContextInterface $context): DateTime

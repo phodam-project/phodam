@@ -24,19 +24,14 @@ class Ex03_NamedProvidersTest extends TestCase
 
         // Register named providers for User class
         // Multiple providers for the same type, each with a unique name
-        $schema->forType(User::class)
-            ->withName('active')
-            ->registerProvider(new ActiveUserProvider());
-
-        $schema->forType(User::class)
-            ->withName('inactive')
-            ->registerProvider(new InactiveUserProvider());
+        // The providers are registered using the PhodamProvider attribute with name parameter
+        $schema->registerProvider(ActiveUserProvider::class);
+        $schema->registerProvider(InactiveUserProvider::class);
 
         // Register a named array provider
         // Array providers MUST be named (you cannot register a default array provider)
-        $schema->forType('array')
-            ->withName('userProfile')
-            ->registerProvider(new UserProfileArrayProvider());
+        // The provider is registered using the PhodamArrayProvider attribute
+        $schema->registerProvider(UserProfileArrayProvider::class);
 
         $this->phodam = $schema->getPhodam();
     }

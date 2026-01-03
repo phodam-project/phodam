@@ -17,7 +17,8 @@ Custom type providers implement the `TypedProviderInterface` and provide full co
 To create a custom type provider, implement the `TypedProviderInterface`:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
@@ -30,7 +31,7 @@ class MyClassTypeProvider implements TypedProviderInterface
      * @inheritDoc
      * @return MyClass
      */
-    public function create(ProviderContext $context): MyClass
+    public function create(ProviderContextInterface $context): MyClass
     {
         // Your custom creation logic here
         return new MyClass();
@@ -44,9 +45,9 @@ class MyClassTypeProvider implements TypedProviderInterface
 - **Return Type**: The `create()` method should return the specific class type
 - **ProviderContext**: Provides access to Phodam for creating nested objects and accessing overrides/config
 
-## Using ProviderContext
+## Using ProviderContextInterface
 
-The `ProviderContext` is your gateway to Phodam's functionality within a provider:
+The `ProviderContextInterface` is your gateway to Phodam's functionality within a provider:
 
 ### Creating Nested Objects
 
@@ -127,7 +128,8 @@ public function create(ProviderContext $context): Classroom
 This example shows a provider that sets custom default values:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 use DateTimeImmutable;
 
@@ -135,13 +137,14 @@ use DateTimeImmutable;
  * @template T extends Student
  * @template-implements TypedProviderInterface<Student>
  */
+#[PhodamProvider(Student::class)]
 class StudentTypeProvider implements TypedProviderInterface
 {
     /**
      * @inheritDoc
      * @return Student
      */
-    public function create(ProviderContext $context): Student
+    public function create(ProviderContextInterface $context): Student
     {
         $defaults = [
             'id' => 1,
@@ -194,7 +197,7 @@ class StudentTypeProvider implements TypedProviderInterface
      * @inheritDoc
      * @return Student
      */
-    public function create(ProviderContext $context): Student
+    public function create(ProviderContextInterface $context): Student
     {
         $defaults = [
             'id' => $this->id++,  // Auto-incrementing ID
@@ -218,20 +221,22 @@ class StudentTypeProvider implements TypedProviderInterface
 This example shows how to handle array fields:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
  * @template T extends Classroom
  * @template-implements TypedProviderInterface<Classroom>
  */
+#[PhodamProvider(Classroom::class)]
 class ClassroomTypeProvider implements TypedProviderInterface
 {
     /**
      * @inheritDoc
      * @return Classroom
      */
-    public function create(ProviderContext $context): Classroom
+    public function create(ProviderContextInterface $context): Classroom
     {
         $defaults = [
             'roomNumber' => $context->getPhodam()->create(
@@ -275,16 +280,18 @@ class ClassroomTypeProvider implements TypedProviderInterface
 This example shows how to use configuration:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
 /**
  * @template T extends Order
  * @template-implements TypedProviderInterface<Order>
  */
+#[PhodamProvider(Order::class)]
 class OrderTypeProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): Order
+    public function create(ProviderContextInterface $context): Order
     {
         $config = $context->getConfig();
         
@@ -335,16 +342,29 @@ $order = $phodam->create(Order::class, null, [], [
 
 ## Registering Custom Type Providers
 
+Custom type providers are registered using the `#[PhodamProvider]` attribute on the provider class.
+
 ### Registering as Default Provider
 
+Add the `#[PhodamProvider]` attribute with just the type:
+
 ```php
+use Phodam\Provider\PhodamProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\TypedProviderInterface;
 use Phodam\PhodamSchema;
 
-$schema = PhodamSchema::withDefaults();
+#[PhodamProvider(Student::class)]
+class StudentTypeProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): Student
+    {
+        // Implementation
+    }
+}
 
-// Register as default provider
-$schema->forType(Student::class)
-    ->registerProvider(new StudentTypeProvider());
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(StudentTypeProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -354,13 +374,20 @@ $student = $phodam->create(Student::class);
 
 ### Registering as Named Provider
 
-```php
-$schema = PhodamSchema::withDefaults();
+Add the `name` parameter to the `#[PhodamProvider]` attribute:
 
-// Register as named provider
-$schema->forType(Student::class)
-    ->withName('activeStudent')
-    ->registerProvider(new StudentTypeProvider());
+```php
+#[PhodamProvider(Student::class, name: 'activeStudent')]
+class StudentTypeProvider implements TypedProviderInterface
+{
+    public function create(ProviderContextInterface $context): Student
+    {
+        // Implementation
+    }
+}
+
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(StudentTypeProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -368,13 +395,16 @@ $phodam = $schema->getPhodam();
 $student = $phodam->create(Student::class, 'activeStudent');
 ```
 
-### Registering with Class String
+### Registering with Class String or Instance
 
-You can register by class name string:
+You can register by class name string or instance:
 
 ```php
-$schema->forType(Student::class)
-    ->registerProvider(StudentTypeProvider::class);
+// By class name (recommended)
+$schema->registerProvider(StudentTypeProvider::class);
+
+// Or by instance
+$schema->registerProvider(new StudentTypeProvider());
 ```
 
 ## Using Custom Providers
@@ -408,13 +438,9 @@ $order = $phodam->create(Order::class, null, [
 
 | Method | Description | Example |
 |--------|-------------|---------|
-| `create(string $type, ?string $name, ?array $overrides, ?array $config)` | Create any type | `$context->getPhodam()->create('string')` |
-| `createArray(string $name, ?array $overrides, ?array $config)` | Create a named array | `$context->getPhodam()->createArray('userProfile')` |
+| `getPhodam()` | Get Phodam instance for creating nested objects | `$context->getPhodam()->create('string')` |
 | `getOverrides()` | Get all overrides | `$context->getOverrides()` |
-| `hasOverride(string $field)` | Check if field is overridden | `$context->hasOverride('name')` |
-| `getOverride(string $field)` | Get specific override | `$context->getOverride('name')` |
 | `getConfig()` | Get configuration | `$context->getConfig()` |
-| `getType()` | Get the type being created | `$context->getType()` |
 
 ## Best Practices
 
@@ -479,7 +505,7 @@ Use proper return types and template annotations:
  */
 class StudentTypeProvider implements TypedProviderInterface
 {
-    public function create(ProviderContext $context): Student
+    public function create(ProviderContextInterface $context): Student
     {
         // ...
     }
@@ -504,9 +530,9 @@ class StudentTypeProvider implements TypedProviderInterface
 
 - Custom type providers implement `TypedProviderInterface`
 - They provide complete control over object creation
-- Use `ProviderContext` to create nested objects and access overrides/config
+- Use `ProviderContextInterface` to create nested objects and access overrides/config
 - Always merge defaults with overrides
-- Register using `PhodamSchema::forType()->registerProvider()`
+- Register using `#[PhodamProvider]` attribute and `PhodamSchema::registerProvider()`
 - Perfect for custom logic, defaults, and complex object construction
 
 Custom type providers are the most powerful way to create objects in Phodam, giving you full control when you need it while still leveraging Phodam's features for nested objects and type generation.

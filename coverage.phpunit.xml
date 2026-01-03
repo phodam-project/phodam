@@ -14,10 +14,11 @@
         displayDetailsOnTestsThatTriggerErrors="true"
         displayDetailsOnTestsThatTriggerNotices="true"
         displayDetailsOnTestsThatTriggerWarnings="true"
-        cacheDirectory="build/.integrationTests.phpunit.cache"
+        cacheDirectory="build/.coverage.phpunit.cache"
         >
     <testsuites>
         <testsuite name="default">
+            <directory>tests</directory>
             <directory>integrationTests</directory>
         </testsuite>
     </testsuites>

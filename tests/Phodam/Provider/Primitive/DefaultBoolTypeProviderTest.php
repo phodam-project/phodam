@@ -18,8 +18,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-#[CoversClass(\Phodam\Provider\Primitive\DefaultBoolTypeProvider::class)]
-#[CoversMethod(\Phodam\Provider\Primitive\DefaultBoolTypeProvider::class, 'create')]
+#[CoversClass(DefaultBoolTypeProvider::class)]
+#[CoversMethod(DefaultBoolTypeProvider::class, 'create')]
 class DefaultBoolTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultBoolTypeProvider $provider;

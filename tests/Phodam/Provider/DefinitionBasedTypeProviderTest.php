@@ -25,10 +25,10 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-#[CoversClass(\Phodam\Provider\DefinitionBasedTypeProvider::class)]
-#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, '__construct')]
-#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'create')]
-#[CoversMethod(\Phodam\Provider\DefinitionBasedTypeProvider::class, 'analyze')]
+#[CoversClass(DefinitionBasedTypeProvider::class)]
+#[CoversMethod(DefinitionBasedTypeProvider::class, '__construct')]
+#[CoversMethod(DefinitionBasedTypeProvider::class, 'create')]
+#[CoversMethod(DefinitionBasedTypeProvider::class, 'analyze')]
 class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
 {
     /** @var PhodamInterface & MockObject */
@@ -71,9 +71,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 ->setNullable(true),
             'myBool' => new FieldDefinition('bool')
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
         $context = new ProviderContext(
             $this->phodam,
@@ -124,9 +124,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 ->setNullable(true),
             'myBool' => new FieldDefinition('bool')
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
         $context = new ProviderContext(
             $this->phodam,
@@ -175,9 +175,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 ->setNullable(true),
             'myBool' => new FieldDefinition('bool')
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
         $context = new ProviderContext(
             $this->phodam,
@@ -226,9 +226,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 ->setNullable(true),
             'myBool' => new FieldDefinition('bool')
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
         $context = new ProviderContext(
             $this->phodam,
@@ -274,9 +274,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
             'myString' => (new FieldDefinition('string'))
                 ->setNullable(true)
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
         $context = new ProviderContext(
             $this->phodam,
@@ -306,9 +306,9 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 'array' => false
             ]
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
 
         $context = new ProviderContext(
@@ -334,7 +334,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
             'myArray' => (new FieldDefinition(SimpleType::class))
                 ->setArray(true)
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
         $this->phodam
             ->method('create')
@@ -351,7 +351,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
                 return null;
             });
 
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $provider = new DefinitionBasedTypeProvider($definition);
 
         $context = new ProviderContext(
             $this->phodam,

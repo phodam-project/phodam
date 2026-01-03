@@ -57,8 +57,11 @@ use Phodam\PhodamSchema;
 $schema = PhodamSchema::withDefaults();
 
 // Register a custom provider for a specific type
-$schema->forType(MyClass::class)
-    ->registerProvider(new MyCustomProvider());
+// Providers use the PhodamProvider attribute to declare their type
+$schema->registerProvider(MyCustomProvider::class);
+
+// Or register a provider instance
+$schema->registerProvider(new MyCustomProvider());
 
 // Get the PhodamInterface instance
 $phodam = $schema->getPhodam();
@@ -76,7 +79,7 @@ use Phodam\PhodamSchema;
 $schema = PhodamSchema::blank();
 
 // Add your own provider bundles if needed
-// $schema->add(MyCustomProviderBundle::class);
+// $schema->registerBundle(MyCustomProviderBundle::class);
 
 // Get the PhodamInterface instance
 $phodam = $schema->getPhodam();
@@ -84,11 +87,9 @@ $phodam = $schema->getPhodam();
 
 ## What `withDefaults()` Includes
 
-The `withDefaults()` method creates a schema that includes the `DefaultProviderBundle`, which provides built-in providers for common PHP types such as:
-
-- Primitives: `int`, `float`, `string`, `bool`
-- Built-in types and common classes
-- Other commonly used types
+The `withDefaults()` method creates a schema that includes:
+- `DefaultPrimitiveBundle` - Provides providers for primitive types: `int`, `float`, `string`, `bool`
+- `DefaultBuiltinBundle` - Provides providers for built-in PHP types: `DateTime`, `DateTimeImmutable`, `DateInterval`, `DatePeriod`, `DateTimeZone`
 
 This gives you a ready-to-use `PhodamInterface` instance that can generate values for most basic types out of the box.
 

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace PhodamExamples\Ex03_NamedProviders;
 
+use Phodam\Provider\PhodamProvider;
 use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
@@ -16,6 +17,7 @@ use Phodam\Provider\TypedProviderInterface;
  * @template T extends User
  * @template-implements TypedProviderInterface<User>
  */
+#[PhodamProvider(User::class, name: 'inactive')]
 class InactiveUserProvider implements TypedProviderInterface
 {
     /**

@@ -26,12 +26,18 @@ Array providers implement the `ProviderInterface` and return an associative arra
 Here's a simple example of an array provider:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
+
+#[PhodamArrayProvider('userProfile')]
 class UserProfileArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $defaults = [
             'firstName' => 'John',
@@ -51,12 +57,18 @@ class UserProfileArrayProvider implements ProviderInterface
 You can use the `ProviderContext` to generate dynamic values for array fields:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
+
+#[PhodamArrayProvider('userProfile')]
 class UserProfileArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $defaults = [
             'firstName' => $context->getPhodam()->create('string'),
@@ -76,12 +88,13 @@ class UserProfileArrayProvider implements ProviderInterface
 You can access configuration passed to `createArray()` through `$context->getConfig()`:
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
 class ProductArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $config = $context->getConfig();
         
@@ -107,36 +120,44 @@ class ProductArrayProvider implements ProviderInterface
 
 ## Registering Array Providers
 
-Array providers must be registered with a name using `PhodamSchema`.
+Array providers must be registered with a name using the `#[PhodamArrayProvider]` attribute.
 
-### Using `forArray()`
+### Using the PhodamArrayProvider Attribute
 
 ```php
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
 use Phodam\PhodamSchema;
 use Phodam\PhodamInterface;
+
+#[PhodamArrayProvider('userProfile')]
+class UserProfileArrayProvider implements ProviderInterface
+{
+    public function create(ProviderContextInterface $context): array
+    {
+        // Implementation
+    }
+}
 
 $schema = PhodamSchema::withDefaults();
 
 // Register an array provider
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
+$schema->registerProvider(UserProfileArrayProvider::class);
 
 $phodam = $schema->getPhodam();
 ```
 
-### Registering with Class String
+### Registering with Class String or Instance
 
-You can also register providers by passing the class name as a string:
+You can register by class name string or instance:
 
 ```php
-$schema = PhodamSchema::withDefaults();
+// By class name (recommended)
+$schema->registerProvider(UserProfileArrayProvider::class);
 
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(UserProfileArrayProvider::class);
-
-$phodam = $schema->getPhodam();
+// Or by instance
+$schema->registerProvider(new UserProfileArrayProvider());
 ```
 
 ## Using Array Providers
@@ -177,12 +198,18 @@ public function createArray(
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
+
+#[PhodamArrayProvider('userProfile')]
 class UserProfileArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $defaults = [
             'id' => $context->getPhodam()->create('int', null, [], ['min' => 1, 'max' => 10000]),
@@ -200,9 +227,7 @@ class UserProfileArrayProvider implements ProviderInterface
 
 // Register and use
 $schema = PhodamSchema::withDefaults();
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
+$schema->registerProvider(UserProfileArrayProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -220,12 +245,18 @@ $specificProfile = $phodam->createArray('userProfile', [
 ### Example 2: API Response Array with Config
 
 ```php
-use Phodam\Provider\ProviderContext;
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\ProviderInterface;
 
+use Phodam\Provider\PhodamArrayProvider;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
+
+#[PhodamArrayProvider('apiResponse')]
 class ApiResponseArrayProvider implements ProviderInterface
 {
-    public function create(ProviderContext $context): array
+    public function create(ProviderContextInterface $context): array
     {
         $config = $context->getConfig();
         
@@ -253,9 +284,7 @@ class ApiResponseArrayProvider implements ProviderInterface
 
 // Register
 $schema = PhodamSchema::withDefaults();
-$schema->forType('array')
-    ->withName('apiResponse')
-    ->registerProvider(new ApiResponseArrayProvider());
+$schema->registerProvider(ApiResponseArrayProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -274,12 +303,18 @@ Choose names that clearly indicate the purpose of the array:
 
 ```php
 // Good
-$schema->forType('array')->withName('userProfile')->registerProvider(...);
-$schema->forType('array')->withName('orderSummary')->registerProvider(...);
+#[PhodamArrayProvider('userProfile')]
+class UserProfileArrayProvider implements ProviderInterface { /* ... */ }
+
+#[PhodamArrayProvider('orderSummary')]
+class OrderSummaryArrayProvider implements ProviderInterface { /* ... */ }
 
 // Avoid
-$schema->forType('array')->withName('array1')->registerProvider(...);
-$schema->forType('array')->withName('data')->registerProvider(...);
+#[PhodamArrayProvider('array1')]  // Not descriptive
+class Array1Provider implements ProviderInterface { /* ... */ }
+
+#[PhodamArrayProvider('data')]  // Too generic
+class DataProvider implements ProviderInterface { /* ... */ }
 ```
 
 ### 2. Leverage ProviderContext for Dynamic Values
@@ -344,17 +379,18 @@ You can register multiple array providers for different use cases:
 $schema = PhodamSchema::withDefaults();
 
 // Different array structures for different purposes
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
+#[PhodamArrayProvider('userProfile')]
+class UserProfileArrayProvider implements ProviderInterface { /* ... */ }
 
-$schema->forType('array')
-    ->withName('userSummary')
-    ->registerProvider(new UserSummaryArrayProvider());
+#[PhodamArrayProvider('userSummary')]
+class UserSummaryArrayProvider implements ProviderInterface { /* ... */ }
 
-$schema->forType('array')
-    ->withName('orderDetails')
-    ->registerProvider(new OrderDetailsArrayProvider());
+#[PhodamArrayProvider('orderDetails')]
+class OrderDetailsArrayProvider implements ProviderInterface { /* ... */ }
+
+$schema->registerProvider(UserProfileArrayProvider::class);
+$schema->registerProvider(UserSummaryArrayProvider::class);
+$schema->registerProvider(OrderDetailsArrayProvider::class);
 
 $phodam = $schema->getPhodam();
 
@@ -380,28 +416,32 @@ $phodam->createArray('nonexistent');
 This exception is thrown when trying to register an array provider with a name that already exists:
 
 ```php
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new UserProfileArrayProvider());
+#[PhodamArrayProvider('userProfile')]
+class UserProfileArrayProvider implements ProviderInterface { /* ... */ }
+
+#[PhodamArrayProvider('userProfile')]
+class AnotherProvider implements ProviderInterface { /* ... */ }
+
+$schema = PhodamSchema::withDefaults();
+$schema->registerProvider(UserProfileArrayProvider::class);
 
 // This will throw ProviderConflictException
-$schema->forType('array')
-    ->withName('userProfile')
-    ->registerProvider(new AnotherProvider());
+$schema->registerProvider(AnotherProvider::class);
 
-// To override, use overriding()
-$schema->forType('array')
-    ->withName('userProfile')
-    ->overriding()
-    ->registerProvider(new AnotherProvider());
+// To override, use overriding: true
+#[PhodamArrayProvider('userProfile', overriding: true)]
+class ImprovedProvider implements ProviderInterface { /* ... */ }
+
+$schema->registerProvider(ImprovedProvider::class);
 ```
 
 ## Summary
 
 - Array providers **must** be named (no default array providers)
 - Implement `ProviderInterface` and return an array from `create()`
-- Use `ProviderContext` to generate dynamic values
-- Register with `forArray()->withName('name')->registerProvider(...)`
+- Use `#[PhodamArrayProvider('name')]` attribute to declare the provider
+- Use `ProviderContextInterface` to generate dynamic values
+- Register with `registerProvider(ArrayProviderClass::class)`
 - Use `createArray('name', $overrides, $config)` to generate arrays
 - Always merge defaults with overrides to allow customization
 - Use config for provider-specific behavior

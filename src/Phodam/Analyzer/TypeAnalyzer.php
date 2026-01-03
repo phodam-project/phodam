@@ -92,7 +92,7 @@ class TypeAnalyzer
             );
         }
 
-        return (new TypeDefinition())
+        return (new TypeDefinition($type))
             ->setFields($mappedFields);
     }
 

@@ -368,11 +368,18 @@ class User
 
 // usage
     // Provide definition only for the problematic field
-    $definition = new TypeDefinition([
-        'legacyField' => new FieldDefinition('string')
-    ]);
+    $schema = PhodamSchema::withDefaults();
+    $definition = new TypeDefinition(
+        User::class,
+        null,
+        false,
+        [
+            'legacyField' => new FieldDefinition('string')
+        ]
+    );
     
-    $phodam->registerTypeDefinition(User::class, $definition);
+    $schema->registerTypeDefinition($definition);
+    $phodam = $schema->getPhodam();
     
     // Now it works!
     $user = $phodam->create(User::class);
@@ -402,12 +409,19 @@ $student = $phodam->create(Student::class);
 
 **Example:**
 ```php
-$definition = new TypeDefinition([
-    'gpa' => (new FieldDefinition('float'))
-        ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2])
-]);
+$schema = PhodamSchema::withDefaults();
+$definition = new TypeDefinition(
+    Student::class,
+    null,
+    false,
+    [
+        'gpa' => (new FieldDefinition('float'))
+            ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2])
+    ]
+);
 
-$phodam->registerTypeDefinition(Student::class, $definition);
+$schema->registerTypeDefinition($definition);
+$phodam = $schema->getPhodam();
 ```
 
 ### Use Custom Providers When:
@@ -444,12 +458,19 @@ try {
     // Fields that were successfully mapped
     
     // Provide definitions for unmapped fields
-    $definition = new TypeDefinition([
-        'unknownField1' => new FieldDefinition('string'),
-        'unknownField2' => new FieldDefinition('int')
-    ]);
+    $schema = PhodamSchema::withDefaults();
+    $definition = new TypeDefinition(
+        User::class,
+        null,
+        false,
+        [
+            'unknownField1' => new FieldDefinition('string'),
+            'unknownField2' => new FieldDefinition('int')
+        ]
+    );
     
-    $phodam->registerTypeDefinition(User::class, $definition);
+    $schema->registerTypeDefinition($definition);
+    $phodam = $schema->getPhodam();
     
     // Try again
     $user = $phodam->create(User::class);
@@ -508,11 +529,18 @@ You don't need to define everything - just the problematic fields:
 
 ```php
 // Only define what automatic analysis can't handle
-$definition = new TypeDefinition([
-    'legacyField' => new FieldDefinition('string')
-]);
+$schema = PhodamSchema::withDefaults();
+$definition = new TypeDefinition(
+    MyClass::class,
+    null,
+    false,
+    [
+        'legacyField' => new FieldDefinition('string')
+    ]
+);
 
-$phodam->registerTypeDefinition(MyClass::class, $definition);
+$schema->registerTypeDefinition($definition);
+$phodam = $schema->getPhodam();
 // Other fields are still auto-analyzed!
 ```
 

@@ -24,7 +24,7 @@
     }
   ],
   "require": {
-    "phodam/phodam-api": "2.0.*",
+    "phodam/phodam-api": "^2.0",
     "php": "^8.4",
     "phpdocumentor/reflection-docblock": "^5.3"
   },
@@ -66,7 +66,7 @@
     "lint:phpstan": "phpstan analyse -l 6 src",
     "test:unit": "phpunit -c phpunit.xml",
     "test:integration": "phpunit -c integrationTests.phpunit.xml",
-    "test:coverage": "XDEBUG_MODE=coverage phpunit --coverage-html=build/phpunit",
+    "test:coverage": "XDEBUG_MODE=coverage phpunit -c coverage.phpunit.xml --coverage-html=build/phpunit",
     "lint": [
       "mkdir -p build",
       "@lint:phpstan",

@@ -25,8 +25,9 @@ class Ex02_CustomTypeProvidersTest extends TestCase
 
         // Tired of specifying active = true, 0.0 <= gpa <= 4.0 ?
         // Make a provider to have your own defaults!
-        $schema->forType(Student::class)
-            ->registerProvider(new StudentTypeProvider());
+        // The providers are registered using the PhodamProvider attribute
+        $schema->registerProvider(StudentTypeProvider::class);
+        $schema->registerProvider(ClassroomTypeProvider::class);
 
         $this->phodam = $schema->getPhodam();
     }

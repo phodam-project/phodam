@@ -18,8 +18,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-#[CoversClass(\Phodam\Provider\Primitive\DefaultStringTypeProvider::class)]
-#[CoversMethod(\Phodam\Provider\Primitive\DefaultStringTypeProvider::class, 'create')]
+#[CoversClass(DefaultStringTypeProvider::class)]
+#[CoversMethod(DefaultStringTypeProvider::class, 'create')]
 class DefaultStringTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultStringTypeProvider $provider;

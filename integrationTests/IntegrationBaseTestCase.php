@@ -9,18 +9,19 @@ declare(strict_types=1);
 
 namespace PhodamTests\Integration;
 
+use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
 use PHPUnit\Framework\TestCase;
 
 abstract class IntegrationBaseTestCase extends TestCase
 {
-    protected function createPhodamWithDefaults(): \Phodam\PhodamInterface
+    protected function createPhodamWithDefaults(): PhodamInterface
     {
         $schema = PhodamSchema::withDefaults();
         return $schema->getPhodam();
     }
 
-    protected function createBlankPhodam(): \Phodam\PhodamInterface
+    protected function createBlankPhodam(): PhodamInterface
     {
         $schema = PhodamSchema::blank();
         return $schema->getPhodam();
