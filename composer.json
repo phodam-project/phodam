@@ -24,7 +24,7 @@
     }
   ],
   "require": {
-    "phodam/phodam-api": "@dev",
+    "phodam/phodam-api": "^2.0",
     "php": "^8.4",
     "phpdocumentor/reflection-docblock": "^5.3"
   },
@@ -36,12 +36,6 @@
       "phpstan/extension-installer": true
     }
   },
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../phodam-api"
-    }
-  ],
   "require-dev": {
     "phpstan/phpstan": "^1.10",
     "phpunit/phpunit": "^11.0",
