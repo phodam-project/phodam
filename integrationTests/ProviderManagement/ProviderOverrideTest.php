@@ -10,28 +10,34 @@ declare(strict_types=1);
 namespace PhodamTests\Integration\ProviderManagement;
 
 use Phodam\PhodamSchema;
-use PhodamTests\Fixtures\SampleProvider;
+use Phodam\Provider\Primitive\DefaultStringTypeProvider;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
+use PhodamTests\Fixtures\TestNamedProviderWithAttribute;
+use PhodamTests\Fixtures\TestProviderWithAttribute;
+use PhodamTests\Fixtures\TestProviderWithOverridingAttribute;
 use PhodamTests\Fixtures\UnregisteredClassType;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Phodam\Store\Registrar::class)]
+#[CoversClass(PhodamSchema::class)]
 class ProviderOverrideTest extends IntegrationBaseTestCase
 {
     public function testOverrideDefaultProvider(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider1 = new SampleProvider();
-        $provider2 = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
 
         // Register first provider
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($provider1);
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
-        // Override with second provider
-        $schema->forType(UnregisteredClassType::class)
-            ->overriding()
-            ->registerProvider($provider2);
+        // Override with second provider using TypeDefinition with overriding flag
+        $type = UnregisteredClassType::class;
+        $definition = new TypeDefinition($type, null, true, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $schema->registerTypeDefinition($definition);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);
@@ -41,43 +47,44 @@ class ProviderOverrideTest extends IntegrationBaseTestCase
 
     public function testOverrideNamedProvider(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider1 = new SampleProvider();
-        $provider2 = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
 
         // Register first named provider
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('myProvider')
-            ->registerProvider($provider1);
+        $schema->registerProvider(TestNamedProviderWithAttribute::class);
 
-        // Override with second provider
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('myProvider')
-            ->overriding()
-            ->registerProvider($provider2);
+        // Override with second provider using TypeDefinition
+        $type = UnregisteredClassType::class;
+        $definition = new TypeDefinition($type, 'customProvider', true, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $schema->registerTypeDefinition($definition);
 
         $phodam = $schema->getPhodam();
-        $result = $phodam->create(UnregisteredClassType::class, 'myProvider');
+        $result = $phodam->create(UnregisteredClassType::class, 'customProvider');
 
         $this->assertInstanceOf(UnregisteredClassType::class, $result);
     }
 
     public function testOverrideReplacesExistingProvider(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider1 = new SampleProvider();
-        $provider2 = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
 
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($provider1);
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
-        $schema->forType(UnregisteredClassType::class)
-            ->overriding()
-            ->registerProvider($provider2);
+        // Override with TypeDefinition
+        $type = UnregisteredClassType::class;
+        $definition = new TypeDefinition($type, null, true, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $schema->registerTypeDefinition($definition);
 
         $phodam = $schema->getPhodam();
 
-        // Should use provider2, not provider1
+        // Should use the new provider
         $result = $phodam->create(UnregisteredClassType::class);
         $this->assertInstanceOf(UnregisteredClassType::class, $result);
     }
@@ -87,17 +94,10 @@ class ProviderOverrideTest extends IntegrationBaseTestCase
         $schema = PhodamSchema::blank();
 
         // Register default string provider
-        $schema->forType('string')
-            ->registerProvider(\Phodam\Provider\Primitive\DefaultStringTypeProvider::class);
+        $schema->registerProvider(DefaultStringTypeProvider::class);
 
-        // Override with a custom provider that always returns the same value
-        $customProvider = $this->createMock(\Phodam\Provider\ProviderInterface::class);
-        $customProvider->method('create')
-            ->willReturn('custom value');
-
-        $schema->forType('string')
-            ->overriding()
-            ->registerProvider($customProvider);
+        // Override with a provider that has overriding attribute
+        $schema->registerProvider(TestProviderWithOverridingAttribute::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create('string');
@@ -107,15 +107,18 @@ class ProviderOverrideTest extends IntegrationBaseTestCase
 
     public function testOverridePreservesType(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
 
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($provider);
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
-        $schema->forType(UnregisteredClassType::class)
-            ->overriding()
-            ->registerProvider(new SampleProvider());
+        // Override with TypeDefinition
+        $type = UnregisteredClassType::class;
+        $definition = new TypeDefinition($type, null, true, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $schema->registerTypeDefinition($definition);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);

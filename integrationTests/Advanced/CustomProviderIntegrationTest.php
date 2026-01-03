@@ -9,28 +9,23 @@ declare(strict_types=1);
 
 namespace PhodamTests\Integration\Advanced;
 
+use Phodam\Phodam;
 use Phodam\PhodamSchema;
-use Phodam\Provider\ProviderContextInterface;
-use Phodam\Provider\ProviderInterface;
+use Phodam\Provider\ProviderContext;
+use PhodamTests\Fixtures\TestNamedProviderWithAttribute;
+use PhodamTests\Fixtures\TestProviderWithAttribute;
 use PhodamTests\Fixtures\UnregisteredClassType;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\MockObject\MockObject;
 
-#[CoversClass(\Phodam\Phodam::class)]
-#[CoversClass(\Phodam\Provider\ProviderContext::class)]
+#[CoversClass(Phodam::class)]
+#[CoversClass(ProviderContext::class)]
 class CustomProviderIntegrationTest extends IntegrationBaseTestCase
 {
     public function testCustomProviderIsUsed(): void
     {
-        $schema = PhodamSchema::blank();
-        $customProvider = $this->createMock(ProviderInterface::class);
-        $customProvider->expects($this->once())
-            ->method('create')
-            ->willReturn(new UnregisteredClassType('test', 'test', 1));
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($customProvider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);
@@ -40,37 +35,20 @@ class CustomProviderIntegrationTest extends IntegrationBaseTestCase
 
     public function testCustomProviderReceivesContext(): void
     {
-        $schema = PhodamSchema::blank();
-        $customProvider = $this->createMock(ProviderInterface::class);
-        $customProvider->expects($this->once())
-            ->method('create')
-            ->with($this->isInstanceOf(ProviderContextInterface::class))
-            ->willReturn(new UnregisteredClassType('test', 'test', 1));
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($customProvider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
-        $phodam->create(UnregisteredClassType::class);
+        $result = $phodam->create(UnregisteredClassType::class);
+
+        // Provider receives context and uses it to create nested objects
+        $this->assertInstanceOf(UnregisteredClassType::class, $result);
     }
 
     public function testCustomProviderCanUseOverrides(): void
     {
-        $schema = PhodamSchema::blank();
-        $customProvider = $this->createMock(ProviderInterface::class);
-        $customProvider->expects($this->once())
-            ->method('create')
-            ->willReturnCallback(function (ProviderContextInterface $context) {
-                $overrides = $context->getOverrides();
-                return new UnregisteredClassType(
-                    $overrides['field1'] ?? 'default1',
-                    $overrides['field2'] ?? 'default2',
-                    $overrides['field3'] ?? 0
-                );
-            });
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($customProvider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
         $overrides = ['field1' => 'custom value'];
@@ -82,47 +60,22 @@ class CustomProviderIntegrationTest extends IntegrationBaseTestCase
 
     public function testCustomProviderCanUseConfig(): void
     {
-        $schema = PhodamSchema::blank();
-        $customProvider = $this->createMock(ProviderInterface::class);
-        $customProvider->expects($this->once())
-            ->method('create')
-            ->willReturnCallback(function (ProviderContextInterface $context) {
-                $config = $context->getConfig();
-                return new UnregisteredClassType(
-                    'test',
-                    'test',
-                    $config['customValue'] ?? 0
-                );
-            });
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($customProvider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
-        $config = ['customValue' => 42];
+        $config = ['minYear' => 1990, 'maxYear' => 2000];
         $result = $phodam->create(UnregisteredClassType::class, null, null, $config);
 
         $this->assertInstanceOf(UnregisteredClassType::class, $result);
-        $this->assertEquals(42, $result->getField3());
+        $this->assertGreaterThanOrEqual(1990, $result->getField3());
+        $this->assertLessThanOrEqual(2000, $result->getField3());
     }
 
     public function testCustomProviderCanCreateNestedObjects(): void
     {
         $schema = PhodamSchema::withDefaults();
-        $customProvider = new class implements ProviderInterface {
-            public function create(ProviderContextInterface $context)
-            {
-                $phodam = $context->getPhodam();
-                return new UnregisteredClassType(
-                    $phodam->create('string'),
-                    $phodam->create('string'),
-                    $phodam->create('int')
-                );
-            }
-        };
-
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($customProvider);
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class);
@@ -135,18 +88,11 @@ class CustomProviderIntegrationTest extends IntegrationBaseTestCase
 
     public function testCustomProviderWithNamedProvider(): void
     {
-        $schema = PhodamSchema::blank();
-        $customProvider = $this->createMock(ProviderInterface::class);
-        $customProvider->expects($this->once())
-            ->method('create')
-            ->willReturn(new UnregisteredClassType('test', 'test', 1));
-
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('custom')
-            ->registerProvider($customProvider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestNamedProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
-        $result = $phodam->create(UnregisteredClassType::class, 'custom');
+        $result = $phodam->create(UnregisteredClassType::class, 'customProvider');
 
         $this->assertInstanceOf(UnregisteredClassType::class, $result);
     }

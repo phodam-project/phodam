@@ -9,24 +9,23 @@ declare(strict_types=1);
 
 namespace PhodamTests\Integration\ProviderManagement;
 
+use Phodam\Phodam;
 use Phodam\PhodamSchema;
-use PhodamTests\Fixtures\SampleProvider;
+use Phodam\Types\FieldDefinition;
+use Phodam\Types\TypeDefinition;
+use PhodamTests\Fixtures\TestNamedProviderWithAttribute;
+use PhodamTests\Fixtures\TestProviderWithAttribute;
 use PhodamTests\Fixtures\UnregisteredClassType;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Phodam\Phodam::class)]
-#[CoversClass(\Phodam\Store\Registrar::class)]
+#[CoversClass(Phodam::class)]
 class NamedProviderTest extends IntegrationBaseTestCase
 {
     public function testRegisterNamedProvider(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider = new SampleProvider();
-
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('customProvider')
-            ->registerProvider($provider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestNamedProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
         $result = $phodam->create(UnregisteredClassType::class, 'customProvider');
@@ -36,32 +35,39 @@ class NamedProviderTest extends IntegrationBaseTestCase
 
     public function testCreateWithNamedProvider(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider = new SampleProvider();
-
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('myProvider')
-            ->registerProvider($provider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestNamedProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
-        $result = $phodam->create(UnregisteredClassType::class, 'myProvider');
+        $result = $phodam->create(UnregisteredClassType::class, 'customProvider');
 
         $this->assertInstanceOf(UnregisteredClassType::class, $result);
     }
 
     public function testMultipleNamedProvidersForSameType(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider1 = new SampleProvider();
-        $provider2 = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        
+        // Create additional named providers
+        $provider1 = new class extends TestProviderWithAttribute {};
+        $provider2 = new class extends TestProviderWithAttribute {};
+        
+        // We can't dynamically add attributes, so we'll use TypeDefinition for additional named providers
+        $type = UnregisteredClassType::class;
+        $definition1 = new TypeDefinition($type, 'provider1', false, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $definition2 = new TypeDefinition($type, 'provider2', false, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
 
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('provider1')
-            ->registerProvider($provider1);
-
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('provider2')
-            ->registerProvider($provider2);
+        $schema->registerProvider(TestNamedProviderWithAttribute::class);
+        $schema->registerTypeDefinition($definition1);
+        $schema->registerTypeDefinition($definition2);
 
         $phodam = $schema->getPhodam();
 
@@ -74,18 +80,19 @@ class NamedProviderTest extends IntegrationBaseTestCase
 
     public function testNamedProviderDoesNotAffectDefault(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $namedProvider = new SampleProvider();
-        $defaultProvider = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
 
         // Register default provider
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($defaultProvider);
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
-        // Register named provider
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('named')
-            ->registerProvider($namedProvider);
+        // Register named provider using TypeDefinition
+        $type = UnregisteredClassType::class;
+        $definition = new TypeDefinition($type, 'named', false, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $schema->registerTypeDefinition($definition);
 
         $phodam = $schema->getPhodam();
 
@@ -100,19 +107,25 @@ class NamedProviderTest extends IntegrationBaseTestCase
 
     public function testDefaultProviderStillWorksWithNamedProviders(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $defaultProvider = new SampleProvider();
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
 
-        $schema->forType(UnregisteredClassType::class)
-            ->registerProvider($defaultProvider);
+        // Register default provider
+        $schema->registerProvider(TestProviderWithAttribute::class);
 
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('named1')
-            ->registerProvider(new SampleProvider());
-
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('named2')
-            ->registerProvider(new SampleProvider());
+        // Register named providers using TypeDefinition
+        $type = UnregisteredClassType::class;
+        $definition1 = new TypeDefinition($type, 'named1', false, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $definition2 = new TypeDefinition($type, 'named2', false, [
+            'field1' => new FieldDefinition('string'),
+            'field2' => new FieldDefinition('string'),
+            'field3' => new FieldDefinition('int'),
+        ]);
+        $schema->registerTypeDefinition($definition1);
+        $schema->registerTypeDefinition($definition2);
 
         $phodam = $schema->getPhodam();
 
@@ -123,17 +136,13 @@ class NamedProviderTest extends IntegrationBaseTestCase
 
     public function testNamedProviderOverrides(): void
     {
-        $schema = PhodamSchema::withDefaults(); // Need defaults for SampleProvider to work
-        $provider = new SampleProvider();
-
-        $schema->forType(UnregisteredClassType::class)
-            ->withName('myProvider')
-            ->registerProvider($provider);
+        $schema = PhodamSchema::withDefaults(); // Need defaults for nested types
+        $schema->registerProvider(TestNamedProviderWithAttribute::class);
 
         $phodam = $schema->getPhodam();
 
         $overrides = ['field1' => 'custom value'];
-        $result = $phodam->create(UnregisteredClassType::class, 'myProvider', $overrides);
+        $result = $phodam->create(UnregisteredClassType::class, 'customProvider', $overrides);
 
         $this->assertInstanceOf(UnregisteredClassType::class, $result);
         $this->assertEquals('custom value', $result->getField1());

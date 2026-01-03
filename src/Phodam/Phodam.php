@@ -50,9 +50,6 @@ class Phodam implements PhodamInterface
         } else {
             // Fallback for now, but soon we'll require ProviderStore.
             $this->providerStore = new ProviderStore();
-            // TODO: This is replaced by `PhodamSchema::withDefaults`
-            $this->registerPrimitiveTypeProviders();
-            $this->registerBuiltinTypeProviders();
         }
 
         $this->typeAnalyzer = new TypeAnalyzer();
@@ -90,7 +87,7 @@ class Phodam implements PhodamInterface
                 ->getTypeProvider($type, $name);
         } catch (ProviderNotFoundException $ex) {
             $definition = $this->typeAnalyzer->analyze($type);
-            $provider = $this->registerTypeDefinition($type, $definition);
+            $provider = $this->registerTypeDefinition($definition);
         }
 
         $context = new ProviderContext(
@@ -108,13 +105,18 @@ class Phodam implements PhodamInterface
     }
 
     /**
-     * @param string $type
      * @param TypeDefinition $definition
      * @return ProviderInterface
      */
-    public function registerTypeDefinition(string $type, TypeDefinition $definition): ProviderInterface
+    public function registerTypeDefinition(TypeDefinition $definition): ProviderInterface
     {
-        $provider = new DefinitionBasedTypeProvider($type, $definition);
+        $type = $definition->getType();
+
+        if ($type === null || $type === '') {
+            throw new InvalidArgumentException('TypeDefinition must have a type set');
+        }
+
+        $provider = new DefinitionBasedTypeProvider($definition);
         $providerConfig = (new ProviderConfig($provider))
             ->forType($type);
         $this->registerProviderConfig($providerConfig);
@@ -215,50 +217,5 @@ class Phodam implements PhodamInterface
         } else {
             $this->providerStore->registerDefaultProvider($type, $provider);
         }
-    }
-
-    private function registerPrimitiveTypeProviders(): void
-    {
-        // register default providers
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultStringTypeProvider()))->forType('string')
-        );
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultIntTypeProvider()))->forType('int')
-        );
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultFloatTypeProvider()))->forType('float')
-        );
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultBoolTypeProvider()))->forType('bool')
-        );
-    }
-
-    // TODO: Figure out two things
-    //     1. Where we want to register all of these other 'Builtin' classes, because we should
-    //     2. Figure out a way to make interface/abstract -> instantiable mappings
-    //        in case the field is only an interface/abstract
-    private function registerBuiltinTypeProviders(): void
-    {
-        // register default providers
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultDateIntervalTypeProvider()))->forType(DateInterval::class)
-        );
-
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultDatePeriodTypeProvider()))->forType(DatePeriod::class)
-        );
-
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultDateTimeTypeProvider()))->forType(DateTime::class)
-        );
-
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultDateTimeImmutableTypeProvider()))->forType(DateTimeImmutable::class)
-        );
-
-        $this->registerProviderConfig(
-            (new ProviderConfig(new DefaultDateTimeZoneTypeProvider()))->forType(DateTimeZone::class)
-        );
     }
 }

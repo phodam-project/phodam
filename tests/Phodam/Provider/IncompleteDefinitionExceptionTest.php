@@ -15,9 +15,9 @@ use PhodamTests\Phodam\PhodamBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(\Phodam\Provider\IncompleteDefinitionException::class)]
-#[CoversMethod(\Phodam\Provider\IncompleteDefinitionException::class, '__construct')]
-#[CoversMethod(\Phodam\Provider\IncompleteDefinitionException::class, 'getType')]
+#[CoversClass(IncompleteDefinitionException::class)]
+#[CoversMethod(IncompleteDefinitionException::class, '__construct')]
+#[CoversMethod(IncompleteDefinitionException::class, 'getType')]
 class IncompleteDefinitionExceptionTest extends PhodamBaseTestCase
 {
     public function testConstruct(): void

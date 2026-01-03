@@ -18,8 +18,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
-#[CoversClass(\Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider::class)]
-#[CoversMethod(\Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider::class, 'create')]
+#[CoversClass(DefaultDateTimeZoneTypeProvider::class)]
+#[CoversMethod(DefaultDateTimeZoneTypeProvider::class, 'create')]
 class DefaultDateTimeZoneTypeProviderTest extends PhodamBaseTestCase
 {
     private DefaultDateTimeZoneTypeProvider $provider;

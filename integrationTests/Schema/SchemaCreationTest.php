@@ -16,7 +16,7 @@ use Phodam\Store\ProviderStore;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Phodam\PhodamSchema::class)]
+#[CoversClass(PhodamSchema::class)]
 class SchemaCreationTest extends IntegrationBaseTestCase
 {
     public function testBlankCreatesNewSchema(): void
@@ -50,12 +50,5 @@ class SchemaCreationTest extends IntegrationBaseTestCase
         $this->assertInstanceOf(Phodam::class, $phodam);
     }
 
-    public function testForTypeReturnsRegistrar(): void
-    {
-        $schema = PhodamSchema::blank();
-        $registrar = $schema->forType('string');
-
-        $this->assertInstanceOf(\Phodam\Store\RegistrarInterface::class, $registrar);
-    }
 }
 

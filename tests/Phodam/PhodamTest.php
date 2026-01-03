@@ -15,6 +15,7 @@ use Phodam\Types\FieldDefinition;
 use Phodam\Analyzer\TypeAnalysisException;
 use Phodam\Types\TypeDefinition;
 use Phodam\Phodam;
+use Phodam\PhodamSchema;
 use Phodam\Provider\ProviderConfig;
 use Phodam\Store\ProviderConflictException;
 use Phodam\Store\ProviderNotFoundException;
@@ -26,17 +27,17 @@ use PhodamTests\Fixtures\UnregisteredClassType;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 
-#[CoversClass(\Phodam\Phodam::class)]
-#[CoversMethod(\Phodam\Phodam::class, '__construct')]
-#[CoversMethod(\Phodam\Phodam::class, 'registerPrimitiveTypeProviders')]
-#[CoversMethod(\Phodam\Phodam::class, 'registerProviderConfig')]
-#[CoversMethod(\Phodam\Phodam::class, 'getArrayProvider')]
-#[CoversMethod(\Phodam\Phodam::class, 'registerArrayProviderConfig')]
-#[CoversMethod(\Phodam\Phodam::class, 'registerTypeProviderConfig')]
-#[CoversMethod(\Phodam\Phodam::class, 'getTypeProvider')]
-#[CoversMethod(\Phodam\Phodam::class, 'registerTypeDefinition')]
-#[CoversMethod(\Phodam\Phodam::class, 'createArray')]
-#[CoversMethod(\Phodam\Phodam::class, 'create')]
+#[CoversClass(Phodam::class)]
+#[CoversMethod(Phodam::class, '__construct')]
+#[CoversMethod(Phodam::class, 'registerPrimitiveTypeProviders')]
+#[CoversMethod(Phodam::class, 'registerProviderConfig')]
+#[CoversMethod(Phodam::class, 'getArrayProvider')]
+#[CoversMethod(Phodam::class, 'registerArrayProviderConfig')]
+#[CoversMethod(Phodam::class, 'registerTypeProviderConfig')]
+#[CoversMethod(Phodam::class, 'getTypeProvider')]
+#[CoversMethod(Phodam::class, 'registerTypeDefinition')]
+#[CoversMethod(Phodam::class, 'createArray')]
+#[CoversMethod(Phodam::class, 'create')]
 class PhodamTest extends PhodamBaseTestCase
 {
     private Phodam $phodam;
@@ -46,7 +47,8 @@ class PhodamTest extends PhodamBaseTestCase
     {
         parent::setUp();
 
-        $this->phodam = new Phodam();
+
+        $this->phodam = PhodamSchema::withDefaults()->getPhodam();
         $this->provider = new SampleProvider();
     }
 
@@ -215,7 +217,7 @@ class PhodamTest extends PhodamBaseTestCase
             'myString' => new FieldDefinition('string'),
             'myBool' => new FieldDefinition('bool')
         ];
-        $definition = new TypeDefinition($fields);
+        $definition = new TypeDefinition($type, null, false, $fields);
 
         // try getting a type provider that exists already, it shouldn't, so an exception should be thrown
         try {
@@ -237,7 +239,7 @@ class PhodamTest extends PhodamBaseTestCase
             );
         }
 
-        $this->phodam->registerTypeDefinition($type, $definition);
+        $this->phodam->registerTypeDefinition($definition);
 
         $result = $this->phodam->create($type);
         $this->assertInstanceOf(SimpleTypeMissingSomeFieldTypes::class, $result);

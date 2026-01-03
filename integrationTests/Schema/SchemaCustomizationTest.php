@@ -10,40 +10,43 @@ declare(strict_types=1);
 namespace PhodamTests\Integration\Schema;
 
 use Phodam\PhodamSchema;
+use Phodam\Provider\Builtin\DefaultBuiltinBundle;
+use Phodam\Provider\Primitive\DefaultPrimitiveBundle;
 use PhodamTests\Fixtures\SampleProviderBundle;
+use PhodamTests\Fixtures\TestProviderWithOverridingAttribute;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
-#[CoversClass(\Phodam\PhodamSchema::class)]
+#[CoversClass(PhodamSchema::class)]
 class SchemaCustomizationTest extends IntegrationBaseTestCase
 {
-    public function testAddCustomProviderBundle(): void
+    public function testRegisterCustomProviderBundle(): void
     {
         $schema = PhodamSchema::blank();
         $bundle = new SampleProviderBundle();
 
-        $schema->add($bundle);
+        $schema->registerBundle($bundle);
 
         // Should not throw exception
         $this->assertInstanceOf(PhodamSchema::class, $schema);
     }
 
-    public function testAddProviderBundleByClassString(): void
+    public function testRegisterProviderBundleByClassString(): void
     {
         $schema = PhodamSchema::blank();
 
-        $schema->add(SampleProviderBundle::class);
+        $schema->registerBundle(SampleProviderBundle::class);
 
         // Should not throw exception
         $this->assertInstanceOf(PhodamSchema::class, $schema);
     }
 
-    public function testAddProviderBundleByInstance(): void
+    public function testRegisterProviderBundleByInstance(): void
     {
         $schema = PhodamSchema::blank();
         $bundle = new SampleProviderBundle();
 
-        $schema->add($bundle);
+        $schema->registerBundle($bundle);
 
         // Should not throw exception
         $this->assertInstanceOf(PhodamSchema::class, $schema);
@@ -52,25 +55,24 @@ class SchemaCustomizationTest extends IntegrationBaseTestCase
     public function testCustomProviderOverridesDefault(): void
     {
         $schema = PhodamSchema::withDefaults();
-        $customProvider = new \Phodam\Provider\Primitive\DefaultStringTypeProvider();
-
-        // Register custom provider - it should override default
-        $schema->forType('string')
-            ->overriding()
-            ->registerProvider($customProvider);
+        
+        // Register custom provider with overriding attribute - it should override default
+        $schema->registerProvider(TestProviderWithOverridingAttribute::class);
 
         $phodam = $schema->getPhodam();
         $stringValue = $phodam->create('string');
 
         $this->assertIsString($stringValue);
+        $this->assertEquals('custom value', $stringValue);
     }
 
-    public function testMultipleBundlesCanBeAdded(): void
+    public function testMultipleBundlesCanBeRegistered(): void
     {
         $schema = PhodamSchema::blank();
 
-        $schema->add(SampleProviderBundle::class);
-        $schema->add(\Phodam\Provider\DefaultProviderBundle::class);
+        $schema->registerBundle(SampleProviderBundle::class);
+        $schema->registerBundle(DefaultPrimitiveBundle::class);
+        $schema->registerBundle(DefaultBuiltinBundle::class);
 
         // Should not throw exception
         $this->assertInstanceOf(PhodamSchema::class, $schema);

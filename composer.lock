@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a4dfeb2f6a56421b7cdd676ca304e805",
+    "content-hash": "955cd41f6a6a15848fcfd90016c53502",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -57,17 +57,11 @@
         },
         {
             "name": "phodam/phodam-api",
-            "version": "v2.0.0-alpha.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phodam-project/phodam-api.git",
-                "reference": "5192ca4e11e832948a72cfb355c391b78e0f97b7"
-            },
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phodam-project/phodam-api/zipball/5192ca4e11e832948a72cfb355c391b78e0f97b7",
-                "reference": "5192ca4e11e832948a72cfb355c391b78e0f97b7",
-                "shasum": ""
+                "type": "path",
+                "url": "../phodam-api",
+                "reference": "57476bbef281f4060fb7ec8eda0b6840df637775"
             },
             "require": {
                 "php": "^8.4"
@@ -87,7 +81,45 @@
                     "Phodam\\": "src/Phodam"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "PhodamTests\\": "tests"
+                }
+            },
+            "scripts": {
+                "lint:phpcs": [
+                    "phpcs --standard=PSR12 src"
+                ],
+                "lint:phpcsfixer": [
+                    "php-cs-fixer fix src --rules=@PSR12 --dry-run --cache-file=build/.php-cs-fixer.cache"
+                ],
+                "lint:phpcsfixer:fix": [
+                    "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache"
+                ],
+                "lint:phpstan": [
+                    "phpstan analyse -l 6 src"
+                ],
+                "test:phpunit": [
+                    "phpunit -c phpunit.xml"
+                ],
+                "lint": [
+                    "mkdir -p build",
+                    "@lint:phpstan",
+                    "@lint:phpcs",
+                    "@lint:phpcsfixer"
+                ],
+                "lint-fix": [
+                    "@lint:phpcsfixer:fix"
+                ],
+                "test": [
+                    "mkdir -p build",
+                    "@test:phpunit"
+                ],
+                "precommit": [
+                    "@lint",
+                    "@test"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -110,11 +142,9 @@
                 "testing",
                 "unit tests"
             ],
-            "support": {
-                "issues": "https://github.com/phodam-project/phodam-api/issues",
-                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-alpha.2"
-            },
-            "time": "2026-01-01T19:57:15+00:00"
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1682,12 +1712,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "51c9557e2e3af34f504f996465998cd80a3dec70"
+                "reference": "a2150396cb9063156024813438781d929ab186b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/51c9557e2e3af34f504f996465998cd80a3dec70",
-                "reference": "51c9557e2e3af34f504f996465998cd80a3dec70",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a2150396cb9063156024813438781d929ab186b3",
+                "reference": "a2150396cb9063156024813438781d929ab186b3",
                 "shasum": ""
             },
             "require": {
@@ -1783,7 +1813,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-01T17:01:44+00:00"
+            "time": "2026-01-02T11:20:22+00:00"
         },
         {
             "name": "psr/container",
@@ -5194,7 +5224,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": {
+        "phodam/phodam-api": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

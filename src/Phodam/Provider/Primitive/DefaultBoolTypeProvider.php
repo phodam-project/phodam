@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Phodam\Provider\Primitive;
 
+use Phodam\Provider\PhodamProvider;
 use Phodam\Provider\ProviderContextInterface;
 use Phodam\Provider\TypedProviderInterface;
 
@@ -17,6 +18,7 @@ use Phodam\Provider\TypedProviderInterface;
  * @template T extends bool
  * @template-implements TypedProviderInterface<bool>
  */
+#[PhodamProvider('bool')]
 class DefaultBoolTypeProvider implements TypedProviderInterface
 {
     /**

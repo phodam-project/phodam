@@ -9,13 +9,23 @@ declare(strict_types=1);
 
 namespace PhodamTests\Integration\ErrorHandling;
 
+use InvalidArgumentException;
+use Phodam\Analyzer\TypeAnalysisException;
+use Phodam\Phodam;
+use Phodam\PhodamSchema;
 use Phodam\Provider\CreationFailedException;
+use Phodam\Provider\ProviderContextInterface;
+use Phodam\Provider\ProviderInterface;
+use Phodam\Provider\Primitive\DefaultStringTypeProvider;
 use Phodam\Store\ProviderNotFoundException;
 use PhodamTests\Fixtures\SimpleTypeMissingSomeFieldTypes;
+use PhodamTests\Fixtures\TestProviderThatThrowsException;
+use PhodamTests\Fixtures\UnregisteredClassType;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
+use ReflectionException;
 
-#[CoversClass(\Phodam\Phodam::class)]
+#[CoversClass(Phodam::class)]
 class ExceptionHandlingTest extends IntegrationBaseTestCase
 {
     public function testInvalidTypeThrowsException(): void
@@ -23,7 +33,7 @@ class ExceptionHandlingTest extends IntegrationBaseTestCase
         $phodam = $this->createPhodamWithDefaults();
 
         // Non-existent class should throw exception
-        $this->expectException(\ReflectionException::class);
+        $this->expectException(ReflectionException::class);
 
         $phodam->create('NonExistentClass' . uniqid());
     }
@@ -35,15 +45,15 @@ class ExceptionHandlingTest extends IntegrationBaseTestCase
         $this->expectException(ProviderNotFoundException::class);
         $this->expectExceptionMessage('No default provider found');
 
-        /** @var \Phodam\Phodam $phodam */
-        $phodam->getTypeProvider(\PhodamTests\Fixtures\UnregisteredClassType::class);
+        /** @var Phodam $phodam */
+        $phodam->getTypeProvider(UnregisteredClassType::class);
     }
 
     public function testUnmappableFieldThrowsException(): void
     {
         $phodam = $this->createPhodamWithDefaults();
 
-        $this->expectException(\Phodam\Analyzer\TypeAnalysisException::class);
+        $this->expectException(TypeAnalysisException::class);
         $this->expectExceptionMessage('Unable to map fields');
 
         $phodam->create(SimpleTypeMissingSomeFieldTypes::class);
@@ -51,24 +61,26 @@ class ExceptionHandlingTest extends IntegrationBaseTestCase
 
     public function testInvalidProviderClassThrowsException(): void
     {
-        $schema = \Phodam\PhodamSchema::blank();
+        $schema = PhodamSchema::blank();
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('must be an instance of ProviderInterface');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must have a PhodamProvider or PhodamArrayProvider attribute');
 
-        $schema->forType('string')
-            ->registerProvider(\stdClass::class);
+        // Create a provider without attribute
+        $provider = new class implements ProviderInterface {
+            public function create(ProviderContextInterface $context)
+            {
+                return 'test';
+            }
+        };
+
+        $schema->registerProvider($provider);
     }
 
     public function testExceptionDuringCreationIsWrapped(): void
     {
-        $schema = \Phodam\PhodamSchema::blank();
-        $provider = $this->createMock(\Phodam\Provider\ProviderInterface::class);
-        $provider->method('create')
-            ->willThrowException(new \RuntimeException('Internal error'));
-
-        $schema->forType('string')
-            ->registerProvider($provider);
+        $schema = PhodamSchema::blank();
+        $schema->registerProvider(TestProviderThatThrowsException::class);
 
         $phodam = $schema->getPhodam();
 

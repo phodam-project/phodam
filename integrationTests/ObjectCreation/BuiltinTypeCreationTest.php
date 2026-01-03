@@ -9,6 +9,11 @@ declare(strict_types=1);
 
 namespace PhodamTests\Integration\ObjectCreation;
 
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use PhodamTests\Integration\IntegrationBaseTestCase;
 use PHPUnit\Framework\Attributes\CoversClass;
 
@@ -28,27 +33,27 @@ class BuiltinTypeCreationTest extends IntegrationBaseTestCase
     {
         $phodam = $this->createPhodamWithDefaults();
 
-        $dateTimeImmutable = $phodam->create(\DateTimeImmutable::class);
+        $dateTimeImmutable = $phodam->create(DateTimeImmutable::class);
 
-        $this->assertInstanceOf(\DateTimeImmutable::class, $dateTimeImmutable);
+        $this->assertInstanceOf(DateTimeImmutable::class, $dateTimeImmutable);
     }
 
     public function testCreateDateInterval(): void
     {
         $phodam = $this->createPhodamWithDefaults();
 
-        $dateInterval = $phodam->create(\DateInterval::class);
+        $dateInterval = $phodam->create(DateInterval::class);
 
-        $this->assertInstanceOf(\DateInterval::class, $dateInterval);
+        $this->assertInstanceOf(DateInterval::class, $dateInterval);
     }
 
     public function testCreateDatePeriod(): void
     {
         $phodam = $this->createPhodamWithDefaults();
 
-        $datePeriod = $phodam->create(\DatePeriod::class);
+        $datePeriod = $phodam->create(DatePeriod::class);
 
-        $this->assertInstanceOf(\DatePeriod::class, $datePeriod);
+        $this->assertInstanceOf(DatePeriod::class, $datePeriod);
     }
 
     public function testCreateDateTimeZone(): void
@@ -64,18 +69,18 @@ class BuiltinTypeCreationTest extends IntegrationBaseTestCase
     {
         $phodam = $this->createPhodamWithDefaults();
 
-        $dateTime = $phodam->create(\DateTime::class);
-        $dateTimeImmutable = $phodam->create(\DateTimeImmutable::class);
-        $dateInterval = $phodam->create(\DateInterval::class);
-        $datePeriod = $phodam->create(\DatePeriod::class);
-        $dateTimeZone = $phodam->create(\DateTimeZone::class);
+        $dateTime = $phodam->create(DateTime::class);
+        $dateTimeImmutable = $phodam->create(DateTimeImmutable::class);
+        $dateInterval = $phodam->create(DateInterval::class);
+        $datePeriod = $phodam->create(DatePeriod::class);
+        $dateTimeZone = $phodam->create(DateTimeZone::class);
 
         // Verify they are valid instances that can be used
-        $this->assertInstanceOf(\DateTime::class, $dateTime);
-        $this->assertInstanceOf(\DateTimeImmutable::class, $dateTimeImmutable);
-        $this->assertInstanceOf(\DateInterval::class, $dateInterval);
-        $this->assertInstanceOf(\DatePeriod::class, $datePeriod);
-        $this->assertInstanceOf(\DateTimeZone::class, $dateTimeZone);
+        $this->assertInstanceOf(DateTime::class, $dateTime);
+        $this->assertInstanceOf(DateTimeImmutable::class, $dateTimeImmutable);
+        $this->assertInstanceOf(DateInterval::class, $dateInterval);
+        $this->assertInstanceOf(DatePeriod::class, $datePeriod);
+        $this->assertInstanceOf(DateTimeZone::class, $dateTimeZone);
 
         // Verify they have expected methods
         $this->assertIsString($dateTime->format('Y-m-d'));

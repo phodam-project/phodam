@@ -24,19 +24,15 @@ use ReflectionProperty;
  */
 class DefinitionBasedTypeProvider implements ProviderInterface
 {
-    private string $type;
     private TypeDefinition $definition;
     private bool $analyzed = false;
 
     /**
-     * @param class-string<T> $type
      * @param TypeDefinition $definition
      */
     public function __construct(
-        string $type,
         TypeDefinition $definition
     ) {
-        $this->type = $type;
         $this->definition = $definition;
     }
 
@@ -55,7 +51,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
         //     to define the fields that the type analyzer can't handle
         // not sure the order on how i want to do this, but...
         // 1. get a list of class fields
-        $refClass = new ReflectionClass($this->type);
+        $refClass = new ReflectionClass($this->definition->getType());
 
         if (!$this->analyzed) {
             $this->analyze($refClass);
@@ -116,7 +112,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             $generatedDefFields = [];
             try {
                 // 6. generate a definition for the type analyzer
-                $generatedDef = $analyzer->analyze($this->type);
+                $generatedDef = $analyzer->analyze($this->definition->getType());
                 $generatedDefFields = $generatedDef->getFields();
             } catch (TypeAnalysisException $ex) {
                 // 7. if it throws an exception, check the $mappedFields from
@@ -131,7 +127,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             if (!empty($stillMissingFields)) {
                 // 9. if it doesn't, then throw an exception and give up
                 throw new IncompleteDefinitionException(
-                    $this->type,
+                    $this->definition->getType(),
                     $stillMissingFields
                 );
             }
