@@ -23,6 +23,7 @@ use Phodam\Provider\Builtin\DefaultDateTimeTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateIntervalTypeProvider;
 use Phodam\Provider\Builtin\DefaultDatePeriodTypeProvider;
 use Phodam\Provider\Builtin\DefaultDateTimeZoneTypeProvider;
+use Phodam\Provider\Builtin\DefaultEnumTypeProvider;
 use Phodam\Provider\CreationFailedException;
 use Phodam\Provider\DefinitionBasedTypeProvider;
 use Phodam\Provider\Primitive\DefaultBoolTypeProvider;
@@ -35,6 +36,7 @@ use Phodam\Provider\ProviderInterface;
 use Phodam\Store\ProviderConflictException;
 use Phodam\Store\ProviderNotFoundException;
 use Phodam\Store\ProviderStore;
+use ReflectionClass;
 use Throwable;
 
 class Phodam implements PhodamInterface
@@ -86,8 +88,13 @@ class Phodam implements PhodamInterface
             $provider = $this
                 ->getTypeProvider($type, $name);
         } catch (ProviderNotFoundException $ex) {
-            $definition = $this->typeAnalyzer->analyze($type);
-            $provider = $this->registerTypeDefinition($definition);
+            // Check if the type is an enum before trying to analyze it
+            if ($this->isEnum($type)) {
+                $provider = $this->getOrRegisterEnumProvider($type);
+            } else {
+                $definition = $this->typeAnalyzer->analyze($type);
+                $provider = $this->registerTypeDefinition($definition);
+            }
         }
 
         $context = new ProviderContext(
@@ -216,6 +223,48 @@ class Phodam implements PhodamInterface
             $this->providerStore->registerNamedProvider($type, $name, $provider);
         } else {
             $this->providerStore->registerDefaultProvider($type, $provider);
+        }
+    }
+
+    /**
+     * Checks if a given type is a PHP 8 enum
+     *
+     * @param string $type
+     * @return bool
+     */
+    private function isEnum(string $type): bool
+    {
+        if (!class_exists($type) && !enum_exists($type)) {
+            return false;
+        }
+
+        try {
+            $reflection = new ReflectionClass($type);
+            return $reflection->isEnum();
+        } catch (\ReflectionException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Gets or registers an enum provider for the given enum type
+     *
+     * @param string $type The enum type
+     * @return ProviderInterface
+     */
+    private function getOrRegisterEnumProvider(string $type): ProviderInterface
+    {
+        // Check if we already have a provider for this enum
+        try {
+            return $this->providerStore->findDefaultProvider($type);
+        } catch (ProviderNotFoundException $ex) {
+            // Provider doesn't exist, create and register it
+            $provider = new DefaultEnumTypeProvider();
+            $providerConfig = (new ProviderConfig($provider))
+                ->forType($type);
+            $this->registerProviderConfig($providerConfig);
+
+            return $provider;
         }
     }
 }

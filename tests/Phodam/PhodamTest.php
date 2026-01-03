@@ -38,6 +38,8 @@ use PHPUnit\Framework\Attributes\CoversMethod;
 #[CoversMethod(Phodam::class, 'registerTypeDefinition')]
 #[CoversMethod(Phodam::class, 'createArray')]
 #[CoversMethod(Phodam::class, 'create')]
+#[CoversMethod(Phodam::class, 'isEnum')]
+#[CoversMethod(Phodam::class, 'getOrRegisterEnumProvider')]
 class PhodamTest extends PhodamBaseTestCase
 {
     private Phodam $phodam;
@@ -46,7 +48,6 @@ class PhodamTest extends PhodamBaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-
 
         $this->phodam = PhodamSchema::withDefaults()->getPhodam();
         $this->provider = new SampleProvider();
@@ -347,4 +348,112 @@ class PhodamTest extends PhodamBaseTestCase
         $result = $this->phodam->create('float');
         $this->assertIsFloat($result, 'Expected result should be a float');
     }
+
+    public function testCreateWithPureEnum(): void
+    {
+        $result = $this->phodam->create(TestPureEnum::class);
+        $this->assertInstanceOf(TestPureEnum::class, $result);
+        $this->assertContains($result, TestPureEnum::cases());
+    }
+
+    public function testCreateWithStringBackedEnum(): void
+    {
+        $result = $this->phodam->create(TestStringBackedEnum::class);
+        $this->assertInstanceOf(TestStringBackedEnum::class, $result);
+        $this->assertContains($result, TestStringBackedEnum::cases());
+        $this->assertIsString($result->value);
+    }
+
+    public function testCreateWithIntBackedEnum(): void
+    {
+        $result = $this->phodam->create(TestIntBackedEnum::class);
+        $this->assertInstanceOf(TestIntBackedEnum::class, $result);
+        $this->assertContains($result, TestIntBackedEnum::cases());
+        $this->assertIsInt($result->value);
+    }
+
+    public function testCreateWithEnumReturnsRandomCase(): void
+    {
+        // Create multiple instances to verify randomness
+        $results = [];
+        for ($i = 0; $i < 10; $i++) {
+            $results[] = $this->phodam->create(TestPureEnum::class);
+        }
+
+        // Verify all results are valid enum cases
+        foreach ($results as $result) {
+            $this->assertInstanceOf(TestPureEnum::class, $result);
+            $this->assertContains($result, TestPureEnum::cases());
+        }
+    }
+
+    public function testCreateWithEnumRegistersProvider(): void
+    {
+        // First call should register the provider
+        $result1 = $this->phodam->create(TestPureEnum::class);
+        $this->assertInstanceOf(TestPureEnum::class, $result1);
+
+        // Second call should use the registered provider
+        $result2 = $this->phodam->create(TestPureEnum::class);
+        $this->assertInstanceOf(TestPureEnum::class, $result2);
+
+        // Provider should now be registered
+        $provider = $this->phodam->getTypeProvider(TestPureEnum::class);
+        $this->assertNotNull($provider);
+    }
+
+    public function testCreateWithEnumAndOverrides(): void
+    {
+        // Overrides shouldn't affect enum creation, but should not cause errors
+        $result = $this->phodam->create(
+            TestPureEnum::class,
+            null,
+            ['someOverride' => 'value']
+        );
+
+        $this->assertInstanceOf(TestPureEnum::class, $result);
+    }
+
+    public function testCreateWithEnumAndConfig(): void
+    {
+        // Config shouldn't affect enum creation, but should not cause errors
+        $result = $this->phodam->create(
+            TestPureEnum::class,
+            null,
+            null,
+            ['someConfig' => 'value']
+        );
+
+        $this->assertInstanceOf(TestPureEnum::class, $result);
+    }
+}
+
+/**
+ * Test enum for pure enums (UnitEnum)
+ */
+enum TestPureEnum
+{
+    case CASE_ONE;
+    case CASE_TWO;
+    case CASE_THREE;
+}
+
+/**
+ * Test enum for string-backed enums (BackedEnum)
+ */
+enum TestStringBackedEnum: string
+{
+    case RED = 'red';
+    case GREEN = 'green';
+    case BLUE = 'blue';
+}
+
+/**
+ * Test enum for int-backed enums (BackedEnum)
+ */
+enum TestIntBackedEnum: int
+{
+    case ZERO = 0;
+    case ONE = 1;
+    case TWO = 2;
 }
