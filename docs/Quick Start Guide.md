@@ -230,6 +230,7 @@ For detailed information on specific topics, refer to these guides:
 7. **[Definition-based Type Providers](Definition-based%20Type%20Providers.md)** - When automatic analysis isn't sufficient
 8. **[Custom Type Providers](Custom%20Type%20Providers.md)** - Full control over object creation
 9. **[Named Providers](Named%20Providers.md)** - Multiple generation strategies for the same type
+10. **[Breaking Circular References](Breaking%20Circular%20References.md)** - How to break Circular References
 
 ## Common Questions
 
