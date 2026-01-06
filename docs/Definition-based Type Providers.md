@@ -1,527 +1,141 @@
 # Definition-based Type Providers
 
-Definition-based type providers allow you to specify how to populate class fields using `FieldDefinition` and `TypeDefinition` objects. This is useful when working with classes that have untyped fields or when you need custom configuration for specific fields.
+Definition-based type providers specify how to populate class fields using `FieldDefinition` and `TypeDefinition` objects. Use them when Phodam cannot automatically determine field types from type declarations or PHPDoc annotations.
 
-## Overview
+## When to Use
 
-Definition-based type providers are ideal for:
+Use definition-based providers for:
 
-- Classes with untyped fields (properties without type declarations)
-- Classes with array fields that need specific element types
-- Fine-grained control over how individual fields are generated
-- Classes that cannot be automatically analyzed by Phodam's `TypeAnalyzer`
+- **Untyped fields**: Properties without type declarations that Phodam cannot infer
+- **Array fields**: Arrays without PHPDoc annotations specifying element types
+- **Custom configuration**: Field-specific constraints (e.g., age ranges, GPA limits)
+- **Partial definitions**: Define only problematic fields and let Phodam auto-complete the rest
 
-## When to Use Definition-based Providers
-
-Use definition-based providers when:
-
-1. **Untyped Fields**: Your class has properties without type declarations that Phodam cannot automatically determine (through type or PHPDoc)
-2. **Array Fields**: You need to specify the element type for array properties (and it doesn't have PHPDoc)
-3. **Custom Configuration**: You need different configuration for specific fields (e.g., specific ranges for integers)
-4. **Partial Definitions**: You want to define only problematic fields and let Phodam auto-complete the rest
+Use automatic type analysis when classes have typed properties or PHPDoc annotations. Use custom providers when you need complex logic or state management.
 
 ## Creating a Type Definition
 
-A `TypeDefinition` is a collection of field definitions. Each field is defined using a `FieldDefinition` object.
-
-### Basic Type Definition
+A `TypeDefinition` maps field names to `FieldDefinition` objects that specify how each field should be populated.
 
 ```php
+use Phodam\PhodamSchema;
 use Phodam\Types\FieldDefinition;
 use Phodam\Types\TypeDefinition;
 
+$schema = PhodamSchema::withDefaults();
+
 $definition = new TypeDefinition(
-    MyClass::class,  // Type name
+    Student::class,  // Type name
     null,            // Provider name (null for default)
     false,           // Overriding flag
-    [
-        'myInt' => new FieldDefinition('int'),
-        'myString' => new FieldDefinition('string'),
-        'myBool' => new FieldDefinition('bool')
-    ]
-);
-```
-
-### FieldDefinition Options
-
-A `FieldDefinition` supports several options:
-
-| Method | Description | Example |
-|--------|-------------|---------|
-| `FieldDefinition(string $type)` | Constructor - the type to generate | `new FieldDefinition('int')` |
-| `setNullable(bool $nullable)` | Whether the field can be null | `->setNullable(true)` |
-| `setArray(bool $array)` | Whether the field is an array | `->setArray(true)` |
-| `setName(?string $name)` | Named provider to use for this field | `->setName('activeUser')` |
-| `setConfig(?array $config)` | Configuration for the field's provider | `->setConfig(['min' => 0, 'max' => 100])` |
-| `setOverrides(?array $overrides)` | Overrides for nested objects | `->setOverrides(['active' => true])` |
-
-### Complete FieldDefinition Example
-
-```php
-use Phodam\Types\FieldDefinition;
-
-// Simple field
-$intField = new FieldDefinition('int');
-
-// Nullable field
-$nullableField = (new FieldDefinition('float'))
-    ->setNullable(true);
-
-// Array field with element type
-$arrayField = (new FieldDefinition(MyClass::class))
-    ->setArray(true);
-
-// Field with configuration
-$configuredField = (new FieldDefinition('int'))
-    ->setConfig(['min' => 18, 'max' => 100]);
-
-// Field using a named provider
-$namedProviderField = (new FieldDefinition(User::class))
-    ->setName('activeUser');
-
-// Field with all options
-$complexField = (new FieldDefinition('float'))
-    ->setNullable(true)
-    ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2]);
-```
-
-## Registering a Type Definition
-
-You can register a type definition using `PhodamSchema::registerTypeDefinition()`:
-
-```php
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
-$schema = PhodamSchema::withDefaults();
-
-$definition = new TypeDefinition(
-    MyClass::class,  // Type name
-    null,            // Provider name (null for default)
-    false,           // Overriding flag
-    [
-        'myInt' => new FieldDefinition('int'),
-        'myString' => new FieldDefinition('string')
-    ]
-);
-
-// Register using schema
-$schema->registerTypeDefinition($definition);
-
-$phodam = $schema->getPhodam();
-$instance = $phodam->create(MyClass::class);
-```
-
-### Registering as a Named Provider
-
-You can register a definition as a named provider by providing a name in the constructor:
-
-```php
-$schema = PhodamSchema::withDefaults();
-
-$definition = new TypeDefinition(
-    MyClass::class,        // Type name
-    'myCustomProvider',    // Provider name
-    false,                 // Overriding flag
-    [
-        'myInt' => new FieldDefinition('int'),
-        'myString' => new FieldDefinition('string')
-    ]
-);
-
-$schema->registerTypeDefinition($definition);
-
-$phodam = $schema->getPhodam();
-$instance = $phodam->create(MyClass::class, 'myCustomProvider');
-```
-
-## Examples
-
-### Example 1: Populating a Type with Untyped Fields
-
-This is the most common use case - when your class has properties without type declarations:
-
-```php
-use Phodam\PhodamInterface;
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
-class User
-{
-    private $id;        // Untyped!
-    private $name;      // Untyped!
-    private ?string $email;
-    private bool $active;
-    
-    // ... getters and setters
-}
-
-$schema = PhodamSchema::withDefaults();
-
-// Define only the untyped fields - Phodam will auto-complete the rest
-$definition = new TypeDefinition(
-    User::class,
-    null,
-    false,
-    [
-        'id' => new FieldDefinition('int'),
-        'name' => new FieldDefinition('string')
-    ]
-);
-
-$schema->registerTypeDefinition($definition);
-$phodam = $schema->getPhodam();
-
-// Now you can create User instances
-$user = $phodam->create(User::class);
-// $user->getId() will be an int
-// $user->getName() will be a string
-// $user->getEmail() will be a string (auto-detected from ?string type)
-// $user->isActive() will be a bool (auto-detected from bool type)
-```
-
-**Note**: You only need to define fields that cannot be automatically determined. Phodam will attempt to auto-complete missing fields using the `TypeAnalyzer`.
-
-### Example 2: Populating a Type with Array Fields
-
-When you have an array field, you need to specify the element type:
-
-```php
-use Phodam\PhodamInterface;
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
-class Order
-{
-    private int $orderId;
-    private array $items;  // What type are the items?
-    
-    // ... getters and setters
-}
-
-$schema = PhodamSchema::withDefaults();
-
-// Define the array field with its element type
-$definition = new TypeDefinition(
-    Order::class,
-    null,
-    false,
-    [
-        'items' => (new FieldDefinition(OrderItem::class))
-            ->setArray(true)
-    ]
-);
-
-$schema->registerTypeDefinition($definition);
-$phodam = $schema->getPhodam();
-
-$order = $phodam->create(Order::class);
-// $order->getItems() will be an array of OrderItem instances (2-5 items by default)
-```
-
-### Example 3: Fields with Configuration
-
-You can provide configuration for specific fields:
-
-```php
-use Phodam\PhodamInterface;
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
-class Student
-{
-    private $id;
-    private $name;
-    private $age;
-    private $gpa;
-    
-    // ... getters and setters
-}
-
-$schema = PhodamSchema::withDefaults();
-
-$definition = new TypeDefinition(
-    Student::class,
-    null,
-    false,
     [
         'id' => new FieldDefinition('int'),
         'name' => new FieldDefinition('string'),
         'age' => (new FieldDefinition('int'))
             ->setConfig(['min' => 18, 'max' => 100]),
         'gpa' => (new FieldDefinition('float'))
-            ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2])
+            ->setNullable(true)
+            ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2]),
+        'tags' => (new FieldDefinition('string'))
+            ->setArray(true),
+        'address' => new FieldDefinition(Address::class)
     ]
 );
 
 $schema->registerTypeDefinition($definition);
 $phodam = $schema->getPhodam();
-
 $student = $phodam->create(Student::class);
-// $student->getAge() will be between 18 and 100
-// $student->getGpa() will be between 0.0 and 4.0 with 2 decimal places
 ```
 
-### Example 4: Nullable Fields
+## FieldDefinition Options
 
-You can mark fields as nullable:
+`FieldDefinition` supports several configuration methods:
+
+| Method | Purpose | Example |
+|--------|---------|---------|
+| `FieldDefinition(string $type)` | Constructor - the type to generate | `new FieldDefinition('int')` |
+| `setNullable(bool $nullable)` | Allow null values | `->setNullable(true)` |
+| `setArray(bool $array)` | Generate an array of the type | `->setArray(true)` |
+| `setName(?string $name)` | Use a named provider for this field | `->setName('activeUser')` |
+| `setConfig(?array $config)` | Provider-specific configuration | `->setConfig(['min' => 0, 'max' => 100])` |
+
+## Registering as a Named Provider
+
+Register a definition as a named provider by providing a name in the constructor:
 
 ```php
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
 $definition = new TypeDefinition(
-    MyClass::class,
-    null,
-    false,
-    [
-        'requiredField' => new FieldDefinition('string'),
-        'optionalField' => (new FieldDefinition('string'))
-            ->setNullable(true),
-        'optionalInt' => (new FieldDefinition('int'))
-            ->setNullable(true)
-    ]
-);
-```
-
-### Example 5: Using Named Providers for Fields
-
-You can use named providers for specific fields:
-
-```php
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-
-// First, register a named provider for User using TypeDefinition
-$schema = PhodamSchema::withDefaults();
-
-$activeUserDefinition = new TypeDefinition(
     User::class,
     'activeUser',  // Named provider
     false,
     [
         'name' => new FieldDefinition('string'),
-        'email' => new FieldDefinition('string'),
         'active' => new FieldDefinition('bool')
     ]
 );
-$schema->registerTypeDefinition($activeUserDefinition);
 
-// Then use it in a field definition
+$schema->registerTypeDefinition($definition);
+$user = $phodam->create(User::class, 'activeUser');
+```
+
+## Auto-completion
+
+Phodam automatically completes fields not defined in your `TypeDefinition` using the `TypeAnalyzer`. Define only fields that cannot be automatically determined:
+
+```php
+class User
+{
+    private $id;        // Untyped - must define
+    private $name;      // Untyped - must define
+    private ?string $email;  // Typed - auto-detected
+    private bool $active;     // Typed - auto-detected
+}
+
+// Only define untyped fields
 $definition = new TypeDefinition(
-    Project::class,
+    User::class,
     null,
     false,
     [
-        'owner' => (new FieldDefinition(User::class))
-            ->setName('activeUser'),  // Use the named provider
+        'id' => new FieldDefinition('int'),
         'name' => new FieldDefinition('string')
     ]
 );
-
-$schema->registerTypeDefinition($definition);
-
-$phodam = $schema->getPhodam();
-$project = $phodam->create(Project::class);
-// $project->getOwner() will be created using the 'activeUser' provider
 ```
 
-### Example 6: Complete Example with Multiple Field Types
+If Phodam cannot determine a field type and you haven't defined it, an `IncompleteDefinitionException` is thrown.
+
+## Array Fields
+
+When a field is marked as an array (`setArray(true)`), Phodam generates an array containing 2-5 elements of the specified type:
 
 ```php
-use Phodam\PhodamInterface;
-use Phodam\PhodamSchema;
-use Phodam\Types\FieldDefinition;
-use Phodam\Types\TypeDefinition;
-use DateTimeImmutable;
+'items' => (new FieldDefinition(OrderItem::class))
+    ->setArray(true)
 
-class Product
-{
-    private $id;
-    private string $name;
-    private ?string $description;
-    private array $tags;
-    private float $price;
-    private DateTimeImmutable $createdAt;
-    private bool $inStock;
-    
-    // ... getters and setters
-}
-
-$schema = PhodamSchema::withDefaults();
-
-$definition = new TypeDefinition(
-    Product::class,
-    null,
-    false,
-    [
-        // Untyped field
-        'id' => new FieldDefinition('int'),
-        
-        // Array field with element type
-        'tags' => (new FieldDefinition('string'))
-            ->setArray(true),
-        
-        // Field with configuration
-        'price' => (new FieldDefinition('float'))
-            ->setConfig(['min' => 0.01, 'max' => 1000.0, 'precision' => 2]),
-        
-        // Built-in type (auto-detected, but can be explicit)
-        'createdAt' => new FieldDefinition(DateTimeImmutable::class),
-        
-        // Field with configuration for string
-        'name' => (new FieldDefinition('string'))
-            ->setConfig(['minLength' => 5, 'maxLength' => 50])
-    ]
-);
-
-$schema->registerTypeDefinition($definition);
-$phodam = $schema->getPhodam();
-
-$product = $phodam->create(Product::class);
-// All fields will be properly populated according to their definitions
+// Generates array with 2-5 OrderItem instances
+$order = $phodam->create(Order::class);
+count($order->getItems()); // Between 2 and 5
 ```
-
-## Auto-completion of Definitions
-
-If your type definition doesn't cover all fields, Phodam will attempt to auto-complete missing fields using the `TypeAnalyzer`. This is useful when you only want to define problematic fields:
-
-```php
-class MyClass
-{
-    private $untypedField;      // Must define this
-    private string $typedField;  // Can be auto-detected
-    private int $anotherTyped;   // Can be auto-detected
-}
-
-// Only define the untyped field
-$definition = new TypeDefinition(
-    MyClass::class,
-    null,
-    false,
-    [
-        'untypedField' => new FieldDefinition('string')
-    ]
-);
-
-// Phodam will auto-complete 'typedField' and 'anotherTyped'
-$schema->registerTypeDefinition($definition);
-$phodam = $schema->getPhodam();
-```
-
-**Note**: If Phodam cannot determine a field type and you haven't defined it, an `IncompleteDefinitionException` will be thrown.
 
 ## Using Overrides
 
-You can override specific fields when creating instances, just like with other providers:
+Override specific fields when creating instances:
 
 ```php
-$user = $phodam->create(User::class, null, [
+$student = $phodam->create(Student::class, null, [
     'name' => 'John Doe',
     'age' => 30
 ]);
-// The 'name' and 'age' fields will use the provided values instead of generated ones
-```
-
-## Array Field Behavior
-
-When a field is marked as an array (`setArray(true)`), Phodam will generate an array containing 2-5 elements of the specified type:
-
-```php
-$definition = new TypeDefinition(
-    Order::class,
-    null,
-    false,
-    [
-        'items' => (new FieldDefinition(OrderItem::class))
-            ->setArray(true)
-    ]
-);
-
-// When creating an instance, items will be an array with 2-5 OrderItem objects
-$order = $phodam->create(Order::class);
-count($order->getItems()); // Will be between 2 and 5
 ```
 
 ## Best Practices
 
-1. **Define Only What's Necessary**: Only define fields that cannot be automatically determined. Let Phodam auto-complete the rest.
-
-2. **Use Configuration for Constraints**: Use `setConfig()` to apply constraints like min/max values rather than hardcoding values:
-
-```php
-// Good
-->setConfig(['min' => 18, 'max' => 100])
-
-// Avoid
-// Hardcoding specific values
-```
-
-3. **Be Explicit for Arrays**: Always specify `setArray(true)` and the element type for array fields:
-
-```php
-// Good
-(new FieldDefinition(Item::class))->setArray(true)
-
-// Avoid
-new FieldDefinition('array')  // Doesn't specify element type
-```
-
-4. **Use Named Providers for Reusability**: If you need the same field configuration in multiple definitions, consider creating a named provider:
-
-```php
-// Register once using TypeDefinition
-$activeUserDefinition = new TypeDefinition(
-    User::class,
-    'activeUser',  // Named provider
-    false,
-    [
-        'name' => new FieldDefinition('string'),
-        'active' => new FieldDefinition('bool')
-    ]
-);
-$schema->registerTypeDefinition($activeUserDefinition);
-
-// Use in multiple definitions
-->setName('activeUser')
-```
-
-5. **Leverage Nullable Types**: Use `setNullable(true)` for optional fields to match your domain model:
-
-```php
-// Good - matches the actual type
-(new FieldDefinition('string'))->setNullable(true)  // For ?string
-```
-
-## Error Handling
-
-### IncompleteDefinitionException
-
-This exception is thrown when a field cannot be determined and is not defined:
-
-```php
-try {
-    $phodam->create(MyClass::class);
-} catch (IncompleteDefinitionException $e) {
-    // Handle missing field definitions
-    // $e->getMessage() will indicate which fields are missing
-}
-```
+1. **Define only what's necessary**: Let Phodam auto-complete fields it can determine automatically
+2. **Use configuration for constraints**: Apply constraints via `setConfig()` rather than hardcoding values
+3. **Be explicit for arrays**: Always specify `setArray(true)` and the element type
+4. **Use named providers for reuse**: Create named providers when the same field configuration is needed in multiple definitions
 
 ## Summary
 
-- Definition-based providers use `FieldDefinition` and `TypeDefinition` to specify how fields should be populated
-- Use them for classes with untyped fields or when you need custom configuration
-- Register using `PhodamSchema::registerTypeDefinition()` with a `TypeDefinition` object
-- `TypeDefinition` constructor: `TypeDefinition(string $type, ?string $name = null, bool $overriding = false, array $fields = [])`
-- Only define fields that cannot be automatically determined - Phodam will auto-complete the rest
-- Support for nullable fields, arrays, configuration, and named providers
-- Perfect for classes with untyped properties or complex field requirements
-
-Definition-based type providers give you fine-grained control over how objects are populated, making them ideal for classes that cannot be automatically analyzed by Phodam.
-
+Definition-based providers use `FieldDefinition` and `TypeDefinition` to specify field population when automatic type analysis fails. Register using `PhodamSchema::registerTypeDefinition()`. Only define fields that cannot be automatically determined - Phodam will auto-complete the rest. Support includes nullable fields, arrays, configuration, and named providers. Ideal for classes with untyped properties or when you need field-specific constraints.
