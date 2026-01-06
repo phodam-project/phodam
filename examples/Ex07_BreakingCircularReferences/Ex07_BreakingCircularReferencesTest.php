@@ -20,7 +20,6 @@ class Ex07_BreakingCircularReferencesTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // The enum provider is automatically available with defaults
         $schema = PhodamSchema::withDefaults();
         $schema->registerProvider(OrderTypeProvider::class);
         $this->phodam = $schema->getPhodam();
