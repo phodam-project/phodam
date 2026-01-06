@@ -2,7 +2,7 @@
 
 Phodam is inspired by [PODAM](https://mtedone.github.io/podam/).
 
-Phodam (pronounced Faux-dam) is a PHP library used to generate objects for unit tests. The main feature of PODAM is that you can give it a class and it generates a populated Object with all fields populated.
+Phodam is a PHP library used to generate randomly populated objects for unit tests.
 
 ## Documentation
 

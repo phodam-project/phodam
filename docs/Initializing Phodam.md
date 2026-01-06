@@ -1,21 +1,21 @@
 # Setting Up Phodam
 
-This guide explains how to set up and initialize a `PhodamInterface` instance for use in your code.
+Initialize a `PhodamInterface` instance to generate test data for your application. This is essential for creating realistic test fixtures without manual data entry.
 
 ## Basic Setup
 
-The recommended way to create a `PhodamInterface` instance is through the `PhodamSchema` class using the `withDefaults()` method:
+Use `PhodamSchema::withDefaults()` to create a schema with built-in providers for primitive types (`int`, `float`, `string`, `bool`) and PHP date/time types. This approach requires no configuration and enables immediate test data generation.
 
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
 
-// Create a schema with default providers
 $schema = PhodamSchema::withDefaults();
-
-// Get the PhodamInterface instance
 $phodam = $schema->getPhodam();
 ```
+
+Register custom providers using `registerProvider()` when you need to generate domain-specific types or require specialized data generation logic. Use `PhodamSchema::blank()` to start with an empty schema for complete control over provider registration.
+
 
 ### Example: In a Test Class
 
@@ -67,36 +67,38 @@ $schema->registerProvider(new MyCustomProvider());
 $phodam = $schema->getPhodam();
 ```
 
-## Creating a Blank Schema
+### Example: In a Test Class
 
-If you need to start with an empty schema (without default providers), you can use `blank()`:
+Here's how you would set it up in a PHPUnit test class:
 
 ```php
 use Phodam\PhodamInterface;
 use Phodam\PhodamSchema;
+use PHPUnit\Framework\TestCase;
 
-// Create a blank schema (no default providers)
-$schema = PhodamSchema::blank();
+class MyTest extends TestCase
+{
+    private PhodamInterface $phodam;
 
-// Add your own provider bundles if needed
-// $schema->registerBundle(MyCustomProviderBundle::class);
+    public function setUp(): void
+    {
+        parent::setUp();
+        $schema = PhodamSchema::withDefaults();
+        // if you have custom Providers
+        $schema->registerProvider(MyCustomProvider::class);
 
-// Get the PhodamInterface instance
-$phodam = $schema->getPhodam();
+        $this->phodam = $schema->getPhodam();
+    }
+
+    public function testSomething(): void
+    {
+        $value = $this->phodam->create(MyClass::class);
+        // ... use $value in your test
+    }
+}
 ```
 
-## What `withDefaults()` Includes
-
-The `withDefaults()` method creates a schema that includes:
-- `DefaultPrimitiveBundle` - Provides providers for primitive types: `int`, `float`, `string`, `bool`
-- `DefaultBuiltinBundle` - Provides providers for built-in PHP types: `DateTime`, `DateTimeImmutable`, `DateInterval`, `DatePeriod`, `DateTimeZone`
-
-This gives you a ready-to-use `PhodamInterface` instance that can generate values for most basic types out of the box.
 
 ## Summary
 
-1. Use `PhodamSchema::withDefaults()` to create a schema with default providers
-2. Optionally customize the schema by registering custom providers
-3. Call `getPhodam()` on the schema to obtain a `PhodamInterface` instance
-4. Use the `PhodamInterface` instance to create test objects with `create()`
-
+Create a `PhodamInterface` instance via `PhodamSchema::withDefaults()` for immediate use, or customize the schema by registering providers for domain-specific types. The schema pattern allows flexible configuration while maintaining simplicity for common use cases.
