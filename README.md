@@ -18,5 +18,5 @@ Phodam is a PHP library used to generate randomly populated objects for unit tes
 8. [Definition-based Type Providers](docs/Definition-based%20Type%20Providers.md) - Specifying field types
 9. [Custom Type Providers](docs/Custom%20Type%20Providers.md) - Full control over object creation
 10. [Named Providers](docs/Named%20Providers.md) - Multiple ways to generate the same type
-11. **[Breaking Circular References](Breaking%20Circular%20References.md)** - How to break Circular References
+11. [Breaking Circular References](docs/Breaking%20Circular%20References.md) - How to break Circular References with Providers
 
