@@ -5,8 +5,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-
-
 namespace Phodam\Analyzer;
 
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
