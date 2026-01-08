@@ -5,3 +5,4 @@ When creating documentation, use the following rules:
 4. Avoid using emojis.
 5. Write in a professional manner as if this were for enterprise users.
 6. Create a brief, but useful, summary at the end.
+7. Use named parameters in function calls if there is more than one parameter.

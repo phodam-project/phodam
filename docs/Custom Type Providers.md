@@ -96,7 +96,7 @@ Register as a named provider (requires specifying the name when creating):
 class StudentTypeProvider implements TypedProviderInterface { /* ... */ }
 
 // Usage
-$student = $phodam->create(Student::class, 'activeStudent');
+$student = $phodam->create(Student::class, name: 'activeStudent');
 ```
 
 ## Using Custom Providers
@@ -108,13 +108,13 @@ Once registered, use providers with overrides and configuration:
 $student = $phodam->create(Student::class);
 
 // With overrides
-$student = $phodam->create(Student::class, null, [
+$student = $phodam->create(Student::class, overrides: [
     'name' => 'John Doe',
     'gpa' => 3.5
 ]);
 
 // With config
-$classroom = $phodam->create(Classroom::class, null, [], [
+$classroom = $phodam->create(Classroom::class, config: [
     'numStudents' => 20
 ]);
 ```

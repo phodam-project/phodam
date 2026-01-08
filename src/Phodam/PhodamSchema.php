@@ -6,8 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace Phodam;
 
 use InvalidArgumentException;
@@ -149,7 +147,7 @@ class PhodamSchema implements PhodamSchemaInterface
     }
 
     /**
-     * @param TypeDefinition $definition
+     * @param TypeDefinition<*> $definition
      */
     public function registerTypeDefinition(TypeDefinition $definition): void
     {

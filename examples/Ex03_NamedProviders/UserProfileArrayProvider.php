@@ -5,8 +5,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace PhodamExamples\Ex03_NamedProviders;
 
 use Phodam\Provider\PhodamArrayProvider;
@@ -26,7 +24,7 @@ class UserProfileArrayProvider implements ProviderInterface
             'firstName' => $context->getPhodam()->create('string'),
             'lastName' => $context->getPhodam()->create('string'),
             'email' => $context->getPhodam()->create('string'),
-            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100])
+            'age' => $context->getPhodam()->create('int', config: ['min' => 18, 'max' => 100])
         ];
 
         // Merge with any overrides

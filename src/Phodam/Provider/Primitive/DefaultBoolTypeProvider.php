@@ -6,8 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace Phodam\Provider\Primitive;
 
 use Phodam\Provider\PhodamProvider;
@@ -27,6 +25,6 @@ class DefaultBoolTypeProvider implements TypedProviderInterface
      */
     public function create(ProviderContextInterface $context): bool
     {
-        return (bool)rand(0, 1);
+        return (bool) rand(0, 1);
     }
 }

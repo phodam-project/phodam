@@ -25,19 +25,13 @@ use Phodam\Types\TypeDefinition;
 $schema = PhodamSchema::withDefaults();
 
 $definition = new TypeDefinition(
-    Student::class,  // Type name
-    null,            // Provider name (null for default)
-    false,           // Overriding flag
-    [
+    Student::class,
+    fields: [
         'id' => new FieldDefinition('int'),
         'name' => new FieldDefinition('string'),
-        'age' => (new FieldDefinition('int'))
-            ->setConfig(['min' => 18, 'max' => 100]),
-        'gpa' => (new FieldDefinition('float'))
-            ->setNullable(true)
-            ->setConfig(['min' => 0.0, 'max' => 4.0, 'precision' => 2]),
-        'tags' => (new FieldDefinition('string'))
-            ->setArray(true),
+        'age' => new FieldDefinition('int', config: ['min' => 18, 'max' => 100]),
+        'gpa' => new FieldDefinition('float', nullable: true, config: ['min' => 0.0, 'max' => 4.0, 'precision' => 2]),
+        'tags' => new FieldDefinition('string', array: true),
         'address' => new FieldDefinition(Address::class)
     ]
 );
@@ -66,16 +60,15 @@ Register a definition as a named provider by providing a name in the constructor
 ```php
 $definition = new TypeDefinition(
     User::class,
-    'activeUser',  // Named provider
-    false,
-    [
+    name: 'activeUser',
+    fields: [
         'name' => new FieldDefinition('string'),
         'active' => new FieldDefinition('bool')
     ]
 );
 
 $schema->registerTypeDefinition($definition);
-$user = $phodam->create(User::class, 'activeUser');
+$user = $phodam->create(User::class, name: 'activeUser');
 ```
 
 ## Auto-completion
@@ -94,9 +87,7 @@ class User
 // Only define untyped fields
 $definition = new TypeDefinition(
     User::class,
-    null,
-    false,
-    [
+    fields: [
         'id' => new FieldDefinition('int'),
         'name' => new FieldDefinition('string')
     ]
@@ -107,11 +98,10 @@ If Phodam cannot determine a field type and you haven't defined it, an `Incomple
 
 ## Array Fields
 
-When a field is marked as an array (`setArray(true)`), Phodam generates an array containing 2-5 elements of the specified type:
+When a field is marked as an array, Phodam generates an array containing 2-5 elements of the specified type:
 
 ```php
-'items' => (new FieldDefinition(OrderItem::class))
-    ->setArray(true)
+'items' => new FieldDefinition(OrderItem::class, array: true);
 
 // Generates array with 2-5 OrderItem instances
 $order = $phodam->create(Order::class);
@@ -123,17 +113,14 @@ count($order->getItems()); // Between 2 and 5
 Override specific fields when creating instances:
 
 ```php
-$student = $phodam->create(Student::class, null, [
-    'name' => 'John Doe',
-    'age' => 30
-]);
+$student = $phodam->create(Student::class, overrides: ['name' => 'John Doe', 'age' => 30]);
 ```
 
 ## Best Practices
 
 1. **Define only what's necessary**: Let Phodam auto-complete fields it can determine automatically
-2. **Use configuration for constraints**: Apply constraints via `setConfig()` rather than hardcoding values
-3. **Be explicit for arrays**: Always specify `setArray(true)` and the element type
+2. **Use configuration for constraints**: Apply constraints via `config` parameter rather than hardcoding values
+3. **Be explicit for arrays**: Always specify `array: true` and the element type
 4. **Use named providers for reuse**: Create named providers when the same field configuration is needed in multiple definitions
 
 ## Summary

@@ -5,8 +5,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace Phodam\Analyzer;
 
 use phpDocumentor\Reflection\DocBlock\Tags\Var_;
@@ -24,8 +22,8 @@ class TypeAnalyzer
     private ?DocBlockFactoryInterface $docBlockFactory = null;
 
     /**
-     * @param string $type
-     * @return TypeDefinition
+     * @param string|class-string<*> $type
+     * @return TypeDefinition<*>
      * @throws ReflectionException|TypeAnalysisException
      */
     public function analyze(string $type): TypeDefinition
@@ -73,13 +71,8 @@ class TypeAnalyzer
                     $isArray = true;
                 }
             }
-
-            $mappedFields[$property->getName()] = (new FieldDefinition($propertyTypeName))
-                ->setName(null)
-                ->setOverrides([])
-                ->setConfig([])
-                ->setNullable($isNullable)
-                ->setArray($isArray);
+            $mappedFields[$property->getName()] =
+                new FieldDefinition($propertyTypeName, nullable: $isNullable, array: $isArray);
         }
 
         if (!empty($unmappedFields)) {
@@ -92,8 +85,7 @@ class TypeAnalyzer
             );
         }
 
-        return (new TypeDefinition($type))
-            ->setFields($mappedFields);
+        return new TypeDefinition($type, fields: $mappedFields);
     }
 
     /**

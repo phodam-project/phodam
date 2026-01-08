@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6a66f3e8194cc2027ec45fe1079e11a",
+    "content-hash": "57f7b20ea257aecbb9387b124b77ebe2",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -57,16 +57,16 @@
         },
         {
             "name": "phodam/phodam-api",
-            "version": "v2.0.0-alpha.3",
+            "version": "v2.0.0-rc.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phodam-project/phodam-api.git",
-                "reference": "57476bbef281f4060fb7ec8eda0b6840df637775"
+                "reference": "4344324f60465974899b970a4a36fbafd54e626c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phodam-project/phodam-api/zipball/57476bbef281f4060fb7ec8eda0b6840df637775",
-                "reference": "57476bbef281f4060fb7ec8eda0b6840df637775",
+                "url": "https://api.github.com/repos/phodam-project/phodam-api/zipball/4344324f60465974899b970a4a36fbafd54e626c",
+                "reference": "4344324f60465974899b970a4a36fbafd54e626c",
                 "shasum": ""
             },
             "require": {
@@ -112,9 +112,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phodam-project/phodam-api/issues",
-                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-alpha.3"
+                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-rc.3"
             },
-            "time": "2026-01-03T13:35:36+00:00"
+            "time": "2026-01-08T03:46:58+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -341,16 +341,16 @@
         },
         {
             "name": "webmozart/assert",
-            "version": "2.0.0",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webmozarts/assert.git",
-                "reference": "1b34b004e35a164bc5bb6ebd33c844b2d8069a54"
+                "reference": "b01be90dceff69c88c7b36c30ee45c9fd9107f7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozarts/assert/zipball/1b34b004e35a164bc5bb6ebd33c844b2d8069a54",
-                "reference": "1b34b004e35a164bc5bb6ebd33c844b2d8069a54",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/b01be90dceff69c88c7b36c30ee45c9fd9107f7f",
+                "reference": "b01be90dceff69c88c7b36c30ee45c9fd9107f7f",
                 "shasum": ""
             },
             "require": {
@@ -397,9 +397,9 @@
             ],
             "support": {
                 "issues": "https://github.com/webmozarts/assert/issues",
-                "source": "https://github.com/webmozarts/assert/tree/2.0.0"
+                "source": "https://github.com/webmozarts/assert/tree/2.1.1"
             },
-            "time": "2025-12-16T21:36:00+00:00"
+            "time": "2026-01-07T17:26:38+00:00"
         }
     ],
     "packages-dev": [
@@ -799,16 +799,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.92.3",
+            "version": "v3.92.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "2ba8f5a60f6f42fb65758cfb3768434fa2d1c7e8"
+                "reference": "9e7488b19403423e02e8403cc1eb596baf4673b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/2ba8f5a60f6f42fb65758cfb3768434fa2d1c7e8",
-                "reference": "2ba8f5a60f6f42fb65758cfb3768434fa2d1c7e8",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/9e7488b19403423e02e8403cc1eb596baf4673b0",
+                "reference": "9e7488b19403423e02e8403cc1eb596baf4673b0",
                 "shasum": ""
             },
             "require": {
@@ -840,17 +840,17 @@
             },
             "require-dev": {
                 "facile-it/paraunit": "^1.3.1 || ^2.7",
-                "infection/infection": "^0.31.0",
-                "justinrainbow/json-schema": "^6.5",
-                "keradus/cli-executor": "^2.2",
+                "infection/infection": "^0.31",
+                "justinrainbow/json-schema": "^6.6",
+                "keradus/cli-executor": "^2.3",
                 "mikey179/vfsstream": "^1.6.12",
                 "php-coveralls/php-coveralls": "^2.9",
                 "php-cs-fixer/phpunit-constraint-isidenticalstring": "^1.6",
                 "php-cs-fixer/phpunit-constraint-xmlmatchesxsd": "^1.6",
-                "phpunit/phpunit": "^9.6.25 || ^10.5.53 || ^11.5.34",
+                "phpunit/phpunit": "^9.6.31 || ^10.5.60 || ^11.5.46",
                 "symfony/polyfill-php85": "^1.33",
-                "symfony/var-dumper": "^5.4.48 || ^6.4.24 || ^7.3.2 || ^8.0",
-                "symfony/yaml": "^5.4.45 || ^6.4.24 || ^7.3.2 || ^8.0"
+                "symfony/var-dumper": "^5.4.48 || ^6.4.26 || ^7.4.0 || ^8.0",
+                "symfony/yaml": "^5.4.45 || ^6.4.30 || ^7.4.1 || ^8.0"
             },
             "suggest": {
                 "ext-dom": "For handling output formats in XML",
@@ -891,7 +891,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.92.3"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.92.4"
             },
             "funding": [
                 {
@@ -899,7 +899,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-18T10:45:02+00:00"
+            "time": "2026-01-04T00:38:52+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1682,12 +1682,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "a2150396cb9063156024813438781d929ab186b3"
+                "reference": "fc9b0a96b203a6c760d7a997bfaf8b14ccaea715"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/a2150396cb9063156024813438781d929ab186b3",
-                "reference": "a2150396cb9063156024813438781d929ab186b3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fc9b0a96b203a6c760d7a997bfaf8b14ccaea715",
+                "reference": "fc9b0a96b203a6c760d7a997bfaf8b14ccaea715",
                 "shasum": ""
             },
             "require": {
@@ -1783,7 +1783,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-01-02T11:20:22+00:00"
+            "time": "2026-01-04T06:49:04+00:00"
         },
         {
             "name": "psr/container",
@@ -3715,12 +3715,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "ccae82871faae9494fc568a0bb8aa0c3ce1cd76c"
+                "reference": "487e1dca3b50d4aeb86db71c3e31124731b38e25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/ccae82871faae9494fc568a0bb8aa0c3ce1cd76c",
-                "reference": "ccae82871faae9494fc568a0bb8aa0c3ce1cd76c",
+                "url": "https://api.github.com/repos/symfony/console/zipball/487e1dca3b50d4aeb86db71c3e31124731b38e25",
+                "reference": "487e1dca3b50d4aeb86db71c3e31124731b38e25",
                 "shasum": ""
             },
             "require": {
@@ -3797,7 +3797,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-25T03:44:57+00:00"
+            "time": "2026-01-05T11:08:21+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -3877,12 +3877,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "00c165446301f3c64c86a40c0b3573edbc36f8f9"
+                "reference": "d38403678674adc8d6eaab4dbb9d3f605bb5c3ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/00c165446301f3c64c86a40c0b3573edbc36f8f9",
-                "reference": "00c165446301f3c64c86a40c0b3573edbc36f8f9",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/d38403678674adc8d6eaab4dbb9d3f605bb5c3ec",
+                "reference": "d38403678674adc8d6eaab4dbb9d3f605bb5c3ec",
                 "shasum": ""
             },
             "require": {
@@ -3954,7 +3954,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-19T08:33:17+00:00"
+            "time": "2026-01-05T11:50:03+00:00"
         },
         {
             "name": "symfony/event-dispatcher-contracts",

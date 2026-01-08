@@ -5,8 +5,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace Phodam\Analyzer;
 
 use Exception;
@@ -14,19 +12,20 @@ use Phodam\Types\FieldDefinition;
 
 class TypeAnalysisException extends Exception
 {
+    /** @var class-string<*> $type */
     private string $type;
     /** @var array<string> $fieldNames */
     private array $fieldNames = [];
-    /** @var array<string, FieldDefinition> */
+    /** @var array<string, FieldDefinition<*>> */
     private array $mappedFields = [];
     /** @var array<string> */
     private array $unmappedFields = [];
 
     /**
-     * @param string $type
+     * @param class-string<*> $type
      * @param string $message
      * @param array<string> $fieldNames
-     * @param array<string, FieldDefinition> $mappedFields
+     * @param array<string, FieldDefinition<*>> $mappedFields
      * @param array<string> $unmappedFields
      */
     public function __construct(
@@ -60,7 +59,7 @@ class TypeAnalysisException extends Exception
     }
 
     /**
-     * @return array<string, FieldDefinition>
+     * @return array<string, FieldDefinition<*>>
      */
     public function getMappedFields(): array
     {

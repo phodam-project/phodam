@@ -103,7 +103,7 @@ Generates a random string with configurable character sets and length.
 $stringValue = $phodam->create('string');
 // Returns a random alphanumeric string between default `minLength` and `maxLength`
 
-$username = $phodam->create('string', null, [], [
+$username = $phodam->create('string', config: [
     'type' => 'upper',
     'minLength' => 10,
     'maxLength' => 20

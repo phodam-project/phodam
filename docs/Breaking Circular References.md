@@ -2,10 +2,6 @@
 
 Phodam can generate cyclic graphs by passing pre-built instances into nested create calls. The `Ex07_BreakingCircularReferences` example shows how to keep a parent reference intact without infinite recursion.
 
-## Why use it
-
-Preserve object identity when related models point to each other (e.g., an `Order` containing `OrderItem`s that each point back to their `Order`). This will break the circular reference and populate the fields correctly.
-
 ## Example
 
 Use a custom provider to create the parent first, then inject it into each child so the back-reference is reused rather than re-created.
@@ -23,7 +19,7 @@ class OrderTypeProvider implements TypedProviderInterface
         $defaults = [
             'id' => $context->getPhodam()->create('int'),
             'items' => array_map(
-                fn ($i) => $context->getPhodam()->create(OrderItem::class, null, ['order' => $order]),
+                fn ($i) => $context->getPhodam()->create(OrderItem::class, overrides: ['order' => $order]),
                 range(0, $numItems)
             ),
         ];

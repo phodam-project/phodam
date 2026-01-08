@@ -6,8 +6,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace Phodam;
 
 use DateInterval;
@@ -112,7 +110,7 @@ class Phodam implements PhodamInterface
     }
 
     /**
-     * @param TypeDefinition $definition
+     * @param TypeDefinition<*> $definition
      * @return ProviderInterface
      */
     public function registerTypeDefinition(TypeDefinition $definition): ProviderInterface

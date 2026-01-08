@@ -5,8 +5,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
-
 namespace PhodamExamples\Ex03_NamedProviders;
 
 use Phodam\PhodamInterface;
@@ -39,8 +37,7 @@ class Ex03_NamedProvidersTest extends TestCase
     public function testUsingNamedActiveUserProvider(): void
     {
         // Use the 'active' named provider
-        $activeUser = $this->phodam->create(User::class, 'active');
-        // var_export($activeUser);
+        $activeUser = $this->phodam->create(User::class, name: 'active');
 
         $this->assertInstanceOf(User::class, $activeUser);
         $this->assertIsString($activeUser->getName());
@@ -49,7 +46,7 @@ class Ex03_NamedProvidersTest extends TestCase
 
         // Test multiple instances to ensure consistency
         for ($i = 0; $i < 10; $i++) {
-            $user = $this->phodam->create(User::class, 'active');
+            $user = $this->phodam->create(User::class, name: 'active');
             $this->assertTrue($user->isActive());
         }
     }
@@ -57,8 +54,7 @@ class Ex03_NamedProvidersTest extends TestCase
     public function testUsingNamedInactiveUserProvider(): void
     {
         // Use the 'inactive' named provider
-        $inactiveUser = $this->phodam->create(User::class, 'inactive');
-        // var_export($inactiveUser);
+        $inactiveUser = $this->phodam->create(User::class, name: 'inactive');
 
         $this->assertInstanceOf(User::class, $inactiveUser);
         $this->assertIsString($inactiveUser->getName());
@@ -67,7 +63,7 @@ class Ex03_NamedProvidersTest extends TestCase
 
         // Test multiple instances to ensure consistency
         for ($i = 0; $i < 10; $i++) {
-            $user = $this->phodam->create(User::class, 'inactive');
+            $user = $this->phodam->create(User::class, name: 'inactive');
             $this->assertFalse($user->isActive());
         }
     }
@@ -77,8 +73,8 @@ class Ex03_NamedProvidersTest extends TestCase
         // Named providers work seamlessly with overrides
         $activeUser = $this->phodam->create(
             User::class,
-            'active',
-            ['name' => 'John Doe', 'email' => 'john@example.com']
+            name: 'active',
+            overrides: ['name' => 'John Doe', 'email' => 'john@example.com']
         );
 
         $this->assertEquals('John Doe', $activeUser->getName());
@@ -88,8 +84,8 @@ class Ex03_NamedProvidersTest extends TestCase
         // Even with overrides, inactive provider still creates inactive users
         $inactiveUser = $this->phodam->create(
             User::class,
-            'inactive',
-            ['name' => 'Jane Doe']
+            name: 'inactive',
+            overrides: ['name' => 'Jane Doe']
         );
 
         $this->assertEquals('Jane Doe', $inactiveUser->getName());
@@ -100,7 +96,6 @@ class Ex03_NamedProvidersTest extends TestCase
     {
         // Use the named array provider
         $profile = $this->phodam->createArray('userProfile');
-        // var_export($profile);
 
         $this->assertIsArray($profile);
         $this->assertArrayHasKey('firstName', $profile);
@@ -120,8 +115,8 @@ class Ex03_NamedProvidersTest extends TestCase
     {
         // Array providers work with overrides
         $profile = $this->phodam->createArray(
-            'userProfile',
-            ['email' => 'custom@example.com', 'age' => 25]
+            name: 'userProfile',
+            overrides: ['email' => 'custom@example.com', 'age' => 25]
         );
 
         $this->assertIsArray($profile);
@@ -134,8 +129,8 @@ class Ex03_NamedProvidersTest extends TestCase
     public function testMultipleNamedProvidersForSameType(): void
     {
         // Demonstrate that we can have multiple named providers for the same type
-        $activeUser = $this->phodam->create(User::class, 'active');
-        $inactiveUser = $this->phodam->create(User::class, 'inactive');
+        $activeUser = $this->phodam->create(User::class, name: 'active');
+        $inactiveUser = $this->phodam->create(User::class, name: 'inactive');
 
         $this->assertInstanceOf(User::class, $activeUser);
         $this->assertInstanceOf(User::class, $inactiveUser);

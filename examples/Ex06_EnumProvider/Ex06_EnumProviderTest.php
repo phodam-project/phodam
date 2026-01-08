@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
+
 
 namespace PhodamExamples\Ex06_EnumProvider;
 
@@ -30,7 +30,6 @@ class Ex06_EnumProviderTest extends TestCase
     {
         // Pure enums (UnitEnum) don't have backing values
         $status = $this->phodam->create(OrderStatus::class);
-        // var_export($status);
         
         $this->assertInstanceOf(OrderStatus::class, $status);
         $this->assertContains($status, OrderStatus::cases());
@@ -40,7 +39,6 @@ class Ex06_EnumProviderTest extends TestCase
     {
         // String-backed enums have string values
         $priority = $this->phodam->create(Priority::class);
-        // var_export($priority);
         
         $this->assertInstanceOf(Priority::class, $priority);
         $this->assertContains($priority, Priority::cases());
@@ -52,7 +50,6 @@ class Ex06_EnumProviderTest extends TestCase
     {
         // Int-backed enums have integer values
         $userRole = $this->phodam->create(UserRole::class);
-        // var_export($userRole);
         
         $this->assertInstanceOf(UserRole::class, $userRole);
         $this->assertContains($userRole, UserRole::cases());
@@ -83,7 +80,6 @@ class Ex06_EnumProviderTest extends TestCase
     {
         // Enums work seamlessly in classes - Phodam automatically detects and uses the enum provider
         $task = $this->phodam->create(Task::class);
-        // var_export($task);
         
         $this->assertInstanceOf(Task::class, $task);
         $this->assertInstanceOf(Priority::class, $task->getPriority());
@@ -95,7 +91,7 @@ class Ex06_EnumProviderTest extends TestCase
     public function testUsingEnumInClassWithOverrides(): void
     {
         // You can override enum values just like any other field
-        $task = $this->phodam->create(Task::class, null, [
+        $task = $this->phodam->create(Task::class, overrides: [
             'priority' => Priority::HIGH,
             'status' => OrderStatus::IN_PROGRESS
         ]);
@@ -108,7 +104,6 @@ class Ex06_EnumProviderTest extends TestCase
     {
         // A class can have multiple enum fields
         $project = $this->phodam->create(Project::class);
-        // var_export($project);
         
         $this->assertInstanceOf(Project::class, $project);
         $this->assertInstanceOf(Priority::class, $project->getPriority());

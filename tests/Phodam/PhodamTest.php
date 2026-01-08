@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
+
 
 namespace PhodamTests\Phodam;
 
@@ -214,7 +214,7 @@ class PhodamTest extends PhodamBaseTestCase
         $type = SimpleTypeMissingSomeFieldTypes::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myFloat' => (new FieldDefinition('float'))->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
             'myString' => new FieldDefinition('string'),
             'myBool' => new FieldDefinition('bool')
         ];
