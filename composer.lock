@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "955cd41f6a6a15848fcfd90016c53502",
+    "content-hash": "57f7b20ea257aecbb9387b124b77ebe2",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -57,11 +57,17 @@
         },
         {
             "name": "phodam/phodam-api",
-            "version": "dev-update-FieldDefinition-TypeDefinition",
+            "version": "v2.0.0-rc.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phodam-project/phodam-api.git",
+                "reference": "4344324f60465974899b970a4a36fbafd54e626c"
+            },
             "dist": {
-                "type": "path",
-                "url": "../phodam-api",
-                "reference": "ba7515acf0824ddf4312926e4dd61512487a22a8"
+                "type": "zip",
+                "url": "https://api.github.com/repos/phodam-project/phodam-api/zipball/4344324f60465974899b970a4a36fbafd54e626c",
+                "reference": "4344324f60465974899b970a4a36fbafd54e626c",
+                "shasum": ""
             },
             "require": {
                 "php": "^8.4"
@@ -81,45 +87,7 @@
                     "Phodam\\": "src/Phodam"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PhodamTests\\": "tests"
-                }
-            },
-            "scripts": {
-                "lint:phpcs": [
-                    "phpcs --standard=PSR12 src"
-                ],
-                "lint:phpcsfixer": [
-                    "php-cs-fixer fix src --rules=@PSR12 --dry-run --cache-file=build/.php-cs-fixer.cache"
-                ],
-                "lint:phpcsfixer:fix": [
-                    "php-cs-fixer fix src --rules=@PSR12 --cache-file=build/.php-cs-fixer.cache"
-                ],
-                "lint:phpstan": [
-                    "phpstan analyse -l 6 src"
-                ],
-                "test:phpunit": [
-                    "phpunit -c phpunit.xml"
-                ],
-                "lint": [
-                    "mkdir -p build",
-                    "@lint:phpstan",
-                    "@lint:phpcs",
-                    "@lint:phpcsfixer"
-                ],
-                "lint-fix": [
-                    "@lint:phpcsfixer:fix"
-                ],
-                "test": [
-                    "mkdir -p build",
-                    "@test:phpunit"
-                ],
-                "precommit": [
-                    "@lint",
-                    "@test"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -142,9 +110,11 @@
                 "testing",
                 "unit tests"
             ],
-            "transport-options": {
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/phodam-project/phodam-api/issues",
+                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-rc.3"
+            },
+            "time": "2026-01-08T03:46:58+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -5224,9 +5194,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "phodam/phodam-api": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
