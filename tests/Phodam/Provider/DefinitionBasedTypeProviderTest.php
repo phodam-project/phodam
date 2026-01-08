@@ -6,7 +6,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root.
 // SPDX-License-Identifier: MIT
 
-declare(strict_types=1);
+
 
 namespace PhodamTests\Phodam\Provider;
 

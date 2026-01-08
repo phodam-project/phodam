@@ -23,8 +23,14 @@
       "role": "Developer"
     }
   ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../phodam-api"
+    }
+  ],
   "require": {
-    "phodam/phodam-api": "^2.0",
+    "phodam/phodam-api": "@dev",
     "php": "^8.4",
     "phpdocumentor/reflection-docblock": "^5.3"
   },
