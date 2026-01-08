@@ -36,9 +36,8 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
             [
                 'id' => new FieldDefinition('int'),
                 'description' => new FieldDefinition('string'),
-                'tags' => (new FieldDefinition('string'))->setArray(true),
-                'price' => (new FieldDefinition('float'))
-                    ->setConfig(['min' => 0.01, 'max' => 1000.0, 'precision' => 2])
+                'tags' => new FieldDefinition('string', array: true),
+                'price' => new FieldDefinition('float', config: ['min' => 0.01, 'max' => 1000.0, 'precision' => 2])
             ]
         );
 
@@ -51,8 +50,7 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
             null,
             false,
             [
-                'items' => (new FieldDefinition(OrderItem::class))
-                    ->setArray(true)
+                'items' => new FieldDefinition(OrderItem::class, array: true)
             ]
         );
 
@@ -65,7 +63,6 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
     {
         // Product has untyped fields that need definition
         $product = $this->phodam->create(Product::class);
-        // var_export($product);
 
         $this->assertInstanceOf(Product::class, $product);
         $this->assertIsInt($product->getId());  // Defined as 'int'
@@ -90,7 +87,7 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
     public function testProductWithOverrides(): void
     {
         // Definition-based providers work with overrides
-        $product = $this->phodam->create(Product::class, null, [
+        $product = $this->phodam->create(Product::class, overrides: [
             'id' => 12345,
             'name' => 'Custom Product',
             'price' => 99.99
@@ -108,7 +105,6 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
     {
         // Order has an array field that needs element type definition
         $order = $this->phodam->create(Order::class);
-        // var_export($order);
 
         $this->assertInstanceOf(Order::class, $order);
         $this->assertIsInt($order->getOrderId());  // Auto-detected from typed property
@@ -141,7 +137,7 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
             [
                 'id' => new FieldDefinition('int'),
                 'description' => new FieldDefinition('string'),
-                'tags' => (new FieldDefinition('string'))->setArray(true),
+                'tags' => new FieldDefinition('string', array: true),
                 'price' => new FieldDefinition('float')
             ]
         );
@@ -171,12 +167,10 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
             null,
             false,
             [
-                'id' => (new FieldDefinition('int'))
-                    ->setConfig(['min' => 1000, 'max' => 9999]),
+                'id' => new FieldDefinition('int', config: ['min' => 1000, 'max' => 9999]),
                 'description' => new FieldDefinition('string'),
-                'tags' => (new FieldDefinition('string'))->setArray(true),
-                'price' => (new FieldDefinition('float'))
-                    ->setConfig(['min' => 10.0, 'max' => 50.0, 'precision' => 2])
+                'tags' => new FieldDefinition('string', array: true),
+                'price' => new FieldDefinition('float', config: ['min' => 10.0, 'max' => 50.0, 'precision' => 2])
             ]
         );
 
@@ -201,9 +195,8 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
             false,
             [
                 'id' => new FieldDefinition('int'),
-                'description' => (new FieldDefinition('string'))
-                    ->setNullable(true),  // Can be null
-                'tags' => (new FieldDefinition('string'))->setArray(true),
+                'description' => new FieldDefinition('string', nullable: true),
+                'tags' => new FieldDefinition('string', array: true),
                 'price' => new FieldDefinition('float')
             ]
         );
@@ -234,15 +227,12 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
         // Create a named provider using TypeDefinition
         $expensiveItemDefinition = new TypeDefinition(
             OrderItem::class,
-            'expensive',
-            false,
-            [
+            name:'expensive',
+            fields: [
                 'itemId' => new FieldDefinition('int'),
                 'productName' => new FieldDefinition('string'),
-                'quantity' => (new FieldDefinition('float'))
-                    ->setConfig(['min' => 1.0, 'max' => 10.0]),
-                'unitPrice' => (new FieldDefinition('float'))
-                    ->setConfig(['min' => 100.0, 'max' => 1000.0])
+                'quantity' => new FieldDefinition('float', config: ['min' => 1.0, 'max' => 10.0]),
+                'unitPrice' => new FieldDefinition('float', config: ['min' => 100.0, 'max' => 1000.0])
             ]
         );
         $schema->registerTypeDefinition($expensiveItemDefinition);
@@ -250,12 +240,8 @@ class Ex04_DefinitionBasedProvidersTest extends TestCase
         // Then use it in a field definition
         $orderDefinition = new TypeDefinition(
             Order::class,
-            null,
-            false,
-            [
-                'items' => (new FieldDefinition(OrderItem::class))
-                    ->setArray(true)
-                    ->setName('expensive')  // Use the named provider
+            fields: [
+                'items' => new FieldDefinition(OrderItem::class, name: 'expensive', array: true)
             ]
         );
 

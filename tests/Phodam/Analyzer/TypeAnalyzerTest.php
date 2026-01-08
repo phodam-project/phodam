@@ -40,12 +40,10 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
     public function testAnalyze(): void
     {
         $expected = [
-            'myInt' => (new FieldDefinition('int')),
-            'myFloat' => (new FieldDefinition('float'))
-                ->setNullable(true),
-            'myString' => (new FieldDefinition('string'))
-                ->setNullable(true),
-            'myBool' => (new FieldDefinition('bool'))
+            'myInt' => new FieldDefinition('int'),
+            'myFloat' => new FieldDefinition('float', nullable: true),
+            'myString' => new FieldDefinition('string', nullable: true),
+            'myBool' => new FieldDefinition('bool')
         ];
 
         $result = $this->analyzer->analyze(SimpleType::class);
@@ -69,8 +67,7 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             'myInt', 'myString'
         ];
         $expectedMappedFields = [
-            'myFloat' => (new FieldDefinition('float'))
-                ->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
             'myBool' => (new FieldDefinition('bool'))
         ];
 
@@ -78,6 +75,7 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             $result = $this->analyzer->analyze(SimpleTypeMissingSomeFieldTypes::class);
         } catch (Exception $ex) {
             $this->assertInstanceOf(TypeAnalysisException::class, $ex);
+            /** @var TypeAnalysisException $ex */
             $this->assertEquals(SimpleTypeMissingSomeFieldTypes::class, $ex->getType());
             $this->assertEquals($expectedMessage, $ex->getMessage());
             $this->assertEquals($expectedFieldNames, $ex->getFieldNames());
@@ -102,6 +100,7 @@ class TypeAnalyzerTest extends PhodamBaseTestCase
             $this->analyzer->analyze(SimpleTypeWithAnArray::class);
         } catch (Exception $ex) {
             $this->assertInstanceOf(TypeAnalysisException::class, $ex);
+            /** @var TypeAnalysisException $ex */
             $this->assertEquals(SimpleTypeWithAnArray::class, $ex->getType());
             $this->assertEquals($expectedMessage, $ex->getMessage());
             $this->assertEquals($expectedFieldNames, $ex->getFieldNames());

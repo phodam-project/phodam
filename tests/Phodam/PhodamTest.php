@@ -214,7 +214,7 @@ class PhodamTest extends PhodamBaseTestCase
         $type = SimpleTypeMissingSomeFieldTypes::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myFloat' => (new FieldDefinition('float'))->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
             'myString' => new FieldDefinition('string'),
             'myBool' => new FieldDefinition('bool')
         ];

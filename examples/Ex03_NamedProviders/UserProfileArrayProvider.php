@@ -26,7 +26,7 @@ class UserProfileArrayProvider implements ProviderInterface
             'firstName' => $context->getPhodam()->create('string'),
             'lastName' => $context->getPhodam()->create('string'),
             'email' => $context->getPhodam()->create('string'),
-            'age' => $context->getPhodam()->create('int', null, [], ['min' => 18, 'max' => 100])
+            'age' => $context->getPhodam()->create('int', config: ['min' => 18, 'max' => 100])
         ];
 
         // Merge with any overrides

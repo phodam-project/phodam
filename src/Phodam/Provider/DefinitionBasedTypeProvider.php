@@ -19,16 +19,14 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionProperty;
 
-/**
- * @template T
- */
 class DefinitionBasedTypeProvider implements ProviderInterface
 {
+    /** @var TypeDefinition<*> $definition */
     private TypeDefinition $definition;
     private bool $analyzed = false;
 
     /**
-     * @param TypeDefinition $definition
+     * @param TypeDefinition<*> $definition
      */
     public function __construct(
         TypeDefinition $definition
@@ -68,7 +66,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
 
         $obj = $refClass->newInstanceWithoutConstructor();
         foreach ($this->definition->getFields() as $fieldName => $fieldDefinition) {
-            /** @var FieldDefinition $fieldDefinition */
+            /** @var FieldDefinition<*> $fieldDefinition */
             $refProperty = $refClass->getProperty($fieldName);
             if ($context->hasOverride($fieldName)) {
                 $val = $context->getOverride($fieldName);
@@ -135,7 +133,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             // 8. if $mappedFields covers the difference in fields,
             //    then you're good
             foreach ($missingFields as $missingField) {
-                $this->definition->addField($missingField, $generatedDefFields[$missingField]);
+                $this->definition->addFieldDefinition($missingField, $generatedDefFields[$missingField]);
             }
         }
 

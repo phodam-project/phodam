@@ -112,7 +112,7 @@ class Phodam implements PhodamInterface
     }
 
     /**
-     * @param TypeDefinition $definition
+     * @param TypeDefinition<*> $definition
      * @return ProviderInterface
      */
     public function registerTypeDefinition(TypeDefinition $definition): ProviderInterface

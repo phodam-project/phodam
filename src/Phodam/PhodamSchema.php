@@ -149,7 +149,7 @@ class PhodamSchema implements PhodamSchemaInterface
     }
 
     /**
-     * @param TypeDefinition $definition
+     * @param TypeDefinition<*> $definition
      */
     public function registerTypeDefinition(TypeDefinition $definition): void
     {

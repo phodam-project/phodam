@@ -29,7 +29,7 @@ class OrderTypeProvider implements TypedProviderInterface
         $defaults = [
             'id' => $context->getPhodam()->create('int'),
             'items' => array_map(
-                fn ($i) => $context->getPhodam()->create(OrderItem::class, null, ['order' => $order]),
+                fn ($i) => $context->getPhodam()->create(OrderItem::class, overrides: ['order' => $order]),
                 range(0, $numItems)
             ),
         ];

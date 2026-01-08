@@ -101,7 +101,7 @@ $task = $phodam->create(Task::class);
 You can override enum values just like any other field when creating objects. This is useful for testing specific enum combinations or ensuring certain states in your test data.
 
 ```php
-$task = $phodam->create(Task::class, null, [
+$task = $phodam->create(Task::class, overrides: [
     'priority' => Priority::HIGH,
     'status' => OrderStatus::IN_PROGRESS
 ]);

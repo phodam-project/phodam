@@ -34,9 +34,7 @@ class StudentTypeProvider implements TypedProviderInterface
             'name' => $context->getPhodam()->create('string'),
             'gpa' => $context->getPhodam()->create(
                 'float',
-                null,
-                [],
-                ['min' => 0.0, 'max' => 4.0, 'precision' => 2]
+                config: ['min' => 0.0, 'max' => 4.0, 'precision' => 2]
             ),
             'active' => true,
             'address' => $context->getPhodam()->create(Address::class),

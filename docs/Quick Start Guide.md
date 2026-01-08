@@ -95,7 +95,7 @@ $student = $phodam->create(Student::class);
 Override specific fields when you need test-specific values while allowing Phodam to generate the remaining properties. This approach maintains test isolation while reducing setup code.
 
 ```php
-$student = $phodam->create(Student::class, null, [
+$student = $phodam->create(Student::class, overrides: [
     'name' => 'John Doe',
     'gpa' => 4.0
 ]);
@@ -106,7 +106,7 @@ $student = $phodam->create(Student::class, null, [
 Configure primitive type generation to match your domain constraints, ensuring generated values are realistic for your test scenarios.
 
 ```php
-$age = $phodam->create('int', null, [], [
+$age = $phodam->create('int', config: [
     'min' => 18,
     'max' => 100
 ]);
@@ -169,7 +169,7 @@ class OrderServiceTest extends TestCase
 
     public function testProcessOrder(): void
     {
-        $order = $this->phodam->create(Order::class, null, [
+        $order = $this->phodam->create(Order::class, overrides: [
             'status' => 'pending'
         ]);
 
@@ -212,7 +212,7 @@ private array $students;
 Prefer overrides over custom providers for one-off test cases to maintain simplicity and reduce maintenance burden.
 
 ```php
-$student = $phodam->create(Student::class, null, [
+$student = $phodam->create(Student::class, overrides: [
     'gpa' => 4.0
 ]);
 ```

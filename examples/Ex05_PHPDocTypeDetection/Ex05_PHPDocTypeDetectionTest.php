@@ -30,7 +30,6 @@ class Ex05_PHPDocTypeDetectionTest extends TestCase
         // LegacyUser has no typed properties, only PHPDoc @var annotations
         // Phodam automatically detects types from PHPDoc
         $user = $this->phodam->create(LegacyUser::class);
-        // var_export($user);
 
         $this->assertInstanceOf(LegacyUser::class, $user);
         $this->assertIsInt($user->getId());  // From @var int
@@ -94,7 +93,6 @@ class Ex05_PHPDocTypeDetectionTest extends TestCase
         // MixedClass has both typed properties and untyped with PHPDoc
         // Phodam uses type declarations when available, PHPDoc otherwise
         $mixed = $this->phodam->create(MixedClass::class);
-        // var_export($mixed);
 
         // Typed properties are auto-detected
         $this->assertIsInt($mixed->getId());  // From type declaration
@@ -117,7 +115,7 @@ class Ex05_PHPDocTypeDetectionTest extends TestCase
     public function testLegacyClassWithOverrides(): void
     {
         // PHPDoc-detected classes work with overrides just like typed classes
-        $user = $this->phodam->create(LegacyUser::class, null, [
+        $user = $this->phodam->create(LegacyUser::class, overrides: [
             'id' => 999,
             'firstName' => 'Jane',
             'lastName' => 'Smith',
@@ -140,17 +138,17 @@ class Ex05_PHPDocTypeDetectionTest extends TestCase
     {
         // For nested overrides, we need to create the nested objects explicitly
         // or use a custom provider that handles nested overrides
-        $address = $this->phodam->create(Address::class, null, [
+        $address = $this->phodam->create(Address::class, overrides: [
             'city' => 'Boston',
             'state' => 'MA'
         ]);
 
-        $order = $this->phodam->create(Order::class, null, [
+        $order = $this->phodam->create(Order::class, overrides: [
             'orderNumber' => 'ORD-12345',
             'total' => 199.99
         ]);
 
-        $user = $this->phodam->create(LegacyUser::class, null, [
+        $user = $this->phodam->create(LegacyUser::class, overrides: [
             'address' => $address,
             'orders' => [$order]
         ]);

@@ -65,10 +65,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $type = SimpleType::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myFloat' => (new FieldDefinition('float'))
-                ->setNullable(true),
-            'myString' => (new FieldDefinition('string'))
-                ->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
+            'myString' => new FieldDefinition('string', nullable: true),
             'myBool' => new FieldDefinition('bool')
         ];
         $definition = new TypeDefinition($type, null, false, $fields);
@@ -117,11 +115,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $type = SimpleType::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myFloat' => (new FieldDefinition('float'))
-                ->setNullable(true),
-            'myString' => (new FieldDefinition('string'))
-                ->setName('MyNamedString')
-                ->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
+            'myString' => (new FieldDefinition('string', name: 'MyNamedString', nullable: true)),
             'myBool' => new FieldDefinition('bool')
         ];
         $definition = new TypeDefinition($type, null, false, $fields);
@@ -169,10 +164,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $type = SimpleType::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myFloat' => (new FieldDefinition('float'))
-                ->setNullable(true),
-            'myString' => (new FieldDefinition('string'))
-                ->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
+            'myString' => new FieldDefinition('string', nullable: true),
             'myBool' => new FieldDefinition('bool')
         ];
         $definition = new TypeDefinition($type, null, false, $fields);
@@ -220,10 +213,8 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $type = SimpleTypeWithoutTypes::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myFloat' => (new FieldDefinition('float'))
-                ->setNullable(true),
-            'myString' => (new FieldDefinition('string'))
-                ->setNullable(true),
+            'myFloat' => new FieldDefinition('float', nullable: true),
+            'myString' => new FieldDefinition('string', nullable: true),
             'myBool' => new FieldDefinition('bool')
         ];
         $definition = new TypeDefinition($type, null, false, $fields);
@@ -271,8 +262,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $type = SimpleTypeMissingSomeFieldTypes::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myString' => (new FieldDefinition('string'))
-                ->setNullable(true)
+            'myString' => new FieldDefinition('string', nullable: true)
         ];
         $definition = new TypeDefinition($type, null, false, $fields);
 
@@ -331,8 +321,7 @@ class DefinitionBasedTypeProviderTest extends PhodamBaseTestCase
         $type = SimpleTypeWithAnArray::class;
         $fields = [
             'myInt' => new FieldDefinition('int'),
-            'myArray' => (new FieldDefinition(SimpleType::class))
-                ->setArray(true)
+            'myArray' => new FieldDefinition(SimpleType::class, array: true)
         ];
         $definition = new TypeDefinition($type, null, false, $fields);
 

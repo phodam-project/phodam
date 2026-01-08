@@ -29,7 +29,6 @@ class Ex01_BasicUsageTest extends TestCase
     public function testCreateInt(): void
     {
         $int = $this->phodam->create('int');
-        // var_export($int);
         $this->assertIsInt($int);
 
         // The default int provider can take some values in its configuration
@@ -38,11 +37,8 @@ class Ex01_BasicUsageTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $positiveInt = $this->phodam->create(
                 'int',
-                null,
-                [],
-                $positiveIntConfig
+                config: $positiveIntConfig,
             );
-            // var_export($positiveInt);
             $this->assertIsInt($positiveInt);
             $this->assertGreaterThanOrEqual(0, $positiveInt);
             $this->assertLessThanOrEqual(PHP_INT_MAX, $positiveInt);
@@ -52,7 +48,6 @@ class Ex01_BasicUsageTest extends TestCase
     public function testCreateFloat(): void
     {
         $float = $this->phodam->create('float');
-        // var_export($float);
         $this->assertIsFloat($float);
 
         // The default float provider can take some values in its configuration
@@ -65,11 +60,8 @@ class Ex01_BasicUsageTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $randomTestScore = $this->phodam->create(
                 'float',
-                null,
-                [],
-                $randomTestScoreConfig
+                config: $randomTestScoreConfig,
             );
-            // echo "\n"; var_export($randomTestScore);
             $this->assertIsFloat($randomTestScore);
             $this->assertGreaterThanOrEqual(0.0, $randomTestScore);
             $this->assertLessThanOrEqual(100.0, $randomTestScore);
@@ -79,7 +71,6 @@ class Ex01_BasicUsageTest extends TestCase
     public function testCreateString(): void
     {
         $string = $this->phodam->create('string');
-        // var_export($string);
         $this->assertIsString($string);
 
         // The default string provider can take some values in its configuration
@@ -92,11 +83,8 @@ class Ex01_BasicUsageTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $randomString = $this->phodam->create(
                 'string',
-                null,
-                [],
-                $stringConfig
+                config: $stringConfig,
             );
-            // echo "\n"; var_export($randomString);
             $this->assertIsString($randomString);
             $strlen = strlen($randomString);
             $this->assertGreaterThanOrEqual(10, $strlen);
@@ -108,7 +96,6 @@ class Ex01_BasicUsageTest extends TestCase
     public function testCreateStudent(): void
     {
         $student = $this->phodam->create(Student::class);
-        // var_export($student);
         $this->assertInstanceOf(Student::class, $student);
         $this->assertIsInt($student->getId());
         $this->assertIsString($student->getName());
@@ -124,11 +111,9 @@ class Ex01_BasicUsageTest extends TestCase
         for ($i = 0; $i < 10; $i++) {
             $student = $this->phodam->create(
                 Student::class,
-                null,
-                $studentOverrides
+                overrides: $studentOverrides
             );
 
-            // echo "\n"; var_export($student);
             $this->assertInstanceOf(Student::class, $student);
             $this->assertIsInt($student->getId());
             $this->assertIsString($student->getName());

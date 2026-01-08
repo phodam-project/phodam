@@ -32,16 +32,14 @@ class ClassroomTypeProvider implements TypedProviderInterface
         $defaults = [
             'roomNumber' => $context->getPhodam()->create(
                 'int',
-                null,
-                [],
-                ['min' => 100, 'max' => 499]
+                config: ['min' => 100, 'max' => 499],
             )
         ];
 
         $config = $context->getConfig();
         $numStudents =
             $config['numStudents'] ??
-            $context->getPhodam()->create('int', null, [], ['min' => 10, 'max' => 15]);
+            $context->getPhodam()->create('int', config: ['min' => 10, 'max' => 15]);
 
         $values = array_merge(
             $defaults,

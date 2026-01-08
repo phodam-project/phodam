@@ -35,7 +35,7 @@ class Ex02_CustomTypeProvidersTest extends TestCase
     public function testCreatingClassroom(): void
     {
         $classroom = $this->phodam->create(Classroom::class);
-        // var_export($classroom);
+
         $this->assertInstanceOf(Classroom::class, $classroom);
         $this->assertIsInt($classroom->getRoomNumber());
         $this->assertIsArray($classroom->getStudents());
