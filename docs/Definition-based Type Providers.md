@@ -41,18 +41,6 @@ $phodam = $schema->getPhodam();
 $student = $phodam->create(Student::class);
 ```
 
-## FieldDefinition Options
-
-`FieldDefinition` supports several configuration methods:
-
-| Method | Purpose | Example |
-|--------|---------|---------|
-| `FieldDefinition(string $type)` | Constructor - the type to generate | `new FieldDefinition('int')` |
-| `setNullable(bool $nullable)` | Allow null values | `->setNullable(true)` |
-| `setArray(bool $array)` | Generate an array of the type | `->setArray(true)` |
-| `setName(?string $name)` | Use a named provider for this field | `->setName('activeUser')` |
-| `setConfig(?array $config)` | Provider-specific configuration | `->setConfig(['min' => 0, 'max' => 100])` |
-
 ## Registering as a Named Provider
 
 Register a definition as a named provider by providing a name in the constructor:
