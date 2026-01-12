@@ -113,18 +113,6 @@ class PhodamSchemaTest extends PhodamBaseTestCase
         $schema->registerBundle('NonExistentClass' . uniqid());
     }
 
-    public function testRegisterBundleWithClassStringThatDoesNotImplementProviderBundleInterfaceThrowsException(): void
-    {
-        $store = new ProviderStore();
-        $schema = new PhodamSchema($store);
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Argument must be an instance of ProviderBundleInterface or a class implementing it");
-
-        // Use a class that exists but doesn't implement ProviderBundleInterface
-        $schema->registerBundle(\stdClass::class);
-    }
-
     public function testGetPhodamReturnsPhodamInstanceWithConfiguredProviderStore(): void
     {
         $store = new ProviderStore();

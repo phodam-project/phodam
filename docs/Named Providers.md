@@ -71,17 +71,22 @@ $phodam = $schema->getPhodam();
 
 ### Type Providers
 
-Pass the provider name as the second parameter to `create()`:
+Pass the provider name using the `name` parameter to `create()`:
 
 ```php
 // Default provider (no name)
 $defaultUser = $phodam->create(User::class);
 
 // Named provider
-$activeUser = $phodam->create(User::class, 'active');
+$activeUser = $phodam->create(User::class, name: 'active');
 
 // With overrides and config
-$activeUser = $phodam->create(User::class, 'active', ['name' => 'John'], ['role' => 'admin']);
+$activeUser = $phodam->create(
+    User::class,
+    name: 'active',
+    overrides: ['name' => 'John'],
+    config: ['role' => 'admin']
+);
 ```
 
 ### Array Providers

@@ -15,10 +15,10 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Builtin\DefaultEnumTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
-use RuntimeException;
 
 /**
  * Test enum for pure enums (UnitEnum)
@@ -50,6 +50,7 @@ enum TestIntBackedEnum: int
     case TWO = 2;
 }
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(DefaultEnumTypeProvider::class)]
 #[CoversMethod(DefaultEnumTypeProvider::class, 'create')]
 class DefaultEnumTypeProviderTest extends PhodamBaseTestCase

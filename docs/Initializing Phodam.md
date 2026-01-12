@@ -16,6 +16,22 @@ $phodam = $schema->getPhodam();
 
 Register custom providers using `registerProvider()` when you need to generate domain-specific types or require specialized data generation logic. Use `PhodamSchema::blank()` to start with an empty schema for complete control over provider registration.
 
+### Starting with a Blank Schema
+
+Use `PhodamSchema::blank()` when you need complete control over which providers are registered, without any default providers:
+
+```php
+use Phodam\PhodamInterface;
+use Phodam\PhodamSchema;
+
+$schema = PhodamSchema::blank();
+// Register only the providers you need
+$schema->registerProvider(MyCustomProvider::class);
+$phodam = $schema->getPhodam();
+```
+
+This is useful when you want to avoid default providers or need a minimal setup for specific test scenarios.
+
 
 ### Example: In a Test Class
 

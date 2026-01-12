@@ -68,6 +68,34 @@ The `ProviderContextInterface` provides access to Phodam functionality:
 - **`getOverrides()`**: Access field value overrides
 - **`getConfig()`**: Access provider-specific configuration
 
+### Using Configuration
+
+Access configuration passed to `create()` via `$context->getConfig()` to customize provider behavior:
+
+```php
+public function create(ProviderContextInterface $context): Order
+{
+    $order = new Order();
+    
+    // Read configuration to customize behavior
+    $numItems = $context->getConfig()['numItems'] ?? 2;
+    
+    $defaults = [
+        'id' => $context->getPhodam()->create('int'),
+        'items' => array_map(
+            fn ($i) => $context->getPhodam()->create(OrderItem::class),
+            range(0, $numItems)
+        ),
+    ];
+    
+    $values = array_merge($defaults, $context->getOverrides());
+    return $order->setId($values['id'])->setItems($values['items']);
+}
+
+// Usage with config
+$order = $phodam->create(Order::class, config: ['numItems' => 5]);
+```
+
 ## Registering Providers
 
 Register providers using the `#[PhodamProvider]` attribute and `registerProvider()`:

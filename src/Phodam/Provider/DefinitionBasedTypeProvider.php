@@ -131,7 +131,7 @@ class DefinitionBasedTypeProvider implements ProviderInterface
             // 8. if $mappedFields covers the difference in fields,
             //    then you're good
             foreach ($missingFields as $missingField) {
-                $this->definition->addFieldDefinition($missingField, $generatedDefFields[$missingField]);
+                $this->definition->addField($missingField, $generatedDefFields[$missingField]);
             }
         }
 
