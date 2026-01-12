@@ -7,6 +7,7 @@
         requireCoverageMetadata="true"
         failOnRisky="true"
         failOnWarning="true"
+        failOnNotice="true"
         testdox="false" 
         displayDetailsOnIncompleteTests="true"
         displayDetailsOnSkippedTests="true"
@@ -40,5 +41,6 @@
         <ini name="beStrictAboutOutputDuringTests" value="true"/>
         <ini name="beStrictAboutTodoAnnotatedTests" value="true"/>
         <ini name="convertDeprecationsToExceptions" value="true"/>
+        <ini name="error_reporting" value="E_ALL"/>
     </php>
 </phpunit>

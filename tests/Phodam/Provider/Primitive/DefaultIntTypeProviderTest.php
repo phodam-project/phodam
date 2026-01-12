@@ -14,10 +14,12 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\Primitive\DefaultIntTypeProvider;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(\Phodam\Provider\Primitive\DefaultIntTypeProvider::class)]
 #[CoversMethod(\Phodam\Provider\Primitive\DefaultIntTypeProvider::class, 'create')]
 class DefaultIntTypeProviderTest extends PhodamBaseTestCase

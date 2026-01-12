@@ -28,7 +28,13 @@ public function create(
 );
 ```
 
-For primitive types, the `$config` parameter is used to customize how the values are generated.
+Parameters:
+- **`$type`**: The class name or primitive type to create
+- **`$name`**: Optional provider name for named providers
+- **`$overrides`**: Optional array of field values to override
+- **`$config`**: Optional array of provider-specific configuration
+
+You can use either positional or named parameters. For primitive types, the `$config` parameter is used to customize how the values are generated.
 
 ## Integer (`int`)
 

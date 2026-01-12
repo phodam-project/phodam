@@ -52,12 +52,6 @@ class PhodamSchema implements PhodamSchemaInterface
             $bundle = $bundleOrClass;
         } else {
             $bundle = (new ReflectionClass($bundleOrClass))->newInstance();
-
-            if (!($bundle instanceof ProviderBundleInterface)) {
-                throw new InvalidArgumentException(
-                    "Argument must be an instance of ProviderBundleInterface or a class implementing it"
-                );
-            }
         }
 
         $providerClasses = $bundle->getProviders();
@@ -83,12 +77,6 @@ class PhodamSchema implements PhodamSchemaInterface
             $provider = $providerOrClass;
         } else {
             $provider = (new ReflectionClass($providerOrClass))->newInstance();
-
-            if (!($provider instanceof ProviderInterface)) {
-                throw new InvalidArgumentException(
-                    "Argument must be an instance of ProviderInterface or a class implementing it"
-                );
-            }
         }
 
         $reflection = new ReflectionClass($provider);
@@ -117,14 +105,6 @@ class PhodamSchema implements PhodamSchemaInterface
             $type = $args['type'] ?? $args[0];
             $name = $args['name'] ?? $args[1] ?? null;
             $overriding = $args['overriding'] ?? $args[2] ?? false;
-
-            // $provider is already an instance if $providerOrClass was an instance
-            // Only instantiate if it was a class name
-            if (!($provider instanceof ProviderInterface)) {
-                throw new InvalidArgumentException(
-                    "Provider must implement ProviderInterface"
-                );
-            }
 
             if ($name !== null) {
                 if ($overriding) {

@@ -15,12 +15,14 @@ use Phodam\PhodamInterface;
 use Phodam\Provider\ProviderContext;
 use PhodamTests\Fixtures\SimpleType;
 use PhodamTests\Phodam\PhodamBaseTestCase;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversMethod;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 
+#[AllowMockObjectsWithoutExpectations]
 #[CoversClass(\Phodam\Provider\ProviderContext::class)]
 #[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getType')]
 #[CoversMethod(\Phodam\Provider\ProviderContext::class, 'getOverrides')]
