@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "76e90a23be8295d755e4c21ed2a8d174",
+    "content-hash": "75885f824d041a2db7e96e639a2bec89",
     "packages": [
         {
             "name": "doctrine/deprecations",
@@ -56,7 +56,7 @@
         },
         {
             "name": "phodam/phodam-api",
-            "version": "v2.0.0-rc.4",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phodam-project/phodam-api.git",
@@ -111,7 +111,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phodam-project/phodam-api/issues",
-                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0-rc.4"
+                "source": "https://github.com/phodam-project/phodam-api/tree/v2.0.0"
             },
             "time": "2026-01-12T02:12:07+00:00"
         },
@@ -4903,9 +4903,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "phodam/phodam-api": 5
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

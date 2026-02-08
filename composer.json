@@ -24,7 +24,7 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "phodam/phodam-api": "^2.0.0-rc.4",
+    "phodam/phodam-api": "^2.0.0",
     "php": "^8.4",
     "phpdocumentor/reflection-docblock": "~6.0.0"
   },
